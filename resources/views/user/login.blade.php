@@ -25,16 +25,16 @@
     <section class=" section-10">
         <div class="container">
             <div class="login-form">    
-                <form action="/examples/actions/confirmation.php" method="post">
+                <form action="{{route('usercheck')}}" method="">
                     <h4 class="modal-title">Login to Your Account</h4>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Email" required="required">
+                        <input type="text" class="form-control" placeholder="Email" name="email" id="email" required="required">
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password" required="required">
+                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" required="required">
                     </div>
                     <div class="form-group small">
-                        <a href="#" class="forgot-link">Forgot Password?</a>
+                        <a href="" class="forgot-link">Forgot Password?</a>
                     </div> 
                     <input type="submit" class="btn btn-dark btn-block btn-lg" value="Login">              
                 </form>			

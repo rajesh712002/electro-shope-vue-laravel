@@ -24,7 +24,8 @@
         <section class=" section-10">
             <div class="container">
                 <div class="login-form">    
-                    <form action="/examples/actions/confirmation.php" method="post">
+                    <form action="{{route('userstore')}}" method="post">
+                        @csrf
                         <h4 class="modal-title">Register Now</h4><br>
                         <div>
                             <h5>Name</h5>
@@ -65,7 +66,7 @@
                         </div> <br>
                         <button type="submit" class="btn btn-dark btn-block btn-lg" value="Register">Register</button>
                     </form>			
-                    <div class="text-center small">Already have an account? <a href="{{route('login')}}">Login Now</a></div>
+                    <div class="text-center small">Already have an account? <a href="{{route('userlogin')}}">Login Now</a></div>
                 </div>
             </div>
         </section>
