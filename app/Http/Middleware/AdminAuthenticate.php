@@ -14,14 +14,13 @@ class AdminAuthenticate
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next,$usertype): Response
+    public function handle(Request $request, Closure $next,$guard): Response
     {
-        // if(Auth::guard('admin')->check()){
-        //     return redirect()->route('register');
-        // }
-    //     if(Auth::user()->role==$usertype){
+        
+      //  if(auth()->user()->type == $guard) {
             return $next($request);
-    //     }
-    //    return response()->json("You are not access.");
+        // }
+        // return response()->json(['You are not authorized to access this page.']);
+    
     }
 }

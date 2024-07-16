@@ -27,7 +27,7 @@ class HomeController extends Controller
     }
     public function userdesh()
     {
-        return view('user.deshboard');
+        return view('userdeshboard');
     }
     public function admindesh()
     {

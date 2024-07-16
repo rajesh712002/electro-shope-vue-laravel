@@ -8,24 +8,55 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminloginController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('admin.login');
     }
 
-     public function deshboard(){
+    public function deshboard()
+    {
         return view('admin.deshboard');
     }
 
     public function loginchk(Request $request)
     {
         $validate = $request->validate([
-            'email' => 'required|max:50',
-            'password' => 'required|min:3|max:30'
+            'email' => 'required|max:100',
+            'password' => 'required|min:8|max:50'
         ]);
 
-        if (Auth::attempt($validate)) {
-            return redirect()->route('admindeshboard');
+        if (Auth::guard('admin')->attempt($validate)) {
+            if (Auth::guard('admin')->user()->role == 2) {
+                return redirect()->route('admin.deshboard')->with('success', 'Welcome admin');
+            } else if (Auth::guard('admin')->user()->role != 2) {
+                return redirect()->route('admin.login')->with('success', 'Either Email or Password Incorrect');
+            }
+        } else {
+            return redirect()->route('admin.login')->with('success', 'Either Email or Password Incorrect');
         }
     }
-    
+
+    public function logout()
+    {
+        Auth::logout();
+        return view('admin.login');
+    }
+
+
+    public function users(){
+        return view('admin.userdata.user');
+    }
+
+    public function orders(){
+        return view('admin.userdata.orders');
+    }
+
+
+    public function pages(){
+        return view('admin.pages');
+    }
+
+    public function store_pages(){
+        return view('admin.create_page');
+    }
 }

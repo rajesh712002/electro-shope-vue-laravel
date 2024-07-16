@@ -22,9 +22,25 @@
 			  	</div>
 			  	<div class="card-body">
 					<p class="login-box-msg">Sign in to start your session</p>
-					<form action="{{route('adminckeck')}}" method="">
+					<form action="{{route('adminckeck')}}" method="post">
+						@csrf
+
+						<div class="row d-flex justify-content-center">
+                            @if (Session::has('success'))
+                                <div class="col-md-10">
+                                    <div class="alert alert-success">
+                                        {{ Session::get('success') }}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
 				  		<div class="input-group mb-3">
-							<input type="email" name="email" id="email" class="form-control" placeholder="Email">
+							<input type="email" name="email" id="email" class="@error('email') is-invalid
+                        @enderror form-control" placeholder="Email" value="{{ old('email') }}">
+						@error('email')
+                            <p class="invalid-feedback">{{ $message }}</p>
+                        @enderror
 							<div class="input-group-append">
 					  			<div class="input-group-text">
 									<span class="fas fa-envelope"></span>
@@ -32,7 +48,11 @@
 							</div>
 				  		</div>
 				  		<div class="input-group mb-3">
-							<input type="password" name="password" id="password" class="form-control" placeholder="Password">
+							<input type="password" name="password" id="password" class="@error('password') is-invalid
+                        @enderror form-control" placeholder="Password" value="{{ old('password') }}">
+						@error('password')
+                            <p class="invalid-feedback">{{ $message }}</p>
+                        @enderror
 							<div class="input-group-append">
 					  			<div class="input-group-text">
 									<span class="fas fa-lock"></span>

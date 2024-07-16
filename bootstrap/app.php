@@ -11,9 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-       $middleware->alias([
-        'user-access' => \App\Http\Middleware\AdminAuthenticate::class,
-       ]);
+    //   $middleware -> redirectTo(
+    //     guests:'/user/login',
+    //     users: '/user/deshboard'
+    //  );
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

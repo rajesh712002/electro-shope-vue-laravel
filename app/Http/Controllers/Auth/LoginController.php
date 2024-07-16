@@ -36,7 +36,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
+    //    $this->middleware('auth')->only('logout');
     }
     public function login(Request $request)
     {
@@ -47,10 +47,10 @@ class LoginController extends Controller
         //     'password' => 'required'
         // ]);
         // if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password']))) {
-        //     if (auth()->user()->role == 2) {
-        //         return redirect()->route('adminhome');
-        //     } else if (auth()->user()->role == 1) {
-        //         return redirect()->route('userhome');
+        //     if (auth()->user()->type == 'admin') {
+        //         return redirect()->route('admindeshboard');
+        //     } else {
+        //         return redirect()->route('userdeshboard');
         //     }
         // }
     }

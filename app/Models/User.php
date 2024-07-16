@@ -14,7 +14,6 @@ class User extends Authenticatable
 {
     
     use HasFactory, Notifiable;
-    protected $guard = 'admin';
 
     /**
      * The attributes that are mass assignable.
@@ -50,10 +49,10 @@ class User extends Authenticatable
         ];
     }
 
-    protected function role():Attribute
-    {
-        return new Attribute(
-            get:fn($value)=>[1,2][$value],
-        );
-    }
+    // protected function role():Attribute
+    // {
+    //     return new Attribute(
+    //         get:fn($value)=>[1,2][$value],
+    //     );
+    // }
 }
