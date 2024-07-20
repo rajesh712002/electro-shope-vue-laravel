@@ -4,9 +4,10 @@
 			<div class="col-md-4">
 				<div class="footer-card">
 					<h3>Get In Touch</h3>
-					<p>3006 Atlanta Mall,Surat,Gujarat,India <br>
-					electroshop@example.com <br>
-					9808237211</p>
+					<p>No dolore ipsum accusam no lorem. <br>
+					123 Street, New York, USA <br>
+					exampl@example.com <br>
+					000 000 0000</p>
 				</div>
 			</div>
 
@@ -40,19 +41,20 @@
 			<div class="row">
 				<div class="col-12 mt-3">
 					<div class="copy-right text-center">
-						<p>© Copyright 2024 Electro Shop. All Rights Reserved</p>
+						<p>Always Welcome </p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </footer>
-<script src="js/jquery-3.6.0.min.js"></script>
-<script src="js/bootstrap.bundle.5.1.3.min.js"></script>
-<script src="js/instantpages.5.1.0.min.js"></script>
-<script src="js/lazyload.17.6.0.min.js"></script>
-<script src="js/slick.min.js"></script>
-<script src="js/custom.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="{{asset('user_assets/js/bootstrap.bundle.5.1.3.min.js')}}"></script>
+<script src="{{asset('user_assets/js/custom.js')}}"></script>
+<script src="{{asset('user_assets/js/instantpages.5.1.0.min.js')}}"></script>
+<script src="{{asset('user_assets/js/jquery-3.6.0.min.js')}}"></script>
+<script src="{{asset('user_assets/js/lazyload.17.6.0.min.js')}}"></script>
+<script src="{{asset('user_assets/js/slick.min.js')}}"></script>
 <script>
 window.onscroll = function() {myFunction()};
 

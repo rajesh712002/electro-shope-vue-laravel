@@ -1,8 +1,14 @@
-@include('user.header');
+{{-- @include('user.includes.header'); --}}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    
+    <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/slick.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/slick-theme.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/video-js.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <meta charset="UTF-8">
@@ -15,10 +21,19 @@
 
     <main>
         <section class="section-5 pt-3 pb-3 mb-3 bg-white">
+            <header class="bg-dark">
+                <div class="container">
+                    <nav class="navbar navbar-expand-xl" id="navbar">
+
+                    </nav>
+                </div>
+            </header>
+
             <div class="container">
                 <div class="light-font">
                     <ol class="breadcrumb primary-color mb-0">
-                        <li class="breadcrumb-item"><a class="white-text" href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a class="white-text" href="{{ route('userdeshboard') }}">Home</a>
+                        </li>
                         <li class="breadcrumb-item">Login</li>
                     </ol>
                 </div>
@@ -42,20 +57,31 @@
 
                         <h4 class="modal-title">Login to Your Account</h4>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Email" name="email" id="email"
-                                required="required">
+                            <input type="email" name="email" id="email"
+                                class="@error('email') is-invalid
+                               @enderror form-control"
+                                    value="{{ old('email') }}" placeholder="Enter Email">
+                                @error('email')
+                                    <p class="invalid-feedback">{{ $message }}</p>
+                                @enderror
                         </div>
 
                         <div class="form-group">
-                            <input type="password" class="form-control" placeholder="Password" name="password"
-                                id="password" required="required">
+                            <input type="password" name="password" id="password"
+                                class="@error('password') is-invalid
+                                    @enderror form-control"
+                                        value="{{ old('password') }}" placeholder="Enter Password">
+                                        @error('password')
+                                            <p class="invalid-feedback">{{ $message }}</p>
+                                        @enderror
                         </div>
                         <div class="form-group small">
                             <a href="" class="forgot-link">Forgot Password?</a>
                         </div>
                         <input type="submit" class="btn btn-dark btn-block btn-lg" value="Login">
                     </form>
-                    <div class="text-center small">Don't have an account? <a href="register.php">Sign up</a></div>
+                    <div class="text-center small">Don't have an account? <a href="{{ route('register') }}">Sign up</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -64,4 +90,4 @@
 </body>
 
 </html>
-@include('user.footer');
+{{-- @include('user.includes.footer'); --}}

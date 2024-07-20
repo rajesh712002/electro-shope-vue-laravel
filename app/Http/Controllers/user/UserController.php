@@ -16,6 +16,11 @@ class UserController extends Controller
         return view('user.register');
     }
 
+    public function index()
+    {
+        return view('user.index');
+    }
+
     public function login()
     {
         return view('user.login');
@@ -65,15 +70,42 @@ class UserController extends Controller
         ]);
 
         if (Auth::attempt($validate)) {
-            return redirect()->route('userdeshboard');
+            if (Auth::guard('web')->user()->role == 1) {
+                return redirect()->route('userdeshboard');
+            } else {//else if (Auth::guard('web')->user()->role != 1) {
+                return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
+            }
         } else {
             return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
         }
     }
 
-    public function logout()
+    public function account()
+    {
+        return view('user.account');
+    }
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+ 
+        $request->session()->regenerateToken();
         return view('user.login');
+    }
+
+
+    public function view_cart()
+    {
+        return view('user.order.cart');
+    }
+
+    public function view_order()
+    {
+        return view('user.order.my_orders');
+    }
+
+    public function wishlist()
+    {
+        return view('user.order.wishlist');
     }
 }

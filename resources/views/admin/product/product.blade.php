@@ -12,7 +12,7 @@
                         <h1>Products</h1>
                     </div>
                     <div class="col-sm-6 text-right">
-                        <a href="{{ route('admin.store_prod') }}" class="btn btn-primary">New Product</a>
+                        <a href="{{ route('admin.create_prod') }}" class="btn btn-primary">New Product</a>
                     </div>
                 </div>
             </div>

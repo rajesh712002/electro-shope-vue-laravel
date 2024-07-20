@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AdminloginController extends Controller
 {
@@ -28,7 +29,8 @@ class AdminloginController extends Controller
         if (Auth::guard('admin')->attempt($validate)) {
             if (Auth::guard('admin')->user()->role == 2) {
                 return redirect()->route('admin.deshboard')->with('success', 'Welcome admin');
-            } else if (Auth::guard('admin')->user()->role != 2) {
+            }
+             else {//else if (Auth::guard('admin')->user()->role != 2) 
                 return redirect()->route('admin.login')->with('success', 'Either Email or Password Incorrect');
             }
         } else {
@@ -36,9 +38,14 @@ class AdminloginController extends Controller
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
+        
         Auth::logout();
+        $request->session()->invalidate();
+ 
+        $request->session()->regenerateToken();
+        
         return view('admin.login');
     }
 
@@ -48,7 +55,9 @@ class AdminloginController extends Controller
     }
 
     public function orders(){
+       
         return view('admin.userdata.orders');
+   
     }
 
 

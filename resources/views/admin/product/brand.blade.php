@@ -12,7 +12,7 @@
                     <h1>Brands</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="{{route('admin.store_brand')}}" class="btn btn-primary">New Brand</a>
+                    <a href="{{route('admin.create_brand')}}" class="btn btn-primary">New Brand</a>
                 </div>
             </div>
         </div>
