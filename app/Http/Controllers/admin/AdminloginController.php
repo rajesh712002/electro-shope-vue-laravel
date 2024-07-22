@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -51,7 +52,8 @@ class AdminloginController extends Controller
 
 
     public function users(){
-        return view('admin.userdata.user');
+        $users = User::all();
+        return view('admin.userdata.user',['users' => $users]);
     }
 
     public function orders(){

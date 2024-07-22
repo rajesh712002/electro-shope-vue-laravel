@@ -30,24 +30,27 @@
         <!-- Main content -->
         <section class="content">
             <!-- Default box -->
+            @include('admin.message')
             <div class="container-fluid">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-tools">
-                            <div class="input-group input-group" style="width: 250px;">
-                                <input type="text" name="table_search" class="form-control float-right"
-                                    placeholder="Search">
+                    <form method="GET">
+                        <div class="card-header">
+                            <div class="card-tools">
+                                <div class="input-group input-group" style="width: 250px;">
+                                    <input type="text" name="keyword" value="{{ Request::get('keyword') }}"
+                                        class="form-control float-right" placeholder="Search">
 
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap">
+                        {{-- <table class="table table-hover text-nowrap">
                             <thead>
                                 <tr>
                                     <th width="60">ID</th>
@@ -261,16 +264,69 @@
                                     </td>
                                 </tr>
                             </tbody>
+                        </table> --}}
+                        <table class="table table-hover text-nowrap" border="2">
+                            <tr>
+                                <th>SubCategory ID</th>
+                                <th>Category Name</th>
+                                {{-- <th>Image</th> --}}
+                                <th>SubCategory Name</th>
+                                <th>slug</th>
+                                <th>status</th>
+
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                 @if ($subcategory->isNotEmpty()) 
+                                    @foreach ($subcategory as $prod)
+                                        <td>{{ $prod->id }}</td>
+                                        <td>{{ $prod->name }}
+                                            {{-- $prod->subcate_id --}}
+
+
+                                        </td>
+                                        {{-- <td><img width="50" src="{{ asset('uploads/products/' . $prod->image) }}"
+                                                alt=""></td> --}}
+                                        <td>{{ $prod->subcate_name }}</td>
+                                        <td>{{ $prod->slug }}</td>
+                                        <td>
+                                            @if ($prod->status == 1)
+                                                <svg class="text-success-500 h-6 w-6 text-success" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                    aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            @else
+                                                <svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                                    stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                            @endif
+                                        </td>
+                                        {{-- <td>{{\Carbon\Carbon::parse($product->created_at)->format('d M, Y')}}</td> --}}
+                                        <td>
+                                            <a href="{{-- route('product.show',$prod->prod_id) --}}" class="btn btn-success ">Show</a>
+                                            <a href="{{ route('admin.edit_subcate',$prod->prod_id) }}" class="btn btn-primary">Update</a>
+                                            <a href="#" onclick="deleteProduct({{-- $prod->prod_id --}});"
+                                                class="btn btn-danger">Delete</a>
+                                            {{-- <form id="delete-product-form-{{ $prod->prod_id }}" method="post"
+                                                action="{{ route('product.destroy', $prod->prod_id) }}">
+                                                @csrf
+                                                @method('delete')
+                                                <script src="{{asset('assets/js/ajx.js')}}"></script>
+                                            </form> --}}
+                            <tr></tr>
+                            @endforeach
+                          @endif 
+                            </tr>
                         </table>
                     </div>
                     <div class="card-footer clearfix">
-                        <ul class="pagination pagination m-0 float-right">
-                            <li class="page-item"><a class="page-link" href="#">«</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">»</a></li>
-                        </ul>
+                        {{ $subcategory->links() }}
                     </div>
                 </div>
             </div>

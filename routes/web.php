@@ -1,13 +1,15 @@
 <?php
 
+
+use App\Http\Middleware\ValidUser;
 use App\Http\Middleware\ValidAdmin;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
-use App\Http\Middleware\ValidUser;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,12 +57,25 @@ Route::middleware([ValidAdmin::class])->group(function () {
     Route::get('/admin/pages', [AdminloginController::class, 'store_pages'])->name('admin.store_pages');
 
     Route::get('/admin/category', [CategoryController::class, 'category'])->name('admin.category');
+//Insert Category
     Route::get('/admin/createcategories', [CategoryController::class, 'create_cat'])->name('admin.create_cat');
     Route::post('/admin/categories', [CategoryController::class, 'store_cat'])->name('admin.store_cat');
+//Update Category
+    Route::get('/admin/{category}/edit', [CategoryController::class, 'edit_cat'])->name('admin.edit_cat');
+    Route::put('/admin/{category}', [CategoryController::class, 'update_cat'])->name('admin.update_cat');
+//Delete Category
+    Route::delete('/admin/{category}', [CategoryController::class, 'destroy_cat'])->name('admin.destroy_cat');
+
 
     Route::get('/admin/subcategory', [CategoryController::class, 'view_subcategory'])->name('admin.subcategory');
+//Insert SubCategory
     Route::get('/admin/createsubcategories', [CategoryController::class, 'create_subcat'])->name('admin.create_subcat');
     Route::post('/admin/storesubcategory', [CategoryController::class, 'store_subcat'])->name('admin.store_subcat');
+//Update SubCategory
+    Route::get('/admin/updatesubcategories/{subcategory}', [CategoryController::class, 'edit_subcate'])->name('admin.edit_subcate');
+    Route::put('/admin/storesubcategory/{subcategory}', [CategoryController::class, 'update_subcate'])->name('admin.update_subcate');
+//Delete SubCategory
+
 
     Route::get('/admin/product', [ProductController::class, 'product'])->name('admin.product');
     Route::get('/admin/createproducts', [ProductController::class, 'create_prod'])->name('admin.create_prod');
