@@ -32,7 +32,7 @@
             <!-- Default box -->
 
             <div class="container-fluid">
-                <form action="{{ route('admin.store_cat') }}" id="CategoryForm" name="CategoryForm">
+                <form action="{{ route('admin.store_cat') }}" id="CategoryForm" name="CategoryForm" enctype="multipart/form-data">
                     {{-- @csrf --}}
                     <div class="card">
                         <div class="card-body">
@@ -51,6 +51,15 @@
                                         <label for="slug">Slug</label>
                                         <input type="text" name="slug" id="slug" class=" form-control"
                                             value="{{ old('slug') }}" placeholder="Slug">
+                                        <h6 style="color: red" class="error"></h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label " for="image">Photo </label>
+                                        <input type="file" name="image" id="image"
+                                            class=" form-control form-control-lg " value="{{ old('image') }}">
+
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>

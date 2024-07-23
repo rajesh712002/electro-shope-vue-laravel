@@ -75,16 +75,24 @@ Route::middleware([ValidAdmin::class])->group(function () {
     Route::get('/admin/updatesubcategories/{subcategory}', [CategoryController::class, 'edit_subcate'])->name('admin.edit_subcate');
     Route::put('/admin/storesubcategory/{subcategory}', [CategoryController::class, 'update_subcate'])->name('admin.update_subcate');
 //Delete SubCategory
+    Route::delete('/admin/deletesubcategory/{subcategory}', [CategoryController::class, 'destroy_subcat'])->name('admin.destroy_subcat');
 
 
-    Route::get('/admin/product', [ProductController::class, 'product'])->name('admin.product');
-    Route::get('/admin/createproducts', [ProductController::class, 'create_prod'])->name('admin.create_prod');
-    Route::post('/admin/products', [ProductController::class, 'store_prod'])->name('admin.store_prod');
-
+    
     Route::get('/admin/brand', [ProductController::class, 'brand'])->name('admin.brand');
+ //Insert Brand
     Route::get('/admin/createbrand', [ProductController::class, 'create_brand'])->name('admin.create_brand');
     Route::post('/admin/brands', [ProductController::class, 'store_brand'])->name('admin.store_brand');
+//Update Brand
+    Route::get('/admin/editbrand/{brand}', [ProductController::class, 'edit_brand'])->name('admin.edit_brand');
+    Route::post('/admin/updatebrand/{brand}', [ProductController::class, 'update_brand'])->name('admin.update_brand');
+//Delete Brand
+    Route::delete('/admin/deletebrand/{brand}', [ProductController::class, 'destroy_brand'])->name('admin.destroy_brand');
 
+
+Route::get('/admin/product', [ProductController::class, 'product'])->name('admin.product');
+Route::get('/admin/createproducts', [ProductController::class, 'create_prod'])->name('admin.create_prod');
+Route::post('/admin/products', [ProductController::class, 'store_prod'])->name('admin.store_prod');
 
     //User Data
     Route::get('/admin/users', [AdminloginController::class, 'users'])->name('admin.users');

@@ -33,7 +33,7 @@
             </div>
             <!-- Default box -->
             <div class="container-fluid">
-                <form action="{{ route('admin.store_subcat') }}" id="SubCategoryForm" name="SubCategoryForm">
+                <form action="{{ route('admin.store_subcat') }}" id="SubCategoryForm" name="SubCategoryForm" enctype="multipart/form-data">
                     @method('post')
                     @csrf
                     <div class="card">
@@ -70,7 +70,15 @@
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label " for="image">Photo </label>
+                                        <input type="file" name="image" id="image"
+                                            class=" form-control form-control-lg " value="{{ old('image') }}">
 
+                                        <h6 style="color: red" class="error"></h6>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="status">Status</label>

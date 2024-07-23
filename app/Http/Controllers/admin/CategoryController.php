@@ -54,15 +54,15 @@ class CategoryController extends Controller
         $category->slug = $request->slug;
         $category->status = $request->status;
         //store Image
-        // $image = $request->image;
-        // $ext = $image->Extension();
-        // $imagename = time() . '.' . $ext;
-        // $image->move(public_path('uploads/products'), $imagename);
-        // $category->image = $imagename;
+        $image = $request->image;
+        $ext = $image->Extension();
+        $imagename = time() . '.' . $ext;
+        $image->move(public_path('admin_assets/images'), $imagename);
+        $category->image = $imagename;
 
         $category->save();
 
-        return response()->json(['success' => 'Item Inserted successfully']);
+        return response()->json(['success' => 'Catagory Inserted successfully']);
     }
 
 
@@ -81,7 +81,7 @@ class CategoryController extends Controller
     public function update_cat($id, Request $request)
     {
         $category = Category::findOrFail($id);
-        // File::delete(public_path('admin_assets/images/' . $category->image));
+         File::delete(public_path('admin_assets/images/' . $category->image));
         //Validation 
         $rules = [
             'name' => 'required|max:50',
@@ -102,15 +102,15 @@ class CategoryController extends Controller
         $category->slug = $request->slug;
         $category->status = $request->status;
         //store Image
-        // $image = $request->image;
-        // $ext = $image->Extension();
-        // $imagename = time() . '.' . $ext;
-        // $image->move(public_path('admin_assets/images'), $imagename);
-        // $category->image = $imagename;
+        $image = $request->image;
+        $ext = $image->Extension();
+        $imagename = time() . '.' . $ext;
+        $image->move(public_path('admin_assets/images'), $imagename);
+        $category->image = $imagename;
 
         $category->save();
 
-        return response()->json(['message' => 'Item Updated successfully']);
+        return response()->json(['success' => 'Catagory Updated successfully']);
     }
 
 
@@ -119,11 +119,11 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        //File::delete(public_path('admin_assets/images/' . $category->image));
+        File::delete(public_path('admin_assets/images/' . $category->image));
 
         $category->delete();
-        return response()->json(['message' => 'Item Deleted successfully']);
-        //return redirect()->route('admin.category.categories')->with('success', 'Product Deleted Successfully');
+        //return response()->json(['message' => 'Item Deleted successfully']);
+     return redirect()->route('admin.category')->with('success', 'SubCatagory Deleted Successfully');
     }
 
 
@@ -176,15 +176,15 @@ class CategoryController extends Controller
         $subcategory->slug = $request->slug;
         $subcategory->status = $request->status;
         //store Image
-        // $image = $request->image;
-        // $ext = $image->Extension();
-        // $imagename = time() . '.' . $ext;
-        // $image->move(public_path('admin_assets/images'), $imagename);
-        // $subcategory->image = $imagename;
+        $image = $request->image;
+        $ext = $image->Extension();
+        $imagename = time() . '.' . $ext;
+        $image->move(public_path('admin_assets/images'), $imagename);
+        $subcategory->image = $imagename;
 
         $subcategory->save();
+        return response()->json(['success' => 'SubCatagory Inserted successfully']);
 
-        return redirect()->route('admin.create_subcat')->with('success', 'SubCategory Added Successfully');
     }
 
 
@@ -193,14 +193,14 @@ class CategoryController extends Controller
 
     public function edit_subcate($id){
         $options = Category::pluck('name', 'id');
-        $category = Subcategory::findOrFail($id);
-        return view('admin.category.update-subcategory',[$id], compact('options'));
+        $subcategory = Subcategory::findOrFail($id);
+        return view('admin.category.update-subcategory',compact('options','subcategory'));
     }
 
     public function update_subcate($id,Request $request){
 
         $subcategory = Subcategory::findOrFail($id);
-        // File::delete(public_path('admin_assets/images/' . $subcategory->image));
+         File::delete(public_path('admin_assets/images/' . $subcategory->image));
         $rules = [
             'category' => 'required|max:50',
             'name' => 'required|max:50',
@@ -221,14 +221,29 @@ class CategoryController extends Controller
         $subcategory->slug = $request->slug;
         $subcategory->status = $request->status;
         //store Image
-        // $image = $request->image;
-        // $ext = $image->Extension();
-        // $imagename = time() . '.' . $ext;
-        // $image->move(public_path('admin_assets/images'), $imagename);
-        // $subcategory->image = $imagename;
+        $image = $request->image;
+        $ext = $image->Extension();
+        $imagename = time() . '.' . $ext;
+        $image->move(public_path('admin_assets/images'), $imagename);
+        $subcategory->image = $imagename;
 
         $subcategory->save();
+
+        return response()->json(['success' => 'SubCatagory Updated successfully']);
+
     }
 
+    //Delete Sub Category
+
+    public function destroy_subcat($id)
+    {
+        $subcategory = Subcategory::findOrFail($id);
+
+        File::delete(public_path('admin_assets/images/' . $subcategory->image));
+
+        $subcategory->delete();
+        //return response()->json(['message' => 'Item Deleted successfully']);
+     return redirect()->route('admin.subcategory')->with('success', 'SubCatagory Deleted Successfully');
+    }
 
 }
