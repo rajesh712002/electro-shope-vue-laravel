@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Validator;
 class CategoryController extends Controller
 {
 
+    //CATEGORY ===============================================================================================================================================
+
     public function category(Request $request)
     {
         $category = Category::latest();
@@ -81,7 +83,7 @@ class CategoryController extends Controller
     public function update_cat($id, Request $request)
     {
         $category = Category::findOrFail($id);
-         File::delete(public_path('admin_assets/images/' . $category->image));
+        File::delete(public_path('admin_assets/images/' . $category->image));
         //Validation 
         $rules = [
             'name' => 'required|max:50',
@@ -123,25 +125,26 @@ class CategoryController extends Controller
 
         $category->delete();
         //return response()->json(['message' => 'Item Deleted successfully']);
-     return redirect()->route('admin.category')->with('success', 'SubCatagory Deleted Successfully');
+        return redirect()->route('admin.category')->with('success', 'SubCatagory Deleted Successfully');
     }
 
 
 
 
 
-
+    //SUB-CATEGORY ========================================================================================================================================
 
     public function view_subcategory(Request $request)
     {
-       //  $subcategory = Subcategory::select('subcategories.*','categories.name as name')->latest('subcategories.id')->leftJoin('categories','categories.id','subcategories.subcate_id');
-        $subcategory = Subcategory::with('category')->latest();
+        //  $subcategory = Subcategory::select('subcategories.*','categories.name as name')->latest('subcategories.id')->leftJoin('categories','categories.id','subcategories.subcate_id');
+        $subcategory = Subcategory::with('category')->get();
+        // dd($subcategory->toArray());
         if (!empty($request->get('keyword'))) {
             $subcategory = $subcategory->where('subcate_name', 'like', '%' . $request->get('keyword') . '%');
             $subcategory = $subcategory->paginate(100);
             return view('admin.category.subcategory', ['subcategory' => $subcategory]);
         } else {
-            
+
             $subcategory = Subcategory::with('category')->paginate(5);
             return view('admin.category.subcategory', compact('subcategory'));
         }
@@ -151,7 +154,7 @@ class CategoryController extends Controller
     {
         // $cat = Category::all();
         // return view('admin.category.create_subcategory', ['cat' => $cat]); //['cat'=>$cat]);
-        $options = Category::pluck('name', 'id');
+        $options = Category::where('status', 1)->pluck('name', 'id');
         return view('admin.category.create_subcategory', compact('options'));
     }
     public function store_subcat(Request $request)
@@ -184,23 +187,24 @@ class CategoryController extends Controller
 
         $subcategory->save();
         return response()->json(['success' => 'SubCatagory Inserted successfully']);
-
     }
 
 
     //UPDATE 
 
 
-    public function edit_subcate($id){
-        $options = Category::pluck('name', 'id');
+    public function edit_subcate($id)
+    {
+        $options = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::findOrFail($id);
-        return view('admin.category.update-subcategory',compact('options','subcategory'));
+        return view('admin.category.update-subcategory', compact('options', 'subcategory'));
     }
 
-    public function update_subcate($id,Request $request){
+    public function update_subcate($id, Request $request)
+    {
 
         $subcategory = Subcategory::findOrFail($id);
-         File::delete(public_path('admin_assets/images/' . $subcategory->image));
+        File::delete(public_path('admin_assets/images/' . $subcategory->image));
         $rules = [
             'category' => 'required|max:50',
             'name' => 'required|max:50',
@@ -215,7 +219,7 @@ class CategoryController extends Controller
             //return redirect()->route('admin.create_subcat')->withInput()->withErrors($validator);
             return response()->json(['errors' => $validator->errors()], 422);
         }
-       
+
         $subcategory->subcate_id = $request->category;
         $subcategory->subcate_name = $request->name;
         $subcategory->slug = $request->slug;
@@ -230,8 +234,8 @@ class CategoryController extends Controller
         $subcategory->save();
 
         return response()->json(['success' => 'SubCatagory Updated successfully']);
-
     }
+
 
     //Delete Sub Category
 
@@ -243,7 +247,20 @@ class CategoryController extends Controller
 
         $subcategory->delete();
         //return response()->json(['message' => 'Item Deleted successfully']);
-     return redirect()->route('admin.subcategory')->with('success', 'SubCatagory Deleted Successfully');
+        return redirect()->route('admin.subcategory')->with('success', 'SubCatagory Deleted Successfully');
     }
 
+//Get Category wise Sub Category
+
+    public function getCategories()
+    {
+        $category = Category::get();
+        return response()->json($category);
+    }
+
+    public function getSubcategories($id)
+    {
+        $subcategory = Subcategory::where('subcate_id', $id)->get();
+        return response()->json($subcategory);
+    }
 }

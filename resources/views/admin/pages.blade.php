@@ -59,7 +59,7 @@
                                     </svg>
                                 </td>
                                 <td>
-                                    <a href="#">
+                                    <a href="{{route('aboutus')}}">
                                         <svg class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                         </svg>
@@ -117,8 +117,8 @@
                             </tr>
                             <tr>
                                 <td>4</td>
-                                <td>Refund Policy</td>
-                                <td>refund-policy</td>
+                                <td>Contact-Us</td>
+                                <td>contact-us</td>
                                 <td>
                                     <svg class="text-success-500 h-6 w-6 text-success" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>

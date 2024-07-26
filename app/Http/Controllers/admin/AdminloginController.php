@@ -70,4 +70,12 @@ class AdminloginController extends Controller
     public function store_pages(){
         return view('admin.create_page');
     }
+
+    public function aboutus(){
+        return view('admin.userdata.contact-us');
+    }
+
+    public function straboutus(){
+       
+    }
 }

@@ -1,4 +1,6 @@
 @extends('admin.layouts.app')
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
 
 
 @section('content')
@@ -21,7 +23,8 @@
         <!-- Main content -->
         <section class="content">
             <!-- Default box -->
-            <form action="{{ route('admin.store_prod') }}" method="POST">
+            <form action="{{ route('admin.store_prod') }}" method="POST" id="ProductForm" name="ProductForm"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="container-fluid">
                     <div class="row">
@@ -32,25 +35,27 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="name">Name</label>
-                                                <input type="text" name="name" id="name"
-                                                    class="@error('name') is-invalid
-                                                        @enderror form-control"
+                                                <input type="text" name="name" id="name" class=" form-control"
                                                     value="{{ old('name') }}" placeholder="Product Name">
-                                                @error('name')
-                                                    <p class="invalid-feedback">{{ $message }}</p>
-                                                @enderror
+
+                                                <h6 style="color: red" class="error"></h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label for="slug">Slug</label>
+                                                <input type="text" name="slug" id="slug" class=" form-control"
+                                                    value="{{ old('slug') }}" placeholder="Slug">
+                                                <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="description">Description</label>
                                                 <textarea name="description" id="description" cols="30" rows="10" value="{{ old('name') }}"
-                                                    class="@error('description') is-invalid
-                                                        @enderror summernote"
-                                                    placeholder="Description"></textarea>
-                                                @error('description')
-                                                    <p class="invalid-feedback">{{ $message }}</p>
-                                                @enderror
+                                                    class=" summernote" placeholder="Description"></textarea>
+
+                                                <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -61,12 +66,9 @@
                                     <h2 class="h4 mb-3">Image</h2>
                                     <div id="image" class="dropzone dz-clickable">
                                         <input type="file" name="image" id="image"
-                                            class="@error('image') is-invalid
-                                        @enderror form-control form-control-lg "
-                                            value="{{ old('image') }}">
-                                        @error('image')
-                                            <p class="invalid-feedback">{{ $message }}</p>
-                                        @enderror
+                                            class=" form-control form-control-lg " value="{{ old('image') }}">
+
+                                        <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
 
@@ -79,13 +81,10 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="price">Price</label>
-                                                <input type="text" name="price" id="price"
-                                                    class="@error('price') is-invalid
-                                                      @enderror form-control"
+                                                <input type="text" name="price" id="price" class=" form-control"
                                                     placeholder="Price" value="{{ old('price') }}">
-                                                @error('price')
-                                                    <p class="invalid-feedback">{{ $message }}</p>
-                                                @enderror
+
+                                                <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -109,22 +108,13 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="sku">SKU (Stock Keeping Unit)</label>
-                                                <input type="text" name="sku" id="sku"
-                                                    class="@error('sku') is-invalid
-                                                        @enderror form-control"
+                                                <input type="text" name="sku" id="sku" class=" form-control"
                                                     value="{{ old('sku') }}" placeholder="sku">
-                                                @error('sku')
-                                                    <p class="invalid-feedback">{{ $message }}</p>
-                                                @enderror
+
+                                                <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="barcode">Barcode</label>
-                                                <input type="text" name="barcode" id="barcode" class="form-control"
-                                                    placeholder="Barcode">
-                                            </div>
-                                        </div>
+
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <div class="custom-control custom-checkbox">
@@ -132,11 +122,13 @@
                                                         name="track_qty" checked>
                                                     <label for="track_qty" class="custom-control-label">Track
                                                         Quantity</label>
+
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <input type="number" min="0" name="qty" id="qty"
                                                     class="form-control" placeholder="Qty">
+                                                <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -152,6 +144,7 @@
                                             <option value="1">Active</option>
                                             <option value="0">Block</option>
                                         </select>
+                                        <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
                             </div>
@@ -160,23 +153,25 @@
                                     <h2 class="h4  mb-3">Product category</h2>
                                     <div class="mb-3">
                                         <label for="category">Category</label>
-                                        <select name="category" id="category" class="@error('category') is-invalid
-                                                        @enderror form-control">
-                                            <option value="">Electronics</option>
-                                            <option value="">Clothes</option>
-                                            <option value="">Furniture</option>
+
+                                        <select name="category" id="category" class="form-control">
+                                            <option value="">---select---</option>
+
+                                            @foreach ($category as $key => $value)
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
                                         </select>
-                                        @error('category')
-                                                    <p class="invalid-feedback">{{ $message }}</p>
-                                                @enderror
+                                        <h6 style="color: red" class="error"></h6>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="category">Sub category</label>
+                                        <label for="sub_category">Sub category</label>
                                         <select name="sub_category" id="sub_category" class="form-control">
-                                            <option value="">Mobile</option>
-                                            <option value="">Home Theater</option>
-                                            <option value="">Headphones</option>
+                                            <option value="">---select---</option>
+                                            @foreach ($subcategory as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
                                         </select>
+
                                     </div>
                                 </div>
                             </div>
@@ -184,27 +179,17 @@
                                 <div class="card-body">
                                     <h2 class="h4 mb-3">Product brand</h2>
                                     <div class="mb-3">
-                                        <select name="status" id="status" class="form-control">
-                                            <option value="">Apple</option>
-                                            <option value="">Vivo</option>
-                                            <option value="">HP</option>
-                                            <option value="">Samsung</option>
-                                            <option value="">DELL</option>
+                                        <select name="brand" id="brand" class="form-control">
+                                            <option value="">---select---</option>
+
+                                            @foreach ($brand as $key => $value)
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h2 class="h4 mb-3">Featured product</h2>
-                                    <div class="mb-3">
-                                        <select name="status" id="status" class="form-control">
-                                            <option value="0">No</option>
-                                            <option value="1">Yes</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 

@@ -24,6 +24,7 @@
             <div class="container-fluid">
                 <form method="POST" action="{{ route('admin.update_brand',$brand->id) }}" name="UpdateBrandForm" id="UpdateBrandForm" enctype="multipart/form-data">
                     @csrf
+                    @method('put')
                     <div class="card">
                         <div class="card-body">
                             <div class="row">

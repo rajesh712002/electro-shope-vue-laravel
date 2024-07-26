@@ -62,7 +62,8 @@
                                             <option value="1">Active</option>
                                             <option value="0">Block</option>
                                         </select>
-                                        <h6 style="color: rgb(255, 0,0)" class="error"></h6>
+                                        <h6 style="color: red" class="error"></h6>
+
 
                                     </div>
                                 </div>

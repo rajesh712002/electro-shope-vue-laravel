@@ -108,6 +108,9 @@ $(document).ready(function () {
     });
 });
 
+//=======//==============//=====================//=========================//=================================================//
+//=======//==============//=====================//=========================//=================================================//
+
 //Ajax For SubCategory
 
 //For Insert SubCategory
@@ -192,6 +195,9 @@ $(document).ready(function () {
 
 //For DELETE SubCategory
 
+//=======//==============//=====================//=========================//=================================================//
+//=======//==============//=====================//=========================//=================================================//
+
 //Ajax For Brand
 
 //For Insert Brand
@@ -241,7 +247,7 @@ $(document).ready(function () {
         e.preventDefault();
         var data = new FormData($(this)[0]);
         let csrfToken = $('meta[name="csrf-token"]').attr("content");
-        console.log(data);
+        //  console.log(data);
         var url = $(this).attr("action");
 
         $.ajax({
@@ -273,3 +279,137 @@ $(document).ready(function () {
         });
     });
 });
+
+//=======//==============//=====================//=========================//=================================================//
+//=======//==============//=====================//=========================//=================================================//
+
+//For Product Insert
+
+$(document).ready(function () {
+    $("#ProductForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                //$("#ProductForm")[0].reset();
+                alert(response.success);
+                window.location.href = "/admin/product";
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    $.each(errors, function (key, value) {
+                        $('[name="' + key + '"]')
+                            .parent()
+                            .find(".error, .error_no_margin")
+                            .text("** " + value[0] + "!");
+                    });
+                }
+            },
+        });
+    });
+});
+
+//For product Update
+
+$(document).ready(function () {
+    $("#UpdateProductForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                //$("#UpdateProductForm")[0].reset();
+                alert(response.success);
+                window.location.href = "/admin/product";
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    $.each(errors, function (key, value) {
+                        $('[name="' + key + '"]')
+                            .parent()
+                            .find(".error, .error_no_margin")
+                            .text("** " + value[0] + "!");
+                    });
+                }
+            },
+        });
+    });
+});
+
+//
+
+//$(document).ready(function () {
+    // $.ajax({
+    //     url: "/admin/getcategories",
+    //     type: "GET",
+    //     dataType: "json",
+    //     success: function (data) {
+    //         $("#category").empty();
+    //         $("#category").append('<option value="">Select Category</option>');
+    //         $.each(data, function (key, value) {
+    //             $("#category").append(
+    //                 '<option value="' +
+    //                     value.id +
+    //                     '">' +
+    //                     value.name +
+    //                     "</option>"
+    //             );
+    //         });
+    //     },
+    // });
+
+//     $("#category").on('change',function () {
+//         var category_id = $(this).val();
+//         $('#sub_category').html('');
+//         // if (category_id) {
+//             $.ajax({
+//                 url: "/admin/getsubcategories/" + category_id,
+//                 type: "GET",
+//                 dataType: "json",
+//                 success: function (data) {
+//                     $("#sub_category").empty();
+//                     $("#sub_category").append(
+//                         '<option value="">Select Subcategory</option>'
+//                     );
+//                     $.each(data, function (key, value) {
+//                         $("#sub_category").append(
+//                             '<option value="' + value.id +'">' + value.subcate_name + "</option>"
+//                         );
+//                     });
+                    
+//                     // $('#sub_category').html('<option value="">Select State</option>');
+//                     // $.each(data, function(key, value) {
+//                     //     $('#sub_category').append('<option value="'+value.id+'">'+value.subcate_name+'</option>');
+//                     // });
+//                 },
+//             });
+//        // }
+//     });
+// });
