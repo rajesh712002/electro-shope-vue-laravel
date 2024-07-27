@@ -15,12 +15,29 @@ use function Laravel\Prompts\alert;
 
 class ProductController extends Controller
 {
-    public function product()
+    public function product(Request $request)
     {
+        // $brand = Brand::latest();
+        // if (!empty($request->get('keyword'))) {
+        //     $brand = $brand->where('name', 'like', '%' . $request->get('keyword') . '%');
+        //     $brand = $brand->paginate(100);
+        //     return view('admin.product.brand', ['brand' => $brand]);
+        // } else {
+        //     $brand = $brand->paginate(5);
+        //     return view('admin.product.brand', ['brand' => $brand]);
+        // }
+
         $product = Product::with('sub_category', 'brand', 'categorys')->get();
         // dd($product->toArray());
-
-        return view('admin.product.product', compact('product'));
+        if (!empty($request->get('keyword'))) {
+                 $product = $product->where('prod_name', 'like', '%' . $request->get('keyword') . '%');
+                $product = Product::with('sub_category', 'brand', 'categorys')->paginate(100);
+                return view('admin.product.product', compact('product'));
+            } else {
+                $product = Product::with('sub_category', 'brand', 'categorys')->paginate(7);
+                return view('admin.product.product', compact('product'));
+            }
+//        return view('admin.product.product', compact('product'));
     }
 
     public function create_prod()

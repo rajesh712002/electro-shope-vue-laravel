@@ -183,9 +183,9 @@
                                         <select name="sub_category" id="sub_category" class="form-control">
                                             <option value="">---select---</option>
                                             
-                                            @foreach ($subcategory as $key => $value)
+                                            {{-- @foreach ($subcategory as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
-                                            @endforeach
+                                            @endforeach --}}
                                         </select>
                                         
                                     </div>

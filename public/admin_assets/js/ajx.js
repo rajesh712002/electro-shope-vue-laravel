@@ -136,7 +136,7 @@ $(document).ready(function () {
             success: function (response) {
                 $("#SubCategoryForm")[0].reset();
                 alert(response.success);
-                window.location.href = "/admin/subcategory";
+                window.location.href = "/admin/createsubcategories";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
@@ -221,9 +221,9 @@ $(document).ready(function () {
             data: data,
 
             success: function (response) {
-                //$("#BrandForm")[0].reset();
+                $("#BrandForm")[0].reset();
                 alert(response.success);
-                window.location.href = "/admin/brand";
+                window.location.href = "/admin/createbrand";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
@@ -304,9 +304,9 @@ $(document).ready(function () {
             data: data,
 
             success: function (response) {
-                //$("#ProductForm")[0].reset();
+                $("#ProductForm")[0].reset();
                 alert(response.success);
-                window.location.href = "/admin/product";
+                window.location.href = "/admin/createproducts";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
@@ -365,7 +365,7 @@ $(document).ready(function () {
 
 //
 
-//$(document).ready(function () {
+$(document).ready(function () {
     // $.ajax({
     //     url: "/admin/getcategories",
     //     type: "GET",
@@ -385,31 +385,31 @@ $(document).ready(function () {
     //     },
     // });
 
-//     $("#category").on('change',function () {
-//         var category_id = $(this).val();
-//         $('#sub_category').html('');
-//         // if (category_id) {
-//             $.ajax({
-//                 url: "/admin/getsubcategories/" + category_id,
-//                 type: "GET",
-//                 dataType: "json",
-//                 success: function (data) {
-//                     $("#sub_category").empty();
-//                     $("#sub_category").append(
-//                         '<option value="">Select Subcategory</option>'
-//                     );
-//                     $.each(data, function (key, value) {
-//                         $("#sub_category").append(
-//                             '<option value="' + value.id +'">' + value.subcate_name + "</option>"
-//                         );
-//                     });
+    $("#category").on('change',function () {
+        var category_id = $(this).val();
+        $('#sub_category').html('');
+        // if (category_id) {
+            $.ajax({
+                url: "/admin/getsubcategories/" + category_id,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#sub_category").empty();
+                    $("#sub_category").append(
+                        '<option value="">---Select Subcategory---</option>'
+                    );
+                    $.each(data, function (key, value) {
+                        $("#sub_category").append(
+                            '<option value="' + value.id +'">' + value.subcate_name + "</option>"
+                        );
+                    });
                     
-//                     // $('#sub_category').html('<option value="">Select State</option>');
-//                     // $.each(data, function(key, value) {
-//                     //     $('#sub_category').append('<option value="'+value.id+'">'+value.subcate_name+'</option>');
-//                     // });
-//                 },
-//             });
-//        // }
-//     });
-// });
+                    // $('#sub_category').html('<option value="">Select State</option>');
+                    // $.each(data, function(key, value) {
+                    //     $('#sub_category').append('<option value="'+value.id+'">'+value.subcate_name+'</option>');
+                    // });
+                },
+            });
+       // }
+    });
+});

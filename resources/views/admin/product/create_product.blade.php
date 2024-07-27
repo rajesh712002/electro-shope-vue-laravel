@@ -167,9 +167,9 @@
                                         <label for="sub_category">Sub category</label>
                                         <select name="sub_category" id="sub_category" class="form-control">
                                             <option value="">---select---</option>
-                                            @foreach ($subcategory as $key => $value)
+                                            {{-- @foreach ($subcategory as $key => $value)
                                             <option value="{{ $key }}">{{ $value }}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                         </select>
 
                                     </div>
@@ -205,3 +205,4 @@
     </div>
     <!-- /.content-wrapper -->
 @endsection
+<script src="{{ asset('admin_assets/js/ajx.js') }}"></script>
