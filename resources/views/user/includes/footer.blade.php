@@ -4,10 +4,10 @@
 			<div class="col-md-4">
 				<div class="footer-card">
 					<h3>Get In Touch</h3>
-					<p>No dolore ipsum accusam no lorem. <br>
-					123 Street, New York, USA <br>
-					exampl@example.com <br>
-					000 000 0000</p>
+					<p> <br>
+					123 feet Rind Road, Ahmedabad, India <br>
+					electro2024@gamil.com <br>
+					980 823 7221</p>
 				</div>
 			</div>
 
@@ -15,8 +15,8 @@
 				<div class="footer-card">
 					<h3>Important Links</h3>
 					<ul>
-						<li><a href="about-us.php" title="About">About</a></li>
-						<li><a href="contact-us.php" title="Contact Us">Contact Us</a></li>						
+						<li><a href="#" title="About">About</a></li>
+						<li><a href="#" title="Contact Us">Contact Us</a></li>						
 						<li><a href="#" title="Privacy">Privacy</a></li>
 						<li><a href="#" title="Privacy">Terms & Conditions</a></li>
 						<li><a href="#" title="Privacy">Refund Policy</a></li>

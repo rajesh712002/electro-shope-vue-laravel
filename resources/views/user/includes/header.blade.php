@@ -41,7 +41,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/slick.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/slick-theme.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/video-js.css') }}">
-    <link rel="stylesheet" type="text/css" href="css/style.css?v=<?php echo rand(111, 999); ?>" />
+    {{-- <link rel="stylesheet" type="text/css" href="css/style.css?v=<?php echo rand(111, 999); ?>" /> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,7 +61,7 @@
         <div class="container">
             <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
                 <div class="col-lg-4 logo">
-                    <a href="{{route('userindex')}}" class="text-decoration-none">
+                    <a href="{{ route('userindex') }}" class="text-decoration-none">
                         <span class="h2 text-uppercase text-primary bg-dark px-2">ELECTRO</span>
                         <span class="h2 text-uppercase text-dark bg-primary px-2 ml-n1">SHOP</span>
                     </a>
@@ -99,21 +100,29 @@
                         <!-- <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="index.php" title="Products">Home</a>
         </li> -->
-
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Electronics
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item nav-link" href="#">Mobile</a></li>
-                                <li><a class="dropdown-item nav-link" href="#">Tablets</a></li>
-                                <li><a class="dropdown-item nav-link" href="#">Laptops</a></li>
-                                <li><a class="dropdown-item nav-link" href="#">Speakers</a></li>
-                                <li><a class="dropdown-item nav-link" href="#">Watches</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
+        
+                        @if (getcategory()->isNotEmpty())
+                        
+                            @foreach (getcategory() as $category)
+                            @if($category->status == 1)
+                                <li class="nav-item dropdown">
+                                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        {{-- @dd($category) --}}
+                                        {{$category->name}}
+                                    </button>
+                                    @if($category->subcategory->isNotEmpty())
+                                    <ul class="dropdown-menu dropdown-menu-dark">
+                                      @foreach($category->subcategory as $subcategory)
+                                        <li><a class="dropdown-item nav-link" href="#">{{$subcategory->subcate_name}}</a></li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </li>
+                                @endif
+                            @endforeach
+                        @endif
+                        {{-- <li class="nav-item dropdown">
                             <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 Men's Fashion
@@ -154,7 +163,7 @@
                                 <li><a class="dropdown-item" href="#">Fans</a></li>
                                 <li><a class="dropdown-item" href="#">Air Coolers</a></li>
                             </ul>
-                        </li>
+                        </li> --}}
 
 
                     </ul>

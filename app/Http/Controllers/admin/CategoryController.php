@@ -136,7 +136,6 @@ class CategoryController extends Controller
 
     public function view_subcategory(Request $request)
     {
-        //  $subcategory = Subcategory::select('subcategories.*','categories.name as name')->latest('subcategories.id')->leftJoin('categories','categories.id','subcategories.subcate_id');
         $subcategory = Subcategory::with('category')->get();
         // dd($subcategory->toArray());
         if (!empty($request->get('keyword'))) {

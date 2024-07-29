@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\user;
 
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +20,9 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('user.index');
+        // $category=Category::withCount('product')->get();
+        // $product=Product::orderBy('created_at', 'desc')->limit(12)->get();
+        return view('user.index');//,compact('category','product'));
     }
 
     public function login()
@@ -28,7 +32,9 @@ class UserController extends Controller
 
     public function deshboard()
     {
-        return view('user.deshboard');
+        $category=Category::withCount('product')->get();
+        $product=Product::orderBy('created_at', 'desc')->limit(12)->get();
+        return view('user.deshboard',compact('category','product'));
     }
 
 

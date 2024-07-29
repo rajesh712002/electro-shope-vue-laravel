@@ -31,7 +31,7 @@ class ProductController extends Controller
         // dd($product->toArray());
         if (!empty($request->get('keyword'))) {
                  $product = $product->where('prod_name', 'like', '%' . $request->get('keyword') . '%');
-                $product = Product::with('sub_category', 'brand', 'categorys')->paginate(100);
+                $product = Product::with('sub_category', 'brand', 'categorys')->paginate(7);
                 return view('admin.product.product', compact('product'));
             } else {
                 $product = Product::with('sub_category', 'brand', 'categorys')->paginate(7);

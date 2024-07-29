@@ -10,6 +10,7 @@ use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
+use App\Http\Controllers\user\ShopController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,6 +26,8 @@ Route::get('/user/deshboard', [UserController::class, 'deshboard'])->name('userd
 Route::get('/user/logout', [UserController::class, 'logout'])->name('user.logout');
 
 Route::middleware([ValidUser::class])->group(function () {
+    
+    Route::get('/user/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop'])->name('usershop');
 
     Route::get('/user/index', [UserController::class, 'index'])->name('userindex');
     Route::get('/user/account', [UserController::class, 'account'])->name('useraccount');

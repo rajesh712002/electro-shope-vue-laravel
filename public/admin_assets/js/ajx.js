@@ -366,25 +366,7 @@ $(document).ready(function () {
 //
 
 $(document).ready(function () {
-    // $.ajax({
-    //     url: "/admin/getcategories",
-    //     type: "GET",
-    //     dataType: "json",
-    //     success: function (data) {
-    //         $("#category").empty();
-    //         $("#category").append('<option value="">Select Category</option>');
-    //         $.each(data, function (key, value) {
-    //             $("#category").append(
-    //                 '<option value="' +
-    //                     value.id +
-    //                     '">' +
-    //                     value.name +
-    //                     "</option>"
-    //             );
-    //         });
-    //     },
-    // });
-
+    
     $("#category").on('change',function () {
         var category_id = $(this).val();
         $('#sub_category').html('');
@@ -404,7 +386,7 @@ $(document).ready(function () {
                         );
                     });
                     
-                    // $('#sub_category').html('<option value="">Select State</option>');
+                    // $('#sub_category').html('<option value="">Select Subcategory</option>');
                     // $.each(data, function(key, value) {
                     //     $('#sub_category').append('<option value="'+value.id+'">'+value.subcate_name+'</option>');
                     // });
