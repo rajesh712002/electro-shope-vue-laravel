@@ -44,7 +44,7 @@ class UserController extends Controller
         $rules = [
 
             'name' => 'required|min:3|max:30',
-            'email' => 'required|max:100',
+            'email' => 'required|unique:users|email|max:100',
             'password' => 'required|min:8|max:50',
             'phone' => 'required|min:10|max:10',
 
@@ -72,7 +72,7 @@ class UserController extends Controller
     {
         $validate = $request->validate([
             'email' => 'required|max:100',
-            'password' => 'required|min:8|max:50'
+            'password' => 'required|min:5|max:50'
         ]);
 
         if (Auth::attempt($validate)) {
@@ -100,10 +100,7 @@ class UserController extends Controller
     }
 
 
-    public function view_cart()
-    {
-        return view('user.order.cart');
-    }
+   
 
     public function view_order()
     {
@@ -114,4 +111,6 @@ class UserController extends Controller
     {
         return view('user.order.wishlist');
     }
+
+    
 }

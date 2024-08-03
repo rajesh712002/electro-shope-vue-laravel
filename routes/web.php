@@ -10,6 +10,8 @@ use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
+use App\Http\Controllers\user\CartController;
+use App\Http\Controllers\user\SettingController;
 use App\Http\Controllers\user\ShopController;
 
 Route::get('/', function () {
@@ -23,28 +25,43 @@ Route::get('/user/login', [UserController::class, 'login'])->name('userlogin');
 Route::post('/user/loginchk', [UserController::class, 'loginchk'])->name('usercheck');
 Route::get('/user/deshboard', [UserController::class, 'deshboard'])->name('userdeshboard');
 
+Route::get('/user/forgotpassword', [SettingController::class, 'forgetPassword'])->name('user.forgetPassword');
+
+Route::get('/register', [UserController::class, 'register'])->name('register');
+Route::post('/user/store', [UserController::class, 'store'])->name('userstore');
+
 Route::get('/user/logout', [UserController::class, 'logout'])->name('user.logout');
 
 Route::middleware([ValidUser::class])->group(function () {
-    
+
+    Route::get('/user/changepassword', [SettingController::class, 'changePassword'])->name('user.changePassword');
+    Route::post('/user/showchangepassword', [SettingController::class, 'showchangePassword'])->name('user.showchangePassword');
+
     Route::get('/user/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop'])->name('usershop');
+    Route::get('/user/viewproduct/{slug}', [ShopController::class, 'view_product'])->name('viewproduct');
 
     Route::get('/user/index', [UserController::class, 'index'])->name('userindex');
-    Route::get('/user/account', [UserController::class, 'account'])->name('useraccount');
+    
+    Route::get('/user/profile', [SettingController::class, 'account'])->name('useraccount');
+    Route::post('/user/changeprofile', [SettingController::class, 'changeProfile'])->name('userchangeProfile');
 
-    Route::get('/register', [UserController::class, 'register'])->name('register');
-    Route::post('/user/store', [UserController::class, 'store'])->name('userstore');
+
+
+    
 
     //User Product Process
-    Route::get('/cart', [UserController::class, 'view_cart'])->name('user.view_cart');
+    Route::get('/cart/{id?}', [CartController::class, 'view_cart'])->name('user.view_cart');
+    Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
+
+
     Route::get('/order', [UserController::class, 'view_order'])->name('user.view_order');
     Route::get('/wishlist', [UserController::class, 'wishlist'])->name('user.wishlist');
 });
 
 
 
-//=========//===========//==============//===================//============================//===============================================
-//========//===========//==============//===================//============================//================================================
+//=======//==============//=====================//============================//===================================//==========================================//
+//=======//==============//=====================//============================//===================================//==========================================//
 
 
 //ADMIN
@@ -52,16 +69,20 @@ Route::middleware([ValidUser::class])->group(function () {
 Route::get('/admin/login', [AdminloginController::class, 'index'])->name('admin.login');
 Route::post('/admin/adminloginchk', [AdminloginController::class, 'loginchk'])->name('adminckeck');
 
+
 Route::get('/admin/logout', [AdminloginController::class, 'logout'])->name('admin.logout');
 
 //About Us
-Route::get('/admin/aboutus',[AdminloginController::class,'aboutus'])->name('aboutus');
-Route::get('/admin/straboutus',[AdminloginController::class,'straboutus'])->name('straboutus');
+Route::get('/admin/aboutus', [AdminloginController::class, 'aboutus'])->name('aboutus');
+Route::get('/admin/straboutus', [AdminloginController::class, 'straboutus'])->name('straboutus');
 
 // Admin-Products
 Route::middleware([ValidAdmin::class])->group(function () {
-
+    
     Route::get('/admin/deshboard', [AdminloginController::class, 'deshboard'])->name('admin.deshboard');
+    
+    Route::get('/admin/changepassword', [AdminloginController::class, 'changePassword'])->name('admin.changePassword');
+    Route::post('/admin/showchangepassword', [AdminloginController::class, 'showchangePassword'])->name('admin.showchangePassword');
 
     Route::get('/admin/page', [AdminloginController::class, 'pages'])->name('admin.pages');
     Route::get('/admin/pages', [AdminloginController::class, 'store_pages'])->name('admin.store_pages');
@@ -91,7 +112,7 @@ Route::middleware([ValidAdmin::class])->group(function () {
 
     Route::get('admin/getcategories', [CategoryController::class, 'getCategories']);
     Route::get('admin/getsubcategories/{id}', [CategoryController::class, 'getSubcategories']);
-    
+
     //================================================================================================================================================================
 
     Route::get('/admin/brand', [ProductController::class, 'brand'])->name('admin.brand');

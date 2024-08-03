@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class AdminloginController extends Controller
 {
@@ -77,5 +79,41 @@ class AdminloginController extends Controller
 
     public function straboutus(){
        
+    }
+
+    public function changePassword(){
+        return view('admin.change-password');
+    }
+
+    public function showchangePassword(Request $request){
+        $rules = [
+
+            'old_password' => 'required|min:3|max:30',
+            'new_password' => 'required|min:3|max:30',
+            'confirm_password' => 'required|same:new_password'
+           
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+            // return redirect()->route('user.changePassword')->withInput()->withErrors($validator);
+        }
+
+        $user = User::select('id','password')->where('id', Auth::guard('admin')->user()->id)->first();
+       // if (Auth::guard('admin')->user()->role == 2)
+        // dd($user);
+        // if(!Hash::check($request->old_password,$user->password)){
+        //     //session()->flash('error','Your Password is Incorrected');
+        //     //dd(session());
+        //     return response()->json(['error','Your Password is Incorrected']);
+           
+        // }
+        // User::where('id',$user->id)->update([
+        //     'password' => Hash::make($request->new_password)
+        // ]);
+        return response()->json(['success','Your Password is Changed']);
+        
     }
 }

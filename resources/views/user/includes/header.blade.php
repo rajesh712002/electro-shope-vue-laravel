@@ -114,7 +114,7 @@
                                     @if($category->subcategory->isNotEmpty())
                                     <ul class="dropdown-menu dropdown-menu-dark">
                                       @foreach($category->subcategory as $subcategory)
-                                        <li><a class="dropdown-item nav-link" href="#">{{$subcategory->subcate_name}}</a></li>
+                                        <li><a class="dropdown-item nav-link" href="">{{$subcategory->subcate_name}}</a></li>
                                         @endforeach
                                     </ul>
                                     @endif

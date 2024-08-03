@@ -17,16 +17,17 @@
 
                     <picture>
                         <source media="(max-width: 799px)" srcset="images/carousel-1-m.jpg" />
-                        <source media="(min-width: 800px)" srcset="images/carousel-1.jpg" />
+                        <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/phones.png' ) }}" />
                         {{-- <img src="{{ asset('/user_assets/images/carousel-1.jpg') }}" alt="" /> --}}
+                        <img src="{{ asset('admin_assets/images/phones.png' ) }}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Kids Fashion</h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet
-                                amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                            <h1 class="display-4 text-white mb-3">Latest Phones</h1>
+                            <p class="mx-md-5 px-5">Get the best deals on the latest smartphones! Discover top features, cutting-edge tech, and exclusive offers. 
+                                Limited time discounts on leading brands. Upgrade now and save!</p>
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -36,16 +37,16 @@
                         <source media="(max-width: 799px)"
                             srcset="{{ asset('/user_assets/images/carousel-2-m.jpg') }}" />
                         <source media="(min-width: 800px)"
-                            srcset="{{ asset('/user_assets/images/carousel-2-m.jpg') }}" />
+                            srcset="{{ asset('admin_assets/images/leptopss.png' ) }}" />
                         <img src="" alt="{{ asset('/user_assets/images/carousel-2-m.jpg') }}" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Womens Fashion</h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet
-                                amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                            <h1 class="display-4 text-white mb-3">New Limited Adition Laptops</h1>
+                            <p class="mx-md-5 px-5">Shop online now and get up to 70% off on branded watches! Don't miss out on this amazing discount. 
+                                Grab your favorite timepieces at unbeatable prices. Limited time offer. Shop today!.</p>
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -56,16 +57,16 @@
                         <source media="(max-width: 799px)"
                             srcset="{{ asset('/user_assets/images/carousel-3-m.jpg') }}" />
                         <source media="(min-width: 800px)"
-                            srcset="{{ asset('/user_assets/images/carousel-3-m.jpg') }}" />
+                            srcset="{{ asset('admin_assets/images/watchs.png' ) }}" />
                         <img src="{{ asset('/user_assets/images/carousel-3-m.jpg') }}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Shop Online at Flat 70% off on Branded Clothes</h1>
+                            <h1 class="display-4 text-white mb-3">Shop Online at Flat 70% off on Branded Watches</h1>
                             <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet
                                 amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -124,17 +125,19 @@
                         <div class="col-lg-3">
                             <div class="cat-card">
                                 <div class="left">
-
+                                    <a href="{{ route('usershop') }}">
                                     <img style="width: 100px; height: 100px; object-fit:contain ;" class="imgfluid"
                                         src="{{ asset('admin_assets/images/' . $item->image) }}" alt="">
-
+                                    </a>
                                 </div>
                                 <div class="right">
+                                    <a href="{{ route('usershop') }}" style=" text-decoration: none!important">
                                     <div class="cat-data">
                                         <h2><b>{{ $item->name }}</b></h2>
                                         <p><b>{{ $item->product_count }} Products</b></p>
                                         {{-- @dd($item->product_count) --}}
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +177,7 @@
                                 </div>
                             </div>
                             <div class="card-body text-center mt-3">
-                                <a class="h6 link" href="product.php">{{ $prod->prod_name }}</a>
+                                <a class="h6 link" href="{{ route('usershop') }}">{{ $prod->prod_name }}</a>
                                 <div class="price mt-2">
                                     <span class="h5"><strong><i class="fa fa-inr" aria-hidden="true"> </i>
                                             {{ $prod->price }}</strong></span>

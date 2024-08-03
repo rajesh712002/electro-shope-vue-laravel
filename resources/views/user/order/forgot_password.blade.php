@@ -34,7 +34,7 @@
                     <ol class="breadcrumb primary-color mb-0">
                         <li class="breadcrumb-item"><a class="white-text" href="{{ route('userdeshboard') }}">Home</a>
                         </li>
-                        <li class="breadcrumb-item">Login</li>
+                        <li class="breadcrumb-item"><a class="white-text" href="{{ route('userlogin') }}">Login</a></li>
                     </ol>
                 </div>
             </div>
@@ -43,7 +43,7 @@
         <section class=" section-10">
             <div class="container">
                 <div class="login-form">
-                    <form action="{{ route('usercheck') }}" method="post">
+                    <form action="" method="">
                         @csrf
                         <div class="row d-flex justify-content-center">
                             @if (Session::has('success'))
@@ -55,7 +55,7 @@
                             @endif
                         </div>
 
-                        <h4 class="modal-title">Login to Your Account</h4>
+                        <h4 class="modal-title">Enter Email to Login</h4>
                         <div class="form-group">
                             <input type="email" name="email" id="email"
                                 class="@error('email') is-invalid
@@ -66,7 +66,7 @@
                                 @enderror
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <input type="password" name="password" id="password"
                                 class="@error('password') is-invalid
                                     @enderror form-control"
@@ -74,14 +74,14 @@
                                         @error('password')
                                             <p class="invalid-feedback">{{ $message }}</p>
                                         @enderror
-                        </div>
+                        </div> --}}
+
                         <div class="form-group small">
-                            <a href="{{route('user.forgetPassword')}}" class="forgot-link">Forgot Password?</a>
+                            <a href="{{route('userlogin')}}" class="forgot-link">Login</a>
                         </div>
-                        <input type="submit" class="btn btn-dark btn-block btn-lg" value="Login">
+                        <input type="submit" class="btn btn-dark btn-block btn-lg" value="Email">
                     </form>
-                    <div class="text-center small">Don't have an account? <a href="{{ route('register') }}">Sign up</a>
-                    </div>
+                    {{-- <div class="text-center small">Don't have an account? <a href="{{ route('register') }}">Sign up</a></div> --}}
                 </div>
             </div>
         </section>

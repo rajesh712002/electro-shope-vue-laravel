@@ -56,18 +56,18 @@
 <script src="{{asset('user_assets/js/lazyload.17.6.0.min.js')}}"></script>
 <script src="{{asset('user_assets/js/slick.min.js')}}"></script>
 <script>
-window.onscroll = function() {myFunction()};
+// window.onscroll = function() {myFunction()};
 
 var navbar = document.getElementById("navbar");
-var sticky = navbar.offsetTop;
+// var sticky = navbar.offsetTop;
 
-function myFunction() {
-  if (window.pageYOffset >= sticky) {
-    navbar.classList.add("sticky")
-  } else {
-    navbar.classList.remove("sticky");
-  }
-}
+// function myFunction() {
+//   if (window.pageYOffset >= sticky) {
+//     navbar.classList.add("sticky")
+//   } else {
+//     navbar.classList.remove("sticky");
+//   }
+// }
 </script>
 </body>
 </html>

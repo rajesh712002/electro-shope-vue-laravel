@@ -52,7 +52,7 @@ class ProductController extends Controller
     {
         $rules = [
             'name' => 'required|max:50',
-            'description' => 'required|max:200',
+            'description' => 'required',
             //'image' => 'required',
             'price' => 'required|numeric',
             'status' => 'required',
@@ -111,7 +111,7 @@ class ProductController extends Controller
 
         $rules = [
             'name' => 'required|max:50',
-            'description' => 'required|max:200',
+            'description' => 'required',
             //'image' => 'required',
             'price' => 'required|numeric',
             'status' => 'required',
