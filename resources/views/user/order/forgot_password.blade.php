@@ -43,7 +43,7 @@
         <section class=" section-10">
             <div class="container">
                 <div class="login-form">
-                    <form action="" method="">
+                    <form action="{{route('user.processForgetPassword')}}" method="post">
                         @csrf
                         <div class="row d-flex justify-content-center">
                             @if (Session::has('success'))

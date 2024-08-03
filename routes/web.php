@@ -26,6 +26,9 @@ Route::post('/user/loginchk', [UserController::class, 'loginchk'])->name('userch
 Route::get('/user/deshboard', [UserController::class, 'deshboard'])->name('userdeshboard');
 
 Route::get('/user/forgotpassword', [SettingController::class, 'forgetPassword'])->name('user.forgetPassword');
+Route::post('/user/processforgetfassword', [SettingController::class, 'processForgetPassword'])->name('user.processForgetPassword');
+Route::get('/user/resestforgotpassword/{token?}', [SettingController::class, 'resestForgetPassword'])->name('user.resestForgetPassword');
+
 
 Route::get('/register', [UserController::class, 'register'])->name('register');
 Route::post('/user/store', [UserController::class, 'store'])->name('userstore');

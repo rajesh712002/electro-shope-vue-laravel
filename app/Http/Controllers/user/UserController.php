@@ -109,7 +109,7 @@ class UserController extends Controller
 
     public function wishlist()
     {
-        return view('user.order.wishlist');
+        // return view('user.order.wishlist');
     }
 
     
