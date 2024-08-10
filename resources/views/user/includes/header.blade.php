@@ -100,77 +100,41 @@
                         <!-- <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="index.php" title="Products">Home</a>
         </li> -->
-        
+
                         @if (getcategory()->isNotEmpty())
-                        
+
                             @foreach (getcategory() as $category)
-                            @if($category->status == 1)
-                                <li class="nav-item dropdown">
-                                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        {{-- @dd($category) --}}
-                                        {{$category->name}}
-                                    </button>
-                                    @if($category->subcategory->isNotEmpty())
-                                    <ul class="dropdown-menu dropdown-menu-dark">
-                                      @foreach($category->subcategory as $subcategory)
-                                        <li><a class="dropdown-item nav-link" href="">{{$subcategory->subcate_name}}</a></li>
-                                        @endforeach
-                                    </ul>
-                                    @endif
-                                </li>
+                                @if ($category->status == 1)
+                                    <li class="nav-item dropdown">
+                                        <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            {{-- @dd($category) --}}
+                                            {{ $category->name }}
+                                        </button>
+                                        @if ($category->subcategory->isNotEmpty())
+                                            <ul class="dropdown-menu dropdown-menu-dark">
+                                                @foreach ($category->subcategory as $subcategory)
+                                                    <li><a class="dropdown-item nav-link"
+                                                            href="{{ route('usershop') }}">{{ $subcategory->subcate_name }}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
                                 @endif
                             @endforeach
                         @endif
-                        {{-- <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Men's Fashion
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="#">Shirts</a></li>
-                                <li><a class="dropdown-item" href="#">Jeans</a></li>
-                                <li><a class="dropdown-item" href="#">Shoes</a></li>
-                                <li><a class="dropdown-item" href="#">Watches</a></li>
-                                <li><a class="dropdown-item" href="#">Perfumes</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Women's Fashion
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="#">T-Shirts</a></li>
-                                <li><a class="dropdown-item" href="#">Tops</a></li>
-                                <li><a class="dropdown-item" href="#">Jeans</a></li>
-                                <li><a class="dropdown-item" href="#">Shoes</a></li>
-                                <li><a class="dropdown-item" href="#">Watches</a></li>
-                                <li><a class="dropdown-item" href="#">Perfumes</a></li>
-                            </ul>
-                        </li>
 
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Appliances
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="#">TV</a></li>
-                                <li><a class="dropdown-item" href="#">Washing Machines</a></li>
-                                <li><a class="dropdown-item" href="#">Air Conditioners</a></li>
-                                <li><a class="dropdown-item" href="#">Vacuum Cleaner</a></li>
-                                <li><a class="dropdown-item" href="#">Fans</a></li>
-                                <li><a class="dropdown-item" href="#">Air Coolers</a></li>
-                            </ul>
-                        </li> --}}
 
 
                     </ul>
                 </div>
                 <div class="right-nav py-0">
-                    <a href="{{ route('user.view_cart') }}" class="ml-3 d-flex pt-2">
-                        <i class="fas fa-shopping-cart text-primary"></i>
+                    <a href="{{ route('user.index') }}" class="ml-3 d-flex pt-2">
+                        <i class="fas fa-shopping-cart text-primary"><span style="color: white">{{Cart::instance('cart')->content()->count()}}</span></i>
+                        {{-- @if (Cart::instance('cart')->content()->count()>0)                            
+                        <span class="cart-amount d-block position-absolute js-cart-items-count">{{Cart::instance('cart')->content()->count()}}</span>
+                        @endif --}}
                     </a>
                 </div>
             </nav>

@@ -25,6 +25,10 @@ Route::get('/user/login', [UserController::class, 'login'])->name('userlogin');
 Route::post('/user/loginchk', [UserController::class, 'loginchk'])->name('usercheck');
 Route::get('/user/deshboard', [UserController::class, 'deshboard'])->name('userdeshboard');
 
+Route::get('/user/aboutus', [UserController::class, 'aboutUs'])->name('aboutus');
+Route::get('/user/contactus', [UserController::class, 'contactUs'])->name('contactus');
+Route::get('/user/privacy', [UserController::class, 'privacy'])->name('privacy');
+
 Route::get('/user/forgotpassword', [SettingController::class, 'forgetPassword'])->name('user.forgetPassword');
 Route::post('/user/processforgetfassword', [SettingController::class, 'processForgetPassword'])->name('user.processForgetPassword');
 Route::get('/user/resestforgotpassword/{token?}', [SettingController::class, 'resestForgetPassword'])->name('user.resestForgetPassword');
@@ -49,21 +53,24 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::post('/user/changeprofile', [SettingController::class, 'changeProfile'])->name('userchangeProfile');
 
 
-
-    
-
-    //User Product Process
-    Route::get('/cart/{id?}', [CartController::class, 'view_cart'])->name('user.view_cart');
+    //Cart Process
+    Route::get('/cart', [CartController::class, 'index'])->name('user.index');
     Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
-
+    Route::put('cart/increase/{rowId}',[CartController::class,'increaseCartQty'])->name('qty.increase');
+    Route::put('cart/decrease/{rowId}',[CartController::class,'decreaseCartQty'])->name('qty.decrease');
+    Route::delete('cart/remove_item/{rowId}',[CartController::class,'remove_item'])->name('qty.remove_item');
 
     Route::get('/order', [UserController::class, 'view_order'])->name('user.view_order');
-    Route::get('/wishlist', [UserController::class, 'wishlist'])->name('user.wishlist');
+
+    //Wishlist Process
+    Route::get('/wishlist', [CartController::class, 'wishlist'])->name('user.wishlist');
+    Route::post('/addcart', [CartController::class, 'addToWishlist'])->name('user.addToWishlist');
+
 });
 
 
 
-//=======//==============//=====================//============================//===================================//==========================================//
+ //=======//==============//=====================//============================//===================================//==========================================//
 //=======//==============//=====================//============================//===================================//==========================================//
 
 
@@ -76,8 +83,8 @@ Route::post('/admin/adminloginchk', [AdminloginController::class, 'loginchk'])->
 Route::get('/admin/logout', [AdminloginController::class, 'logout'])->name('admin.logout');
 
 //About Us
-Route::get('/admin/aboutus', [AdminloginController::class, 'aboutus'])->name('aboutus');
-Route::get('/admin/straboutus', [AdminloginController::class, 'straboutus'])->name('straboutus');
+// Route::get('/admin/aboutus', [AdminloginController::class, 'aboutus'])->name('aboutus');
+// Route::get('/admin/straboutus', [AdminloginController::class, 'straboutus'])->name('straboutus');
 
 // Admin-Products
 Route::middleware([ValidAdmin::class])->group(function () {

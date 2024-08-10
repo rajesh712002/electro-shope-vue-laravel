@@ -14,6 +14,7 @@
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('admin_assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Theme style -->
@@ -59,7 +60,7 @@
                             <i class="fas fa-user-cog mr-2"></i> Settings
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="{{route('admin.changePassword')}}" class="dropdown-item">
+                        <a href="{{ route('admin.changePassword') }}" class="dropdown-item">
                             <i class="fas fa-lock mr-2"></i> Change Password
                         </a>
                         <div class="dropdown-divider"></div>

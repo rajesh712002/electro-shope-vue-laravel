@@ -3,7 +3,7 @@
  <html lang="en">
 
  <head>
-    
+
      <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.css') }}">
      <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.min.css') }}">
      <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/slick.css') }}">
@@ -35,8 +35,13 @@
              <div class="container">
                  <div class="light-font">
                      <ol class="breadcrumb primary-color mb-0">
-                         <li class="breadcrumb-item"><a class="white-text" href="{{ route('userdeshboard') }}">Home</a>
-                         </li>
+                         @if (Auth::check())
+                             <li class="breadcrumb-item"><a class="white-text" href="{{ route('usershop') }}">Home</a>
+                             </li>
+                         @else
+                             <li class="breadcrumb-item"><a class="white-text"
+                                     href="{{ route('userdeshboard') }}">Home</a></li>
+                         @endif
                          <li class="breadcrumb-item">Register</li>
                      </ol>
                  </div>

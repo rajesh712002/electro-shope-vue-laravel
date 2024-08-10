@@ -5,6 +5,10 @@ namespace App\Http\Controllers\admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Subcategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -19,7 +23,17 @@ class AdminloginController extends Controller
 
     public function deshboard()
     {
-        return view('admin.deshboard');
+        $totaluser = User::count();
+
+        $totalcategory = Category::where('status','1')->count();
+
+        $totalsubcategory = Subcategory::where('status','1')->count();
+
+        $totalbrand =Brand::where('status','1')->count();
+
+        $totalproduct= Product::where('status','1')->count();
+
+        return view('admin.deshboard',compact('totaluser','totalcategory','totalsubcategory','totalbrand','totalproduct'));
     }
 
     public function loginchk(Request $request)
@@ -44,10 +58,9 @@ class AdminloginController extends Controller
     public function logout(Request $request)
     {
         
-        Auth::logout();
-        $request->session()->invalidate();
- 
-        $request->session()->regenerateToken();
+        Auth::guard('admin')->logout();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
         
         return view('admin.login');
     }
@@ -102,17 +115,17 @@ class AdminloginController extends Controller
         }
 
         $user = User::select('id','password')->where('id', Auth::guard('admin')->user()->id)->first();
-       // if (Auth::guard('admin')->user()->role == 2)
+       if (Auth::guard('admin')->user()->role == 2)
         // dd($user);
-        // if(!Hash::check($request->old_password,$user->password)){
-        //     //session()->flash('error','Your Password is Incorrected');
-        //     //dd(session());
-        //     return response()->json(['error','Your Password is Incorrected']);
+        if(!Hash::check($request->old_password,$user->password)){
+            //session()->flash('error','Your Password is Incorrected');
+            //dd(session());
+            return response()->json(['error','Your Password is Incorrected']);
            
-        // }
-        // User::where('id',$user->id)->update([
-        //     'password' => Hash::make($request->new_password)
-        // ]);
+        }
+        User::where('id',$user->id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
         return response()->json(['success','Your Password is Changed']);
         
     }

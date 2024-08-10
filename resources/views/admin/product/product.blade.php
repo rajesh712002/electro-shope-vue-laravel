@@ -310,8 +310,8 @@
 
 
                                         <td>{{ $prod->description }}</td>
-                                        <td>{{ $prod->price }}</td>
-                                        <td>{{ $prod->compare_price }}</td>
+                                        <td><i class="fa fa-inr"></i> {{ $prod->price }}</td>
+                                        <td><i class="fa fa-inr"></i> {{ $prod->compare_price }}</td>
                                         <td>{{ $prod->qty }}</td>
                                         <td>
                                             @if ($prod->status == 1)

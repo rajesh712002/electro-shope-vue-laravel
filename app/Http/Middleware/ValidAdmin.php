@@ -17,7 +17,7 @@ class ValidAdmin
     public function handle(Request $request, Closure $next): Response
     {
         
-        if(Auth::check()){
+        if(Auth::guard('admin')->check()){
            
         return $next($request);
         }

@@ -21,7 +21,7 @@
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
                     <li class="breadcrumb-item"><a class="white-text" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="white-text" href="{{route('usershop')}}">Shop</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('usershop') }}">Shop</a></li>
                     <li class="breadcrumb-item">Cart</li>
                 </ol>
             </div>
@@ -32,153 +32,87 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="table-responsive">
-                        <table class="table" id="cart">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th>Remove</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    {{-- @dd($product) --}}
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <img src="images/product-1.jpg" width="" height="">
-                                            {{-- <h2>{{$product->prod_name}}</h2> --}}
-                                        </div>
-                                    </td>
-                                    <td>$100</td>
-                                    <td>
-                                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text"
-                                                class="form-control form-control-sm  border-0 text-center"
-                                                value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        $100
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
-                                    </td>
-                                </tr>
+                    {{-- @dd($items) --}}
+                    @if ($items->count() > 0)
 
-                                {{-- <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <img src="images/product-1.jpg" width="" height="">
-                                            <h2>Product Name Goes Here</h2>
-                                        </div>
-                                    </td>
-                                    <td>$100</td>
-                                    <td>
-                                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text"
-                                                class="form-control form-control-sm  border-0 text-center"
-                                                value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        $100
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
-                                    </td>
-                                </tr>
+                        <div class="table-responsive">
+                            <table class="table" id="cart">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($items as $item)
+                                        <tr>
+                                            {{-- @dd($product) --}}
+                                            <td>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    {{-- <img src="{{ asset('admin_assets/images/') }}/{{$item->model->image}}" width="120" height="120" alt="{{$item->name}}"> --}}
+                                                    {{-- <h2>{{$product->prod_name}}</h2> --}}
+                                                    {{ $item->name }}
+                                                </div>
+                                            </td>
+                                            <td>{{ $item->price }}</td>
+                                            <td>
+                                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                    <div class="input-group-btn">
+                                                        <form method="POST"
+                                                            action="{{ route('qty.decrease', ['rowId' => $item->rowId]) }}">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                    <input type="text" name="quantity"
+                                                        class="form-control form-control-sm  border-0 text-center"
+                                                        value="{{ $item->qty }}" min="1">
+                                                    <div class="input-group-btn">
+                                                        <form method="POST"
+                                                            action="{{ route('qty.increase', ['rowId' => $item->rowId]) }}">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ $item->subtotal }}
+                                            </td>
+                                            <td>
+                                                <form method="POST" action="{{route('qty.remove_item', ['rowId' => $item->rowId])}}">
+                                                    @csrf
+                                                            @method('delete')
+                                                    <button type="submit" class="btn btn-sm btn-danger"><i
+                                                            class="fa fa-times"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
 
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <img src="images/product-1.jpg" width="" height="">
-                                            <h2>Product Name Goes Here</h2>
-                                        </div>
-                                    </td>
-                                    <td>$100</td>
-                                    <td>
-                                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text"
-                                                class="form-control form-control-sm  border-0 text-center"
-                                                value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        $100
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
-                                    </td>
-                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="row">
+                            <div class="col-md-12 text-center pt-5 bp-5">
+                                <p>No items found in your cart </p>
+                                <a href="{{ route('usershop') }}" class="btn btn-info">Shop Now</a>
+                            </div>
+                        </div>
+                    @endif
 
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <img src="images/product-1.jpg" width="" height="">
-                                            <h2>Product Name Goes Here</h2>
-                                        </div>
-                                    </td>
-                                    <td>$100</td>
-                                    <td>
-                                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text"
-                                                class="form-control form-control-sm  border-0 text-center"
-                                                value="1">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        $100
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
-                                    </td>
-                                </tr> --}}
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card cart-summery">
@@ -189,29 +123,30 @@
                             <div class="d-flex justify-content-between pb-2">
                                 <div>Subtotal</div>
                                 <div><i class="fa fa-inr" aria-hidden="true">
-                                </i> 4000</div>
+                                    </i> {{ Cart::instance('cart')->subtotal() }}</div>
                             </div>
                             <div class="d-flex justify-content-between pb-2">
                                 <div>Shipping</div>
-                                <div><i class="fa fa-inr" aria-hidden="true">
-                                </i> 20</div>
-                            </div>
-                            <div class="d-flex justify-content-between summery-end">
-                                <div>Total</div>
-                                <div><i class="fa fa-inr" aria-hidden="true">
-                                </i> 4020</div>
-                            </div>
-                            <div class="pt-5">
-                                <a href="login.php" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
+                                {{-- <div><i class="fa fa-inr" aria-hidden="true"> --}}
+                                </i> Free
                             </div>
                         </div>
+                        <div class="d-flex justify-content-between summery-end">
+                            <div>Total</div>
+                            <div><i class="fa fa-inr" aria-hidden="true">
+                                </i> {{ Cart::instance('cart')->total() }}</div>
+                        </div>
+                        <div class="pt-5">
+                            <a href="" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
+                        </div>
                     </div>
-                    {{-- <div class="input-group apply-coupan mt-4">
+                </div>
+                {{-- <div class="input-group apply-coupan mt-4">
                         <input type="text" placeholder="Coupon Code" class="form-control">
                         <button class="btn btn-dark" type="button" id="button-addon2">Apply Coupon</button>
                     </div> --}}
-                </div>
             </div>
+        </div>
         </div>
     </section>
 </main>

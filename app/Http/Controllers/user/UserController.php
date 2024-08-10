@@ -92,10 +92,9 @@ class UserController extends Controller
     }
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
- 
-        $request->session()->regenerateToken();
+        Auth::guard('web')->logout();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
         return view('user.login');
     }
 
@@ -109,8 +108,20 @@ class UserController extends Controller
 
     public function wishlist()
     {
-        // return view('user.order.wishlist');
+         return view('user.order.wishlist');
     }
 
+    public function aboutUs(){
+        return view('user.order.about-us');
+    }
+
+    
+    public function contactUs(){
+        return view('user.order.contact-us');
+    }
+
+    public function privacy(){
+        return view('user.order.privacy');
+    }
     
 }

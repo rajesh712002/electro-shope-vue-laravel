@@ -201,7 +201,6 @@ class CategoryController extends Controller
 
     public function update_subcate($id, Request $request)
     {
-
         $subcategory = Subcategory::findOrFail($id);
         File::delete(public_path('admin_assets/images/' . $subcategory->image));
         $rules = [
@@ -209,16 +208,12 @@ class CategoryController extends Controller
             'name' => 'required|max:50',
             'slug' => 'required|unique:subcategories|max:100',
             'status' => 'required'
-
         ];
-
         $validator = Validator::make($request->all(), $rules);
-
         if ($validator->fails()) {
             //return redirect()->route('admin.create_subcat')->withInput()->withErrors($validator);
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         $subcategory->subcate_id = $request->category;
         $subcategory->subcate_name = $request->name;
         $subcategory->slug = $request->slug;
@@ -229,9 +224,7 @@ class CategoryController extends Controller
         $imagename = time() . '.' . $ext;
         $image->move(public_path('admin_assets/images'), $imagename);
         $subcategory->image = $imagename;
-
         $subcategory->save();
-
         return response()->json(['success' => 'SubCatagory Updated successfully']);
     }
 
@@ -249,7 +242,7 @@ class CategoryController extends Controller
         return redirect()->route('admin.subcategory')->with('success', 'SubCatagory Deleted Successfully');
     }
 
-//Get Category wise Sub Category
+    //Get Category wise Sub Category
 
     public function getCategories()
     {

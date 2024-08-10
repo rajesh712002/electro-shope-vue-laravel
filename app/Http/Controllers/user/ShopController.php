@@ -45,12 +45,12 @@ class ShopController extends Controller
         $products = $products->paginate(9);
         $brands = Brand::where('status', '1')->get();
 
-        return view('user.order.shop', compact('brands', 'products', 'categorys','categorySelected','subcategorySelected','brandsArray'));
+        return view('user.order.shop', compact('brands', 'products', 'categorys', 'categorySelected', 'subcategorySelected', 'brandsArray'));
     }
 
 
 
-    public function view_product($slug){
+    public function view_product(Request $request,$slug){
         // dd($slug);
         $product = Product::with('brand')->where('slug',$slug)->first();
         // dd($product);

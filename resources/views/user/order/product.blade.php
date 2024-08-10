@@ -1,4 +1,5 @@
 {{-- @include('user.includes.header') --}}
+
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -54,119 +55,118 @@
 </head>
 
 <main>
-    <form action="" method="GET">
-        <section class="section-5 pt-3 pb-3 mb-3 bg-white">
-            <div class="container">
-                <div class="light-font">
-                    {{-- @dd($product) --}}
-                    <ol class="breadcrumb primary-color mb-0">
-                        <li class="breadcrumb-item"><a class="white-text" href="{{route('userindex')}}">Home</a></li>
-                        <li class="breadcrumb-item"><a class="white-text" href="{{route('usershop')}}">Shop</a></li>
-                        <li class="breadcrumb-item">{{ $product->prod_name }}</li>
-                    </ol>
-                </div>
+    {{-- <form action="" method="GET"> --}}
+    <section class="section-5 pt-3 pb-3 mb-3 bg-white">
+        <div class="container">
+            <div class="light-font">
+                {{-- @dd($product) --}}
+                <ol class="breadcrumb primary-color mb-0">
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('usershop') }}">Shop</a></li>
+                    <li class="breadcrumb-item">{{ $product->prod_name }}</li>
+                </ol>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="section-7 pt-3 mb-3">
-            <div class="container">
+    <section class="section-7 pt-3 mb-3">
+        <div class="container">
 
-                <div class="row ">
-                    <div class="col-md-5">
-                        <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner bg-light">
-                                <div class="carousel-item" style="display: block " >
-                                    <img class="w-100 h-100" src="{{ asset('admin_assets/images/' . $product->image) }}"
-                                        alt="">
-                                </div>
-
-                                {{-- <div class="carousel-item active">
-                                <img class="w-100 h-100" src="images/product-2.jpg" alt="Image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="w-100 h-100" src="images/product-3.jpg" alt="Image">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="w-100 h-100" src="images/product-4.jpg" alt="Image">
-                                </div> --}}
+            <div class="row ">
+                <div class="col-md-5">
+                    <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner bg-light">
+                            <div class="carousel-item" style="display: block ">
+                                <img class="w-100 h-100" src="{{ asset('admin_assets/images/' . $product->image) }}"
+                                    alt="">
                             </div>
-                            {{-- <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
-                                <i class="fa fa-2x fa-angle-left text-dark"></i>
-                            </a>
-                            <a class="carousel-control-next" href="#product-carousel" data-bs-slide="next">
-                                <i class="fa fa-2x fa-angle-right text-dark"></i>
-                            </a> --}}
+
                         </div>
+
                     </div>
-                    {{-- <img width="10" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
-                    <div class="col-md-7">
-                        <div class="bg-light right">
-                            <img style="width: 100px; height: 70px; object-fit: contain;!important" src="{{ asset('admin_assets/images/' . $product->brand->image) }}">
-                            <h1>{{ $product->prod_name }}</h1>
-                            <div class="d-flex mb-3">
-                                <div class="text-primary mr-2">
-                                    <small class="fas fa-star"></small>
-                                    <small class="fas fa-star"></small>
-                                    <small class="fas fa-star"></small>
-                                    <small class="fas fa-star-half-alt"></small>
-                                    <small class="far fa-star"></small>
-                                </div>
-                                <small class="pt-1">(99 Reviews)</small>
+                </div>
+                {{-- <img width="10" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
+                <div class="col-md-7">
+                    <div class="bg-light right">
+                        <img style="width: 100px; height: 70px; object-fit: contain;!important"
+                            src="{{ asset('admin_assets/images/' . $product->brand->image) }}">
+                        <h1>{{ $product->prod_name }}</h1>
+                        <div class="d-flex mb-3">
+                            <div class="text-primary mr-2">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
                             </div>
-                          <div>
+                            <small class="pt-1">(99 Reviews)</small>
+                        </div>
+                        <div>
                             {{-- <img style="10px" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
-                          </div>
-                            <h2 class="price text-secondary"><i class="fa fa-inr"
-                                    aria-hidden="true"><del>{{ $product->compare_price }}</del></i></h2>
-                            <h2 class="price "><i class="fa fa-inr" aria-hidden="true">{{ $product->price }}</i></h2>
-
-                            <p>{{ $product->description }}</p>
-                            <a href="" onclick="addToCart({{$product->id}})" class="btn btn-dark"><i class="fas fa-shopping-cart"></i> &nbsp;ADD TO
-                                CART</a>
                         </div>
-                    </div>
+                        <h2 class="price text-secondary"><i class="fa fa-inr"
+                                aria-hidden="true"><del>{{ $product->compare_price }}</del></i></h2>
+                        <h2 class="price "><i class="fa fa-inr" aria-hidden="true">{{ $product->price }}</i>
+                        </h2>
 
-                    <div class="col-md-12 mt-5">
-                        <div class="bg-light">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
-                                        data-bs-target="#description" type="button" role="tab"
-                                        aria-controls="description" aria-selected="true">Description</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="shipping-tab" data-bs-toggle="tab"
-                                        data-bs-target="#shipping" type="button" role="tab"
-                                        aria-controls="shipping" aria-selected="false">Shipping & Returns</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
-                                        data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews"
-                                        aria-selected="false">Reviews</button>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="description" role="tabpanel"
-                                    aria-labelledby="description-tab">
-                                    <p>
-                                        {{ $product->description }}
-                                    </p>
-                                </div>
-                                <div class="tab-pane fade" id="shipping" role="tabpanel"
-                                    aria-labelledby="shipping-tab">
-                                    <p></p>
-                                </div>
-                                <div class="tab-pane fade" id="reviews" role="tabpanel"
-                                    aria-labelledby="reviews-tab">
-                                    {{-- <img style="width: 100px; height: 70px; object-fit: contain;!important" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
-                                </div>
+                        <p>{{ $product->description }}</p>
+                        @if (Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
+                            <a href="{{ route('user.index') }}" class="btn btn-info ">Go To Cart</a>
+                        @else
+                            <form action="{{ route('user.addToCart') }}" method="POST">
+                                {{-- @dd($product) --}}
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}" />
+                                <input type="hidden" name="prod_name" value="{{ $product->prod_name }}" />
+                                <input type="hidden" name="price" value="{{ $product->price }}" />
+                                <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
+                                    &nbsp;ADD TO CART</button>
+                            </form>
+                        @endif
+
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-5">
+                    <div class="bg-light">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                    data-bs-target="#description" type="button" role="tab"
+                                    aria-controls="description" aria-selected="true">Description</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="shipping-tab" data-bs-toggle="tab"
+                                    data-bs-target="#shipping" type="button" role="tab"
+                                    aria-controls="shipping" aria-selected="false">Shipping & Returns</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                                    data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews"
+                                    aria-selected="false">Reviews</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="description" role="tabpanel"
+                                aria-labelledby="description-tab">
+                                <p>
+                                    {{ $product->description }}
+                                </p>
+                            </div>
+                            <div class="tab-pane fade" id="shipping" role="tabpanel"
+                                aria-labelledby="shipping-tab">
+                                <p></p>
+                            </div>
+                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                {{-- <img style="width: 100px; height: 70px; object-fit: contain;!important" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </form>
+        </div>
+    </section>
+    {{-- </form> --}}
 
     {{-- <section class="pt-5 section-8">
         <div class="container">

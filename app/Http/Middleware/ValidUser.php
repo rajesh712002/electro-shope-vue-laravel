@@ -16,12 +16,10 @@ class ValidUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check()){
-            
-         return $next($request);
-         }
-         else{
-             return redirect()->route('userlogin');
-         }
+        if (Auth::check()) {
+            return $next($request);
+        } else {
+            return redirect()->route('userlogin');
+        }
     }
 }

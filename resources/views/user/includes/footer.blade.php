@@ -15,9 +15,9 @@
 				<div class="footer-card">
 					<h3>Important Links</h3>
 					<ul>
-						<li><a href="#" title="About">About</a></li>
-						<li><a href="#" title="Contact Us">Contact Us</a></li>						
-						<li><a href="#" title="Privacy">Privacy</a></li>
+						<li><a href="{{route('aboutus')}}" title="About">About</a></li>
+						<li><a href="{{route('contactus')}}" title="Contact Us">Contact Us</a></li>						
+						<li><a href="{{route('privacy')}}" title="Privacy">Privacy</a></li>
 						<li><a href="#" title="Privacy">Terms & Conditions</a></li>
 						<li><a href="#" title="Privacy">Refund Policy</a></li>
 					</ul>
@@ -28,8 +28,8 @@
 				<div class="footer-card">
 					<h3>My Account</h3>
 					<ul>
-						<li><a href="#" title="Sell">Login</a></li>
-						<li><a href="#" title="Advertise">Register</a></li>
+						<li><a href="{{route('userlogin')}}" title="Sell">Login</a></li>
+						<li><a href="{{route('register')}}" title="Advertise">Register</a></li>
 						<li><a href="#" title="Contact Us">My Orders</a></li>						
 					</ul>
 				</div>

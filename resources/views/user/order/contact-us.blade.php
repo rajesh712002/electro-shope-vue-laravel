@@ -1,10 +1,16 @@
-<?php include('includes/header.php');?>
+@include('user.includes.header')
+
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="http://localhost/amazing-shop/">Home</a></li>
+                    @if (Auth::check())
+                    <li class="breadcrumb-item"><a class="white-text" href="{{route('userindex')}}">Home</a></li>
+                       @else
+                       <li class="breadcrumb-item"><a class="white-text" href="{{route('userdeshboard')}}">Home</a></li>
+
+                    @endif
                     <li class="breadcrumb-item">Contact Us</li>
                 </ol>
             </div>
@@ -23,13 +29,15 @@
         <div class="container">          
             <div class="row">
                 <div class="col-md-6 mt-3 pe-lg-5">
-                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content.</p>
+                    <p>Founded in 2024, Electro-Shop has come a long way from its beginnings. When we first started out, our
+                        passion for providing top-notch electronics drove us to start our own business. We now serve customers all
+                        over India.</p>
                     <address>
-                    Cecilia Chapman <br>
-                    711-2880 Nulla St.<br> 
-                    Mankato Mississippi 96522<br>
-                    <a href="tel:+xxxxxxxx">(XXX) 555-2368</a><br>
-                    <a href="mailto:jim@rock.com">jim@rock.com</a>
+                        <h3>Get In Touch</h3>
+                        <p> <br>
+                        123 feet Rind Road, Ahmedabad, India <br></p>
+                    <a href="tel:9808237221">9808237221</a><br>
+                    <a href="mailto:electro2024@gamil.com">electro2024@gamil.com</a>
                     </address>                    
                 </div>
 
@@ -70,4 +78,4 @@
         </div>
     </section>
 </main>
-<?php include('includes/footer.php');?>
+@include('user.includes.footer')

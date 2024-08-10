@@ -172,7 +172,7 @@ class ProductController extends Controller
             $brand = $brand->where('name', 'like', '%' . $request->get('keyword') . '%');
             $brand = $brand->paginate(100);
             return view('admin.product.brand', ['brand' => $brand]);
-        } else {
+        }else {
             $brand = $brand->paginate(5);
             return view('admin.product.brand', ['brand' => $brand]);
         }

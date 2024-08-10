@@ -3,7 +3,8 @@
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="#">My Account</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{route('usershop')}}">Shop</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" >My Account</a></li>
                     <li class="breadcrumb-item">Settings</li>
                 </ol>
             </div>
@@ -33,7 +34,8 @@
                                     <button class="btn btn-outline-danger btn-sm" type="button"><i class="fas fa-trash-alt me-2"></i>Remove</button>
                                 </div>
                             </div>  
-                            <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
+                            
+                            {{-- <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
                                 <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a class="d-block flex-shrink-0 mx-auto me-sm-4" href="#" style="width: 10rem;"><img src="images/product-1.jpg" alt="Product"></a>
                                     <div class="pt-2">
                                         <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h3>                                        
@@ -67,7 +69,8 @@
                                 <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
                                     <button class="btn btn-outline-danger btn-sm" type="button"><i class="fas fa-trash-alt me-2"></i>Remove</button>
                                 </div>
-                            </div>  
+                            </div> --}}
+                            
                         </div>
                     </div>
                 </div>

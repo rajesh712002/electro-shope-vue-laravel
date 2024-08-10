@@ -5,50 +5,69 @@ namespace App\Http\Controllers\user;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use Surfsidemedia\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
 {
     public function addToCart(Request $request)
     {
-        
 
-        
-        // $product = Product::find($request->id);
-        // if ($product == null) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Product Not Found'
-        //     ]);
-        // }
-        // if (Cart::count() > 0) {
-        //     echo "Product Exist";
-        // } else {
-        //     echo "Cart is empty";
-        //     Cart::add($product->id, $product->prod_name, 1, $product->price);//, ['productImage' => $product->image]
-        //     $status = true;
-        //     $message = 'Product Added';
-            
-        // }
-        // // dd($message );
-        // return response()->json([
-        //     'status' => $status,
-        //     'message' => $message
-        // ]);
+
+        Cart::instance('cart')->add($request->id, $request->prod_name, 1, $request->price)->associate('App\Model\Product');
+        return redirect()->back();
     }
 
-    public function updateToCart()
+
+    // public function view_cart($slug = null)
+    // {
+    //     // dd(Cart::content());
+    //     $product = Product::where('slug', $slug)->first();
+    //     return view('user.order.cart', compact('product'));
+    // }
+
+    public function index()
     {
+        $items = Cart::instance('cart')->content();
+        return view('user.order.cart', compact('items'));
     }
 
-    public function removeToCard()
+    public function increaseCartQty($rowId)
     {
+        $product = Cart::instance('cart')->get($rowId);
+        $qty = $product->qty + 1;
+        Cart::instance('cart')->update($rowId, $qty);
+        return redirect()->back();
     }
 
-    public function view_cart($slug = null)
+    public function decreaseCartQty($rowId)
     {
-        // dd(Cart::content());
-        $product = Product::where('slug', $slug)->first();
-        return view('user.order.cart', compact('product'));
+        $product = Cart::instance('cart')->get($rowId);
+        $qty = $product->qty - 1;
+        Cart::instance('cart')->update($rowId, $qty);
+        return redirect()->back();
+    }
+
+    public function remove_item($rowId)
+    {
+        Cart::instance('cart')->remove($rowId);
+        return redirect()->back();
+    }
+
+
+
+    //Wishlist
+
+
+    public function wishlist()
+    {
+        $items = Cart::instance('wishlist')->content();
+        return view('user.order.wishlist', compact('items'));
+        //  return view('user.order.wishlist');
+    }
+
+    public function addToWishlist(Request $request)
+    {
+        Cart::instance('wishlist')->add($request->id, $request->prod_name, 1, $request->price)->associate('App\Model\Product');
+        return redirect()->back();
     }
 }

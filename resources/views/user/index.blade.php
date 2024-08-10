@@ -9,7 +9,7 @@
 
                     <picture>
                         <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/phones.png' ) }}" />
-                        <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/phones.png' ) }}" />
+                        <a href="{{route('usershop')}}"> <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/phones.png' ) }}" /></a>
                         <img src="{{ asset('admin_assets/images/phones.png' ) }}" alt="" />
                     </picture>
 
@@ -25,9 +25,9 @@
                 <div class="carousel-item">
 
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/leptopss.png' ) }}" />
+                        <a href="{{route('usershop')}}"><source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/leptopss.png' ) }}" />
                         <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/leptopss.png' ) }}" />
-                        <img src="{{ asset('admin_assets/images/leptopss.png' ) }}" alt="" />
+                         <img src="{{ asset('admin_assets/images/leptopss.png' ) }}" alt="" /></a>
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
@@ -43,9 +43,9 @@
                     <!-- <img src="images/carousel-3.jpg" class="d-block w-100" alt=""> -->
 
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/watchs.png' ) }}" />
+                        <a href="{{route('usershop')}}"> <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/watchs.png' ) }}" />
                         <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/watchs.png' ) }}" />
-                        <img src="{{ asset('admin_assets/images/watchs.png' ) }}" alt="" />
+                        <img src="{{ asset('admin_assets/images/watchs.png' ) }}" alt="" /></a>
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
@@ -164,9 +164,25 @@
                                 <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
                                 </a>
                                 <div class="product-action">
-                                    <a class="btn btn-dark" href="#">
+                                    {{-- <a class="btn btn-dark" href="{{route('viewproduct',$prod->slug)}}">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
+                                    </a> --}}
+                                    @if (Cart::instance('cart')->content()->where('id', $prod->id)->count() > 0)
+                                    <a class="btn btn-dark" href="{{ route('user.index') }}">
+                                        <i class="btn btn-info">Go To Cart</i>
                                     </a>
+                                @else
+                                    <form action="{{ route('user.addToCart') }}" method="POST">
+                                        {{-- @dd($product) --}}
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $prod->id }}" />
+                                        <input type="hidden" name="prod_name"
+                                            value="{{ $prod->prod_name }}" />
+                                        <input type="hidden" name="price" value="{{ $prod->price }}" />
+                                        <button type="submit" class="btn btn-dark"><i
+                                                class="fas fa-shopping-cart"></i> Add To Cart</button>
+                                    </form>
+                                @endif
                                 </div>
                             </div>
                             <div class="card-body text-center mt-3">
@@ -176,7 +192,7 @@
                                             {{ $prod->price }}</strong></span>
                                     <span class="h6 text-underline"><del>{{ $prod->compare_price }}</del></span>
                                 </div>
-                                <div> Qty:- {{ $prod->qty }}</div>
+                                <div class="text-secondary"> InStock:- {{ $prod->qty }}</div>
                             </div>
                         </div>
                     </div>

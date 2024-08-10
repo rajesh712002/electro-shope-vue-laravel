@@ -111,31 +111,33 @@ class SettingController extends Controller
             return redirect()->route('user.forgetPassword')->withInput()->withErrors($validator);
         }
 
-        $token = Str::random(60);
-        DB::table('password_reset_tokens')->insert([
-            'email' => $request->email,
-            'token' => $token,
-            'created_at' => now()
-        ]);
+        // $token = Str::random(60);
 
-        //=======Mail=======
+        // DB::table('password_reset_tokens')->where('email',$request->email)->delete();
 
-        $user = User::where('email',$request->email)->first();
+        // DB::table('password_reset_tokens')->insert([
+        //     'email' => $request->email,
+        //     'token' => $token,
+        //     'created_at' => now()
+        // ]);
 
-        $formData = [
-            'token' => $token,
-            'user' => $user,
-            'mailSubject' => 'You Have Requested To Resest Your Password'
-        ];
+        // //=======Mail=======
 
-        Mail::to($request->email)->send(new ResetPasswordEmail($formData));
+        // $user = User::where('email',$request->email)->first();
 
-        return redirect()->route('user.forgetPassword')->with('success');
+        // $formData = [
+        //     'token' => $token,
+        //     'user' => $user,
+        //     'mailSubject' => 'You Have Requested To Resest Your Password'
+        // ];
 
+        // Mail::to($request->email)->send(new ResetPasswordEmail($formData));
 
+        return redirect()->route('user.forgetPassword')->with('success', 'Please Check your inbox to resest your password');
     }
 
-    public function resestForgetPassword(){
+    public function resestForgetPassword()
+    {
         return view('user.order.forgot_password');
     }
 }

@@ -4,7 +4,7 @@
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="{{route('userindex')}}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a></li>
                     <li class="breadcrumb-item active">Shop</li>
                 </ol>
             </div>
@@ -60,88 +60,11 @@
                                     @endforeach
                                     @endif
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
 
-                    {{-- <div class="sub-title mt-5">
 
-                        <h2>Brand</h3>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            @dd($brand)
-                            @if ($brands->isNotEmpty())
-                                @foreach ($brands as $brand)
-                                    <div class="form-check mb-2">
-                                        <input @if(in_array($brand->id, $brandsArray)) checked @endif
-                                            class="form-check-input brand-label " type="checkbox" name="brand[]"
-                                            value="{{ $brand->id }}" id="brand-{{ $brand->id }}">
-                                        <label class="form-check-label" for="brand-{{ $brand->id }}">
-                                            {{ $brand->name }}
-                                        </label>
-                                    </div>
-                                @endforeach
-                            @endif
-
-                        </div>
-                    </div> --}}
-
-                    {{-- <div class="sub-title mt-5">
-                        <h2>Price</h3>
-                    </div> --}}
-
-                    {{-- <div class="card">
-                        <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    <i class="fa fa-inr" aria-hidden="true"> 0-2000</i>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    <i class="fa fa-inr" aria-hidden="true"> 2000-5000</i>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    <i class="fa fa-inr" aria-hidden="true"> 5000-10000</i>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    <i class="fa fa-inr" aria-hidden="true"> 10000-20000</i>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    <i class="fa fa-inr" aria-hidden="true"> 20000-40000</i>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    <i class="fa fa-inr" aria-hidden="true"> 40000-80000</i>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value=""
-                                    id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    <i class="fa fa-inr" aria-hidden="true"> 80000+</i>
-                                </label>
-                            </div>
-                        </div>
-                    </div> --}}
                 </div>
                 <div class="col-md-9">
                     <div class="row pb-3">
@@ -180,23 +103,37 @@
                                         <a class="whishlist" href="#"><i class="far fa-heart"></i></a>
 
                                         <div class="product-action">
-                                            <a class="btn btn-dark" href="#">
-                                                <i class="fa fa-shopping-cart"></i> Add To Cart
-                                            </a>
+
+                                            @if (Cart::instance('cart')->content()->where('id', $prod->id)->count() > 0)
+                                                <a class="btn btn-dark" href="{{ route('user.index') }}">
+                                                    <i class="btn btn-info">Go To Cart</i>
+                                                </a>
+                                            @else
+                                                <form action="{{ route('user.addToCart') }}" method="POST">
+                                                    {{-- @dd($product) --}}
+                                                    @csrf
+                                                    <input type="hidden" name="id" value="{{ $prod->id }}" />
+                                                    <input type="hidden" name="prod_name"
+                                                        value="{{ $prod->prod_name }}" />
+                                                    <input type="hidden" name="price" value="{{ $prod->price }}" />
+                                                    <button type="submit" class="btn btn-dark"><i
+                                                            class="fas fa-shopping-cart"></i> Add To Cart</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </div>
-                                    
+
                                     <div class="card-body text-center mt-3">
                                         <a class="h6 link"
-                                        href="{{ route('viewproduct', $prod->slug) }}">{{ $prod->prod_name }}</a>
-                                        
+                                            href="{{ route('viewproduct', $prod->slug) }}">{{ $prod->prod_name }}</a>
+
                                         <div class="price mt-2">
                                             <span class="h5"><strong><i class="fa fa-inr" aria-hidden="true">
-                                            </i>
-                                            {{ $prod->price }}</strong></span>
+                                                    </i>
+                                                    {{ $prod->price }}</strong></span>
                                             <span
-                                            class="h6 text-underline"><del>{{ $prod->compare_price }}</del></span>
-                                           <div> Qty:- {{ $prod->qty }}</div>
+                                                class="h6 text-underline"><del>{{ $prod->compare_price }}</del></span>
+                                            <div class="text-secondary"> InStock:- {{ $prod->qty }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -233,7 +170,7 @@
         });
         console.log(brandss.toString());
         var url = '{{ url()->current() }}?';
-       //  window.location.href = url+'&brands='+brandss;
+        //  window.location.href = url+'&brands='+brandss;
     }
 
     // $.("#sort").change(function(){
