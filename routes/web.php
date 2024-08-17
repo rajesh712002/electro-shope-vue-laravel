@@ -64,7 +64,18 @@ Route::middleware([ValidUser::class])->group(function () {
 
     //Wishlist Process
     Route::get('/wishlist', [CartController::class, 'wishlist'])->name('user.wishlist');
-    Route::post('/addcart', [CartController::class, 'addToWishlist'])->name('user.addToWishlist');
+    Route::post('/addwishlist', [CartController::class, 'addToWishlist'])->name('user.addToWishlist');
+    Route::delete('/removewishlist/{id}',[CartController::class,'remove_wishlist'])->name('user.remove_wishlist');
+
+    Route::delete('/moveToCart/{id}', [CartController::class, 'moveToCart'])->name('user.moveToCart');
+
+
+
+    //Checkout
+
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('user.checkout');
+
+
 
 });
 

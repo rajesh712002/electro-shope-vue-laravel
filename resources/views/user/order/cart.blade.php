@@ -32,13 +32,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    {{-- @dd($items) --}}
-                    @if ($items->count() > 0)
+                    {{-- @dd($carts) --}}
+                    @if ($product->count() > 0)
 
                         <div class="table-responsive">
                             <table class="table" id="cart">
                                 <thead>
                                     <tr>
+                                        <th>Image</th>
                                         <th>Item</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
@@ -47,14 +48,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($items as $item)
+                                    {{-- @foreach ($carts as $cart) --}}
+                                    @foreach ($product as $item)
                                         <tr>
                                             {{-- @dd($product) --}}
                                             <td>
                                                 <div class="d-flex align-items-center justify-content-center">
-                                                    {{-- <img src="{{ asset('admin_assets/images/') }}/{{$item->model->image}}" width="120" height="120" alt="{{$item->name}}"> --}}
+                                                    <img src="{{ asset('admin_assets/images/' . $item->image) }}"
+                                                        width="120" height="120">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center justify-content-center">
                                                     {{-- <h2>{{$product->prod_name}}</h2> --}}
-                                                    {{ $item->name }}
+                                                    {{ $item->prod_name }}
                                                 </div>
                                             </td>
                                             <td>{{ $item->price }}</td>
@@ -62,7 +69,7 @@
                                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                                     <div class="input-group-btn">
                                                         <form method="POST"
-                                                            action="{{ route('qty.decrease', ['rowId' => $item->rowId]) }}">
+                                                            action="{{ route('qty.decrease',$item->cid) }}">
                                                             @csrf
                                                             @method('PUT')
                                                             <button type="submit"
@@ -70,13 +77,19 @@
                                                                 <i class="fa fa-minus"></i>
                                                             </button>
                                                         </form>
+                                                        {{-- <button type="submit"
+                                                            class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button> --}}
                                                     </div>
                                                     <input type="text" name="quantity"
                                                         class="form-control form-control-sm  border-0 text-center"
-                                                        value="{{ $item->qty }}" min="1">
+                                                        value="{{ $item->cqty }}" min="1"
+                                                        max="{{ $item->qty }}">
+
                                                     <div class="input-group-btn">
                                                         <form method="POST"
-                                                            action="{{ route('qty.increase', ['rowId' => $item->rowId]) }}">
+                                                            action="{{ route('qty.increase', $item->cid) }}">
                                                             @csrf
                                                             @method('PUT')
                                                             <button type="submit"
@@ -84,22 +97,38 @@
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </form>
+                                                        {{-- <button type="submit"
+                                                            class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button> --}}
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                {{ $item->subtotal }}
+                                                {{ $item->price * $item->cqty }}
                                             </td>
                                             <td>
-                                                <form method="POST" action="{{route('qty.remove_item', ['rowId' => $item->rowId])}}">
+                                                {{-- <form method="POST" action="{{route('qty.remove_item', ['rowId' => $item->rowId])}}">
                                                     @csrf
                                                             @method('delete')
                                                     <button type="submit" class="btn btn-sm btn-danger"><i
                                                             class="fa fa-times"></i></button>
+                                                </form> --}}
+
+
+                                                <form id="delete-product-form-{{ $item->cid }}" class="delete_cat"
+                                                    method="post" action="{{ route('qty.remove_item', $item->cid) }}">
+                                                    @csrf
+                                                    @method('delete')
                                                 </form>
+
+                                                <button onclick="deleteProduct({{ $item->cid }});" type="submit"
+                                                    class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
+
+                                    {{-- @endforeach --}}
 
                                 </tbody>
                             </table>
@@ -123,7 +152,7 @@
                             <div class="d-flex justify-content-between pb-2">
                                 <div>Subtotal</div>
                                 <div><i class="fa fa-inr" aria-hidden="true">
-                                    </i> {{ Cart::instance('cart')->subtotal() }}</div>
+                                    </i> {{$totalSum}}</div>
                             </div>
                             <div class="d-flex justify-content-between pb-2">
                                 <div>Shipping</div>
@@ -134,7 +163,7 @@
                         <div class="d-flex justify-content-between summery-end">
                             <div>Total</div>
                             <div><i class="fa fa-inr" aria-hidden="true">
-                                </i> {{ Cart::instance('cart')->total() }}</div>
+                                </i> {{$totalSum}}</div>
                         </div>
                         <div class="pt-5">
                             <a href="" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
@@ -150,4 +179,11 @@
         </div>
     </section>
 </main>
+<script>
+    function deleteProduct(id) {
+        if (confirm("Do you really want to delete this record ?")) {
+            document.getElementById("delete-product-form-" + id).submit();
+        }
+    }
+</script>
 @include('user.includes.footer')

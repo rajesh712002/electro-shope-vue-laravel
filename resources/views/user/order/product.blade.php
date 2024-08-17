@@ -68,7 +68,7 @@
             </div>
         </div>
     </section>
-
+{{-- @dd($product) --}}
     <section class="section-7 pt-3 mb-3">
         <div class="container">
 
@@ -108,21 +108,21 @@
                                 aria-hidden="true"><del>{{ $product->compare_price }}</del></i></h2>
                         <h2 class="price "><i class="fa fa-inr" aria-hidden="true">{{ $product->price }}</i>
                         </h2>
-
+                        {{-- @dd(Auth::user()->id) --}}
                         <p>{{ $product->description }}</p>
-                        @if (Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
+                        {{-- @if ()
                             <a href="{{ route('user.index') }}" class="btn btn-info ">Go To Cart</a>
-                        @else
+                        @else --}}
                             <form action="{{ route('user.addToCart') }}" method="POST">
                                 {{-- @dd($product) --}}
                                 @csrf
-                                <input type="hidden" name="id" value="{{ $product->id }}" />
-                                <input type="hidden" name="prod_name" value="{{ $product->prod_name }}" />
-                                <input type="hidden" name="price" value="{{ $product->price }}" />
+                                <input type="hidden" name="prod_id" value="{{ $product->id }}" />
+                                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                <input type="hidden" name="qty" value="2" />
                                 <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
                                     &nbsp;ADD TO CART</button>
                             </form>
-                        @endif
+                        {{-- @endif --}}
 
                     </div>
                 </div>

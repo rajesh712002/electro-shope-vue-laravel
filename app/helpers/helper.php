@@ -1,10 +1,11 @@
 <?php
 
 use App\Models\user;
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -21,6 +22,14 @@ function getproduct(){
     return $product = Product::orderBy('created_at', 'desc')->limit(12)->get();
 
 }
+
+function cartCount(){
+    $userId = Auth::user()->id;
+    return $totalItemCount  = DB::table('carts')
+        ->where('user_id', $userId)
+        ->count();
+}
+
 
 
 

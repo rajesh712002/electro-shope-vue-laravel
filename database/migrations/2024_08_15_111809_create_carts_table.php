@@ -13,13 +13,9 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->references('id')->on('users');
-            $table->string('image')->nullable();
-            $table->string('prod_name')->nullable();
-            $table->double('price', 10, 2)->nullable();
-            $table->integer('qty')->nullable()->nullable();
-            $table->double('sub_total', 10, 2)->nullable();
-            $table->double('total', 10, 2)->nullable();
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('product_id')->references('id')->on('products');
+            $table->bigInteger('qty');
             $table->timestamps();
         });
     }

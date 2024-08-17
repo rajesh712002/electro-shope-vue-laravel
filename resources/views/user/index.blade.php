@@ -161,28 +161,34 @@
                                 <a href="{{route('viewproduct',$prod->slug)}}">
                                 <img style="width: 200px; height: 200px; object-fit: contain;" class="cardimgtop"
                                     src="{{ asset('admin_assets/images/' . $prod->image) }}" alt="">
-                                <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                                {{-- <a class="whishlist" href="222"><i class="far fa-heart"></i></a> --}}
+                                <form method="POST" action="{{route('user.addToWishlist')}}">
+                                    @csrf
+                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+
+                                    <button type="submit" class="whishlist "><i class="far fa-heart"></i></button>
+                                </form>
                                 </a>
                                 <div class="product-action">
                                     {{-- <a class="btn btn-dark" href="{{route('viewproduct',$prod->slug)}}">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </a> --}}
-                                    @if (Cart::instance('cart')->content()->where('id', $prod->id)->count() > 0)
+                                    {{-- @if (Cart::instance('cart')->content()->where('id', $prod->id)->count() > 0)
                                     <a class="btn btn-dark" href="{{ route('user.index') }}">
                                         <i class="btn btn-info">Go To Cart</i>
                                     </a>
-                                @else
-                                    <form action="{{ route('user.addToCart') }}" method="POST">
-                                        {{-- @dd($product) --}}
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $prod->id }}" />
-                                        <input type="hidden" name="prod_name"
-                                            value="{{ $prod->prod_name }}" />
-                                        <input type="hidden" name="price" value="{{ $prod->price }}" />
-                                        <button type="submit" class="btn btn-dark"><i
-                                                class="fas fa-shopping-cart"></i> Add To Cart</button>
-                                    </form>
-                                @endif
+                                @else --}}
+                                <form action="{{ route('user.addToCart') }}" method="POST">
+                                    {{-- @dd($product) --}}
+                                    @csrf
+                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                    <input type="hidden" name="qty" value="1" />
+                                    <button type="submit" class="btn btn-dark"><i
+                                            class="fas fa-shopping-cart"></i> Add To Cart</button>
+                                </form>
+                                {{-- @endif --}}
                                 </div>
                             </div>
                             <div class="card-body text-center mt-3">

@@ -100,26 +100,30 @@
                                                 src="{{ asset('admin_assets/images/' . $prod->image) }}"
                                                 alt="">
                                         </a>
-                                        <a class="whishlist" href="#"><i class="far fa-heart"></i></a>
+                                        <form method="POST" action="{{route('user.addToWishlist')}}">
+                                            @csrf
+                                            <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
 
+                                            <button type="submit" class="whishlist "><i class="far fa-heart"></i></button>
+                                        </form>
                                         <div class="product-action">
 
-                                            @if (Cart::instance('cart')->content()->where('id', $prod->id)->count() > 0)
-                                                <a class="btn btn-dark" href="{{ route('user.index') }}">
+                                            {{-- @if ($prod)
+                                                <a  href="{{ route('user.index') }}">
                                                     <i class="btn btn-info">Go To Cart</i>
                                                 </a>
-                                            @else
+                                            @else --}}
                                                 <form action="{{ route('user.addToCart') }}" method="POST">
                                                     {{-- @dd($product) --}}
                                                     @csrf
-                                                    <input type="hidden" name="id" value="{{ $prod->id }}" />
-                                                    <input type="hidden" name="prod_name"
-                                                        value="{{ $prod->prod_name }}" />
-                                                    <input type="hidden" name="price" value="{{ $prod->price }}" />
+                                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                                    <input type="hidden" name="qty" value="1" />
                                                     <button type="submit" class="btn btn-dark"><i
                                                             class="fas fa-shopping-cart"></i> Add To Cart</button>
                                                 </form>
-                                            @endif
+                                            {{-- @endif --}}
                                         </div>
                                     </div>
 

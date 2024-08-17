@@ -131,10 +131,7 @@
                 </div>
                 <div class="right-nav py-0">
                     <a href="{{ route('user.index') }}" class="ml-3 d-flex pt-2">
-                        <i class="fas fa-shopping-cart text-primary"><span style="color: white">{{Cart::instance('cart')->content()->count()}}</span></i>
-                        {{-- @if (Cart::instance('cart')->content()->count()>0)                            
-                        <span class="cart-amount d-block position-absolute js-cart-items-count">{{Cart::instance('cart')->content()->count()}}</span>
-                        @endif --}}
+                        <i class="fas fa-shopping-cart text-primary"><span style="color: white">{{cartCount()}}</span></i>
                     </a>
                 </div>
             </nav>
