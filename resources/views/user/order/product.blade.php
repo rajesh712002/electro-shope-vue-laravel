@@ -88,7 +88,7 @@
                 {{-- <img width="10" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
                 <div class="col-md-7">
                     <div class="bg-light right">
-                        <img style="width: 100px; height: 70px; object-fit: contain;!important"
+                        <img style="width: 100px; height: 70px; object-fit: contain ! important"
                             src="{{ asset('admin_assets/images/' . $product->brand->image) }}">
                         <h1>{{ $product->prod_name }}</h1>
                         <div class="d-flex mb-3">
@@ -110,9 +110,7 @@
                         </h2>
                         {{-- @dd(Auth::user()->id) --}}
                         <p>{{ $product->description }}</p>
-                        {{-- @if ()
-                            <a href="{{ route('user.index') }}" class="btn btn-info ">Go To Cart</a>
-                        @else --}}
+                       
                             <form action="{{ route('user.addToCart') }}" method="POST">
                                 {{-- @dd($product) --}}
                                 @csrf
@@ -122,7 +120,7 @@
                                 <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
                                     &nbsp;ADD TO CART</button>
                             </form>
-                        {{-- @endif --}}
+                       
 
                     </div>
                 </div>
@@ -304,3 +302,4 @@
 
 
 @include('user.includes.footer')
+

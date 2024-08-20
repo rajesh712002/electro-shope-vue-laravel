@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
 use App\Http\Controllers\user\CartController;
+use App\Http\Controllers\user\CheckoutController;
 use App\Http\Controllers\user\SettingController;
 use App\Http\Controllers\user\ShopController;
 
@@ -73,7 +74,8 @@ Route::middleware([ValidUser::class])->group(function () {
 
     //Checkout
 
-    Route::get('/checkout', [CartController::class, 'checkout'])->name('user.checkout');
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
+    Route::post('/storecheckout', [CheckoutController::class, 'storeCheckout'])->name('user.storecheckout');
 
 
 

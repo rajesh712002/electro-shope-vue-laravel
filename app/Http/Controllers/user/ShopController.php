@@ -58,17 +58,8 @@ class ShopController extends Controller
     }
 
 
-    public function addToCart(){
+ //========//==============//===================//
+ //checkout process
 
-    }
-
-    public function removeToCard(){
-
-    }
-    
-    public function view_cart($slug=null)
-    {
-        $product = Product::where('slug',$slug)->first();
-        return view('user.order.cart',compact('product'));
-    }
+ 
 }

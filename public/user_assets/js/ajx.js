@@ -129,3 +129,45 @@ $(document).ready(function () {
     });
 });
 
+//==========================================================================================
+
+//User Addresses
+
+$(document).ready(function () {
+    $("#CheckoutForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                $("#CheckoutForm")[0].reset();
+                alert(response.success);
+                // window.location.href = "/admin/createsubcategories";
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    $.each(errors, function (key, value) {
+                        $('[name="' + key + '"]')
+                            .parent()
+                            .find(".error, .error_no_margin")
+                            .text("** " + value[0] + "!");
+                    });
+                }
+            },
+        });
+    });
+});
+
