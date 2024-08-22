@@ -40,7 +40,8 @@ class CategoryController extends Controller
         $rules = [
             'name' => 'required|max:50',
             'slug' => 'required|unique:categories|max:100',
-            'status' => 'required|max:50'
+            'status' => 'required|max:50',
+            'image' => 'required',
 
         ];
 

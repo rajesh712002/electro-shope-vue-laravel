@@ -130,9 +130,13 @@
                     </ul>
                 </div>
                 <div class="right-nav py-0">
+                    @if (Auth::check())
                     <a href="{{ route('user.index') }}" class="ml-3 d-flex pt-2">
-                        <i class="fas fa-shopping-cart text-primary"><span style="color: white">{{cartCount()}}</span></i>
+                        <i class="fas fa-shopping-cart text-primary"><span style="color: white">
+                                {{ cartCount() }}
+                            </span></i>
                     </a>
+                    @endif
                 </div>
             </nav>
         </div>

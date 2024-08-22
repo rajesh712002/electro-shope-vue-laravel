@@ -116,7 +116,7 @@
                                 @csrf
                                 <input type="hidden" name="prod_id" value="{{ $product->id }}" />
                                 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
-                                <input type="hidden" name="qty" value="2" />
+                                <input type="hidden" name="qty" value="1" />
                                 <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
                                     &nbsp;ADD TO CART</button>
                             </form>

@@ -13,18 +13,10 @@ class ShopController extends Controller
 {
     public function shop($categoryslug = null, $subcategoryslug = null)
     {
-        // dd("here");
-        // dd($categoryslug);
-        // dd("here");
+        
         $categorySelected='';
         $subcategorySelected='';
         $brandsArray = [];
-
-        // if(!empty($request->get('brand')))
-        // {
-        //     $brandsArray = explode(',',$request->get('brand'));
-        //     dd($brandsArray);
-        // }
 
         $categorys = Category::withCount('product')->get();
         $products = Product::where('status', 1);

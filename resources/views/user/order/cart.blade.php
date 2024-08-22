@@ -15,6 +15,8 @@
                                 Grab your favorite timepieces at unbeatable prices. Limited time offer. Shop today!</p> --}}
 
 @include('user.includes.header')
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
         <div class="container">
@@ -69,7 +71,8 @@
                                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                                     <div class="input-group-btn">
                                                         <form method="POST"
-                                                            action="{{ route('qty.decrease',$item->cid) }}">
+                                                            action="{{ route('qty.decrease', $item->cid) }}"
+                                                            id="DecreaseCartForm">
                                                             @csrf
                                                             @method('PUT')
                                                             <button type="submit"
@@ -143,33 +146,36 @@
                     @endif
 
                 </div>
-                <div class="col-md-4">
-                    <div class="card cart-summery">
-                        <div class="sub-title">
-                            <h2 class="bg-white">Cart Summery</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between pb-2">
-                                <div>Subtotal</div>
+                @if (cartCount() > 0)
+                    <div class="col-md-4">
+                        <div class="card cart-summery">
+                            <div class="sub-title">
+                                <h2 class="bg-white">Cart Summery</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between pb-2">
+                                    <div>Subtotal</div>
+                                    <div><i class="fa fa-inr" aria-hidden="true">
+                                        </i> {{ $totalSum }}</div>
+                                </div>
+                                <div class="d-flex justify-content-between pb-2">
+                                    <div>Shipping</div>
+                                    {{-- <div><i class="fa fa-inr" aria-hidden="true"> --}}
+                                    </i> Free
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between summery-end">
+                                <div>Total</div>
                                 <div><i class="fa fa-inr" aria-hidden="true">
-                                    </i> {{$totalSum}}</div>
+                                    </i> {{ $totalSum }}</div>
                             </div>
-                            <div class="d-flex justify-content-between pb-2">
-                                <div>Shipping</div>
-                                {{-- <div><i class="fa fa-inr" aria-hidden="true"> --}}
-                                </i> Free
+                            <div class="pt-5">
+                                <a href="{{ route('user.checkout') }}" class="btn-dark btn btn-block w-100">Proceed to
+                                    Checkout</a>
                             </div>
-                        </div>
-                        <div class="d-flex justify-content-between summery-end">
-                            <div>Total</div>
-                            <div><i class="fa fa-inr" aria-hidden="true">
-                                </i> {{$totalSum}}</div>
-                        </div>
-                        <div class="pt-5">
-                            <a href="" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                         </div>
                     </div>
-                </div>
+                @endif
                 {{-- <div class="input-group apply-coupan mt-4">
                         <input type="text" placeholder="Coupon Code" class="form-control">
                         <button class="btn btn-dark" type="button" id="button-addon2">Apply Coupon</button>
@@ -186,4 +192,7 @@
         }
     }
 </script>
+
+<script src="{{ asset('user_assets/js/ajx.js') }}"></script>
+
 @include('user.includes.footer')

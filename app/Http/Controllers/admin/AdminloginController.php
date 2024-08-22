@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\User;
+use App\Models\Brand;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\OrderItem;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\Subcategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -71,10 +73,23 @@ class AdminloginController extends Controller
         return view('admin.userdata.user',['users' => $users]);
     }
 
-    public function orders(){
-       
-        return view('admin.userdata.orders');
+    public function viewOrders(){
+        $order = Order::with('user')->get();
+        return view('admin.userdata.orders',compact('order'));
    
+    }
+
+    public function viewOrderDetails($id = null){
+        $order_item = OrderItem::where('order_id',$id)->with('order')->first();
+        $order_item_det = OrderItem::where('order_id',$id)->with('order')->get();
+// dd($order_item_count);
+        return view('admin.userdata.order_detail',compact('order_item','order_item_det'));
+   
+    }
+
+    public function updateUserOrder(Request $request,$id = null){
+        $order_update = Order::where('id',$id)->update(['status' => $request->status]);
+        return redirect()->back();
     }
 
 

@@ -169,33 +169,27 @@
                                 </a>
 
                                 {{-- <a class="whishlist" href="222"><i class="far fa-heart"></i></a> --}}
+                                @if (Auth::check())
                                 <form method="POST" action="{{route('user.addToWishlist')}}">
                                     @csrf
                                     <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
 
-                                    <button type="submit" class="whishlist "><i class="far fa-heart"></i></button>
                                 </form>
-
+                                @endif
+                                <a class="whishlist" href="{{route('user.wishlist')}}"><i class="far fa-heart"></i></a>
                                 <div class="product-action">
-                                    {{-- <a class="btn btn-dark" href="{{route('viewproduct',$prod->slug)}}">
-                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                    </a> --}}
-                                    {{-- @if (Cart::instance('cart')->content()->where('id', $prod->id)->count() > 0)
-                                    <a class="btn btn-dark" href="{{ route('user.index') }}">
-                                        <i class="btn btn-info">Go To Cart</i>
-                                    </a>
-                                @else --}}
+                                 
+                                @if (Auth::check())
                                 <form action="{{ route('user.addToCart') }}" method="POST">
                                     {{-- @dd($product) --}}
                                     @csrf
                                     <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
                                     <input type="hidden" name="qty" value="1" />
-                                    <button type="submit" class="btn btn-dark"><i
-                                            class="fas fa-shopping-cart"></i> Add To Cart</button>
                                 </form>
-                                {{-- @endif --}}
+                                @endif
+                                <a class="btn btn-dark" href="{{route('user.index')}}" ><i class="fas fa-shopping-cart"></i> Add To Cart</a>
                                 </div>
                             </div>
                             <div class="card-body text-center mt-3">

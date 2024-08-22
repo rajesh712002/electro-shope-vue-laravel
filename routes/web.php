@@ -53,6 +53,8 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::get('/user/profile', [SettingController::class, 'account'])->name('useraccount');
     Route::post('/user/changeprofile', [SettingController::class, 'changeProfile'])->name('userchangeProfile');
 
+    Route::get('/order', [SettingController::class, 'view_order'])->name('user.view_order');
+    Route::get('/orderdetail/{orderId?}', [SettingController::class, 'orderDetail'])->name('user.order_detail');
 
     //Cart Process
     Route::get('/cart', [CartController::class, 'index'])->name('user.index');
@@ -61,7 +63,6 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::put('cart/decrease/{rowId}',[CartController::class,'decreaseCartQty'])->name('qty.decrease');
     Route::delete('cart/remove_item/{rowId}',[CartController::class,'remove_item'])->name('qty.remove_item');
 
-    Route::get('/order', [UserController::class, 'view_order'])->name('user.view_order');
 
     //Wishlist Process
     Route::get('/wishlist', [CartController::class, 'wishlist'])->name('user.wishlist');
@@ -163,6 +164,10 @@ Route::middleware([ValidAdmin::class])->group(function () {
     //================================================================================================================================================================
 
     //User Data
+    Route::get('/admin/orders', [AdminloginController::class, 'viewOrders'])->name('admin.orders');
+    Route::get('/admin/orderdetail/{id?}', [AdminloginController::class, 'viewOrderDetails'])->name('admin.orderdetail');
+    Route::put('/admin/updateorderdetail/{id?}', [AdminloginController::class, 'updateUserOrder'])->name('admin.updateorderdetail');
+
+
     Route::get('/admin/users', [AdminloginController::class, 'users'])->name('admin.users');
-    Route::get('/admin/orders', [AdminloginController::class, 'orders'])->name('admin.orders');
 });

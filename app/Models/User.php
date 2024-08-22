@@ -49,10 +49,8 @@ class User extends Authenticatable
         ];
     }
 
-    // protected function role():Attribute
-    // {
-    //     return new Attribute(
-    //         get:fn($value)=>[1,2][$value],
-    //     );
-    // }
+    public function order()
+    {
+        return $this->hasMany(Order::class,'user_id','id');
+    }
 }

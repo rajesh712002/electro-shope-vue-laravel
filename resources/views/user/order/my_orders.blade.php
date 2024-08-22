@@ -29,56 +29,42 @@
                                     <thead> 
                                         <tr>
                                             <th>Orders #</th>
-                                            <th>Date Purchased</th>
+                                            <th>Purchased Date</th>
                                             <th>Status</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if($order->isNotEmpty())
+                                        @foreach($order as $orders)
                                         <tr>
                                             <td>
-                                                <a href="order-detail.php">OR756374</a>
+                                                <a href="{{route('user.order_detail',$orders->id)}}">{{$orders->id}}</a>
                                             </td>
-                                            <td>11 Nav, 2022</td>
+                                            <td>{{ \Carbon\Carbon::parse($orders->created_at)->format('d M, Y')}}</td>
                                             <td>
-                                                <span class="badge bg-success">Delivered</span>
+                                                @if($orders->status == 'pending')
+                                                <button type="button" class="btn btn-info"><span class="fa fa-bars" aria-hidden="true"></span> Pending</button>
+                                                
+                                                @elseif($orders->status == 'shipped')
+                                                <button type="button" class="btn btn-primary"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Shipped</button>
+
+                                                @elseif($orders->status == 'out for delivery')
+                                                <button type="button" class="btn btn-warning"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Out For Delivery!</button>
+                                              
+                                                @elseif($orders->status == 'delivered')
+                                                <button type="button" class="btn btn-success"><span class="fa fa-check-circle" aria-hidden="true"></span> Delivered</button>
+
+                                                @elseif($orders->status == 'cancelled')
+                                              <button type="button" class="btn btn-danger"> <i class="fa fa-close"></i> Cancelled</button>
+
+                                                @endif
                                                 
                                             </td>
-                                            <td>$400</td>
+                                            <td><i class="fa fa-inr" aria-hidden="true"></i> {{$orders->grand_total}}</td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="order-detail.php">OR756374</a>
-                                            </td>
-                                            <td>10 Oct, 2022</td>
-                                            <td>
-                                                <span class="badge bg-success">Delivered</span>
-                                                
-                                            </td>
-                                            <td>$400</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="order-detail.php">OR756374</a>
-                                            </td>
-                                            <td>02 Sep, 2022</td>
-                                            <td>
-                                                <span class="badge bg-success">Delivered</span>
-                                                
-                                            </td>
-                                            <td>$400</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="order-detail.php">OR756374</a>
-                                            </td>
-                                            <td>01 Dec, 2022</td>
-                                            <td>
-                                                <span class="badge bg-success">Delivered</span>
-                                                
-                                            </td>
-                                            <td>$400</td>
-                                        </tr>                                        
+                                        @endforeach
+                                                @endif          
                                     </tbody>
                                 </table>
                             </div>                            

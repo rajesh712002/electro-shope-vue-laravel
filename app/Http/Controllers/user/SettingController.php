@@ -11,6 +11,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -111,27 +113,7 @@ class SettingController extends Controller
             return redirect()->route('user.forgetPassword')->withInput()->withErrors($validator);
         }
 
-        // $token = Str::random(60);
-
-        // DB::table('password_reset_tokens')->where('email',$request->email)->delete();
-
-        // DB::table('password_reset_tokens')->insert([
-        //     'email' => $request->email,
-        //     'token' => $token,
-        //     'created_at' => now()
-        // ]);
-
-        // //=======Mail=======
-
-        // $user = User::where('email',$request->email)->first();
-
-        // $formData = [
-        //     'token' => $token,
-        //     'user' => $user,
-        //     'mailSubject' => 'You Have Requested To Resest Your Password'
-        // ];
-
-        // Mail::to($request->email)->send(new ResetPasswordEmail($formData));
+       
 
         return redirect()->route('user.forgetPassword')->with('success', 'Please Check your inbox to resest your password');
     }
@@ -139,5 +121,25 @@ class SettingController extends Controller
     public function resestForgetPassword()
     {
         return view('user.order.forgot_password');
+    }
+
+
+
+    public function view_order()
+    {
+        $user_id = Auth::user()->id;
+        $order = Order::where('user_id',$user_id)->orderBy('user_id','DESC')->get();
+        return view('user.order.my_orders',compact('order'));
+    }
+
+    public function orderDetail($id = null){
+        $user_id = Auth::user()->id;
+
+        $order = Order::where('user_id',$user_id)->where('id',$id)->first();
+        // dd($order);
+        $order_item = OrderItem::where('order_id',$id)->with('product')->get();
+        $order_item_count = OrderItem::where('order_id',$id)->count();
+        
+    return view('user.order.order_detail',compact('order','order_item','order_item_count'));
     }
 }

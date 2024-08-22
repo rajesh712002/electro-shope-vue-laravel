@@ -1,4 +1,6 @@
 @include('user.includes.header')
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
         <div class="container">
@@ -31,11 +33,9 @@
                                     <div class="mb-3">
                                         <label for="name">Old Password</label>
                                         <input type="password" name="old_password" id="old_password" value="{{ old('old_password') }}"
-                                            placeholder="Old Password" class="@error('old_password') is-invalid
-                                    @enderror form-control">
-                                    @error('old_password')
-                                    {{-- <p class="invalid-feedback">{{ $message }}</p> --}}
-                                    @enderror
+                                            placeholder="Old Password" class=" is-invalid
+                                     form-control">
+                                   
                                     <p></p>
                                 <h6 style="color: red" class="error"></h6>
                                     </div>

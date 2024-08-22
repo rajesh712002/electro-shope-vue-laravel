@@ -78,8 +78,9 @@ class CartController extends Controller
 
         if ($cart_prod_id) {
         } else {
-            // dd($product->pqty );
+            // dd($product->pqty);
             // if ($product) {
+            
             if ($product->cqty != $product->pqty) {
                 $cart->qty +=  1;
                 $cart->save();

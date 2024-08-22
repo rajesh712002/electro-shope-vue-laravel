@@ -31,5 +31,17 @@ function cartCount(){
 }
 
 
+function orderItemCount(){
+    $userId = Auth::user()->id;
+    return $orderItemCount  = DB::table('order_items')
+        ->where('user_id', $userId)
+        ->count();
+}
+
+function productImage($id){
+    return $product = Product::where('id',$id)->select('image')->get();
+}
+
+
 
 

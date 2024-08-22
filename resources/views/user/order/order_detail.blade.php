@@ -1,4 +1,4 @@
-<?php include('includes/header.php');?>
+@include('user.includes.header')
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
         <div class="container">
@@ -15,29 +15,15 @@
         <div class="container  mt-5">
             <div class="row">
                 <div class="col-md-3">
-                    <ul id="account-panel" class="nav nav-pills flex-column" >
-                        <li class="nav-item ">
-                            <a href="#"  class="nav-link font-weight-bold" role="tab" aria-controls="tab-login" aria-expanded="false"><i class="fas fa-user-alt"></i> My Profile</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a href="#"  class="nav-link font-weight-bold" role="tab" aria-controls="tab-register" aria-expanded="false"><i class="fas fa-shopping-bag"></i>My Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="wishlist.php"  class="nav-link font-weight-bold" role="tab" aria-controls="tab-register" aria-expanded="false"><i class="fas fa-heart"></i> Wishlist</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#"  class="nav-link font-weight-bold" role="tab" aria-controls="tab-register" aria-expanded="false"><i class="fas fa-lock"></i> Change Password</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#"  class="nav-link font-weight-bold" role="tab" aria-controls="tab-register" aria-expanded="false"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                        </li>
-                    </ul>
+                    
+                    @include('user.includes.account_panel')
                 </div>
                 <div class="col-md-9">
                     <div class="card">
                         <div class="card-header">
                             <h2 class="h5 mb-0 pt-2 pb-2">My Orders</h2>
                         </div>
+                         {{-- @dd($order_item_count) --}}
 
                         <div class="card-body pb-0">
                             <!-- Info -->
@@ -49,16 +35,16 @@
                                             <h6 class="heading-xxxs text-muted">Order No:</h6>
                                             <!-- Text -->
                                             <p class="mb-lg-0 fs-sm fw-bold">
-                                            673290789
+                                                {{ $order->id }}
                                             </p>
                                         </div>
                                         <div class="col-6 col-lg-3">
                                             <!-- Heading -->
-                                            <h6 class="heading-xxxs text-muted">Shipped date:</h6>
+                                            <h6 class="heading-xxxs text-muted">{{$order->status}} date:</h6>
                                             <!-- Text -->
                                             <p class="mb-lg-0 fs-sm fw-bold">
                                                 <time datetime="2019-10-01">
-                                                    01 Oct, 2019
+                                                    {{ \Carbon\Carbon::parse($order->updated_at)->format('d M, Y')}}
                                                 </time>
                                             </p>
                                         </div>
@@ -67,7 +53,25 @@
                                             <h6 class="heading-xxxs text-muted">Status:</h6>
                                             <!-- Text -->
                                             <p class="mb-0 fs-sm fw-bold">
-                                            Awating Delivery
+                                                @if ($order->status == 'pending')
+                                                    <button type="button" class="btn btn-info"><span class="fa fa-bars"
+                                                            aria-hidden="true"></span> Pending</button>
+                                                @elseif($order->status == 'shipped')
+                                                    <button type="button" class="btn btn-primary"><span
+                                                            class="fa fa-cog fa-spin" aria-hidden="true"></span>
+                                                        Shipped!</button>
+                                                @elseif($order->status == 'out for delivery')
+                                                    <button type="button" class="btn btn-warning"><span
+                                                            class="fa fa-cog fa-spin" aria-hidden="true"></span> Out For
+                                                        Delivery!</button>
+                                                @elseif($order->status == 'delivered')
+                                                    <button type="button" class="btn btn-success"><span
+                                                            class="fa fa-check-circle" aria-hidden="true"></span>
+                                                        Delivered</button>
+                                                @elseif($order->status == 'cancelled')
+                                                    <td> <button type="button" class="btn btn-danger"> <i
+                                                                class="fa fa-close"></i> Cancelled</button></td>
+                                                @endif
                                             </p>
                                         </div>
                                         <div class="col-6 col-lg-3">
@@ -75,7 +79,7 @@
                                             <h6 class="heading-xxxs text-muted">Order Amount:</h6>
                                             <!-- Text -->
                                             <p class="mb-0 fs-sm fw-bold">
-                                            $259.00
+                                                <i class="fa fa-inr" aria-hidden="true"></i> {{ $order->grand_total }}
                                             </p>
                                         </div>
                                     </div>
@@ -86,29 +90,41 @@
                         <div class="card-footer p-3">
 
                             <!-- Heading -->
-                            <h6 class="mb-7 h5 mt-4">Order Items (3)</h6>
+                            <h6 class="mb-7 h5 mt-4">Order Items ({{$order_item_count}})</h6>
 
                             <!-- Divider -->
                             <hr class="my-3">
 
                             <!-- List group -->
                             <ul>
-                                <li class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-4 col-md-3 col-xl-2">
-                                            <!-- Image -->
-                                            <a href="product.html"><img src="images/product-1.jpg" alt="..." class="img-fluid"></a>
+                                {{-- @dd($order_item) --}}
+                                @foreach ($order_item as $order_items)
+                                    {{-- @dump($order_items) --}}
+                                    <li class="list-group-item">
+                                        <div class="row align-items-center">
+                                            <div class="col-4 col-md-3 col-xl-2">
+                                                <!-- Image -->
+                                                <a href=""> <img
+                                                        src="{{ asset('admin_assets/images/' . $order_items->product->image) }}"></a>
+
+                                            </div>
+                                            <div class="col">
+                                                <!-- Title -->
+                                                <a href=""> <img
+                                                        style="width: 100px; height: 70px; object-fit: contain ! important"
+                                                        src="{{ asset('admin_assets/images/' . $order_items->product->brand->image) }}"></a>
+                                                <p class="mb-4 fs-sm fw-bold">
+
+                                                    <a class="text-body" href="product.html">{{ $order_items->name }}
+                                                        X
+                                                        <b><u><i>{{ $order_items->qty }}</i></u></b> </a> <br>
+                                                    <span class="text-muted"><i class="fa fa-inr"
+                                                            aria-hidden="true"></i> {{ $order_items->price }}</span>
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="col">
-                                            <!-- Title -->
-                                            <p class="mb-4 fs-sm fw-bold">
-                                                <a class="text-body" href="product.html">Cotton floral print Dress x 1</a> <br>
-                                                <span class="text-muted">$40.00</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
+                                    </li>
+                                    {{-- <li class="list-group-item">
                                     <div class="row align-items-center">
                                         <div class="col-4 col-md-3 col-xl-2">
                                             <!-- Image -->
@@ -123,16 +139,16 @@
                                         </div>
                                     </div>
                                 </li>
-
+                                
                                 <li class="list-group-item">
                                     <div class="row align-items-center">
                                         <div class="col-4 col-md-3 col-xl-2">
                                             <!-- Image -->
                                             <a href="#"><img src="images/product-3.jpg" alt="..." class="img-fluid"></a>
-
+                                            
                                         </div>
                                         <div class="col">
-
+                                            
                                             <!-- Title -->
                                             <p class="mb-4 fs-sm fw-bold">
                                                 <a class="text-body" href="#">Sweatshirt with Pocket</a> <br>
@@ -141,11 +157,12 @@
                                             
                                         </div>
                                     </div>
-                                </li>
+                                </li> --}}
+                                @endforeach
                             </ul>
-                        </div>                      
+                        </div>
                     </div>
-                    
+
                     <div class="card card-lg mb-5 mt-3">
                         <div class="card-body">
                             <!-- Heading -->
@@ -155,19 +172,21 @@
                             <ul>
                                 <li class="list-group-item d-flex">
                                     <span>Subtotal</span>
-                                    <span class="ms-auto">$128.00</span>
+                                    <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i>
+                                        {{ $order->grand_total }} </span>
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Tax</span>
-                                    <span class="ms-auto">$0.00</span>
+                                    <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i> 0.00</span>
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Shipping</span>
-                                    <span class="ms-auto">$8.00</span>
+                                    <span class="ms-auto">Free</span>
                                 </li>
                                 <li class="list-group-item d-flex fs-lg fw-bold">
                                     <span>Total</span>
-                                    <span class="ms-auto">$136.00</span>
+                                    <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i>
+                                        {{ $order->grand_total }} </span>
                                 </li>
                             </ul>
                         </div>
@@ -177,4 +196,4 @@
         </div>
     </section>
 </main>
-<?php include('includes/footer.php');?>
+@include('user.includes.footer')
