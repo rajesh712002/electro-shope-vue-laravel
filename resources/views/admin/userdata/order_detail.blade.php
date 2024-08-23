@@ -108,7 +108,7 @@
                                                     <tr>
                                                         <td> {{ $order_items->name }}</td>
                                                         <td> <i class="fa fa-inr" aria-hidden="true"> </i>
-                                                         {{ $order_items->price }}</td>
+                                                            {{ $order_items->price }}</td>
                                                         <td> {{ $order_items->qty }}</td>
                                                         <td> {{ $order_items->price * $order_items->qty }}</td>
                                                 @endforeach
@@ -136,26 +136,36 @@
                             <div class="col-md-3">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h2 class="h4 mb-3">Order Status</h2>
-                                        <form method="POST"
-                                            action="{{ route('admin.updateorderdetail', $order_item->order_id) }}">
-                                            @csrf
-                                            @method('put')
-                                            <div class="mb-3">
-                                                <select name="status" id="status" class="form-control">
-                                                    <option value="pending">Pending</option>
-                                                    <option value="shipped">Shipped</option>
-                                                    <option value="out for delivery">Out For Delivery</option>
-                                                    <option value="delivered">Delivered</option>
-                                                    <option value="cancelled">Cancelled</option>
-                                                </select>
-                                            </div>
+                                        @if ($order_item->order->status == 'delivered')
+                                            <button type="button" class="btn btn-success"><span class="fa fa-check-circle"
+                                                    aria-hidden="true"></span>
+                                                Delivered</button>
+                                        @elseif($order_item->order->status == 'cancelled')
+                                            <button type="button" class="btn btn-danger"><span class="fa fa-close"
+                                                    aria-hidden="true"></span>
+                                                Cancelled</button>
+                                        @else
+                                            <h2 class="h4 mb-3">Order Status</h2>
+                                            <form method="POST"
+                                                action="{{ route('admin.updateorderdetail', $order_item->order_id) }}">
+                                                @csrf
+                                                @method('put')
+                                                <div class="mb-3">
+                                                    <select name="status" id="status" class="form-control">
+                                                        <option value="pending">Pending</option>
+                                                        <option value="shipped">Shipped</option>
+                                                        <option value="out for delivery">Out For Delivery</option>
+                                                        <option value="delivered">Delivered</option>
+                                                        <option value="cancelled">Cancelled</option>
+                                                    </select>
+                                                </div>
 
-                                            <div class="mb-3">
-                                                <button type="submit" id="submit" name="submit"
-                                                    class="btn btn-primary">Update</button>
-                                            </div>
-                                        </form>
+                                                <div class="mb-3">
+                                                    <button type="submit" id="submit" name="submit"
+                                                        class="btn btn-primary">Update</button>
+                                                </div>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="card">

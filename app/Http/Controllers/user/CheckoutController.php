@@ -130,6 +130,8 @@ class CheckoutController extends Controller
             $order->grand_total = $totalSum;
             $order->subtotal = $totalSum;
 
+            $order->payment_status = 'paid';
+            // $order->status = $request->status;
             $order->user_id = $user->id;
             $order->first_name = $request->first_name;
             $order->last_name = $request->last_name;
@@ -156,6 +158,7 @@ class CheckoutController extends Controller
             $order->grand_total = $totalSum;
             $order->subtotal = $totalSum;
 
+            $order->payment_status = 'paid';
             $order->user_id = $user->id;
             $order->first_name = $request->first_name;
             $order->last_name = $request->last_name;

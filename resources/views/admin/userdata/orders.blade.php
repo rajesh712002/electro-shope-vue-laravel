@@ -45,6 +45,7 @@
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Status</th>
+                                    <th>Payment Status</th>
                                     <th>Total</th>
                                     <th>Date Purchased</th>
                                 </tr>
@@ -80,64 +81,11 @@
                                             @endif
                                             {{-- <span class="badge bg-success">Delivered</span> --}}
                                         </td>
+                                        <td>{{$orders->payment_status}}</td>
                                         <td><i class="fa fa-inr" aria-hidden="true"></i> {{ $orders->grand_total }}</td>
                                         <td>{{ \Carbon\Carbon::parse($orders->created_at)->format('d M, Y') }}</td>
                                     </tr>
-                                    {{-- <tr>
-                                    <td><a href="order-detail.html">OR756374</a></td>
-                                    <td>Mohit Singh</td>
-                                    <td>example@example.com</td>
-                                    <td>12345678</td>
-                                    <td>
-                                        <span class="badge bg-success">Delivered</span>
-                                    </td>
-                                    <td>$400</td>
-                                    <td>Nov 20, 2022</td>																				
-                                </tr>
-                                <tr>
-                                    <td><a href="order-detail.html">OR756374</a></td>
-                                    <td>Mohit Singh</td>
-                                    <td>example@example.com</td>
-                                    <td>12345678</td>
-                                    <td>
-                                        <span class="badge bg-success">Delivered</span>
-                                    </td>
-                                    <td>$400</td>
-                                    <td>Nov 20, 2022</td>																				
-                                </tr>
-                                <tr>
-                                    <td><a href="order-detail.html">OR756374</a></td>
-                                    <td>Mohit Singh</td>
-                                    <td>example@example.com</td>
-                                    <td>12345678</td>
-                                    <td>
-                                        <span class="badge bg-success">Delivered</span>
-                                    </td>
-                                    <td>$400</td>
-                                    <td>Nov 20, 2022</td>																				
-                                </tr>
-                                <tr>
-                                    <td><a href="order-detail.html">OR756374</a></td>
-                                    <td>Mohit Singh</td>
-                                    <td>example@example.com</td>
-                                    <td>12345678</td>
-                                    <td>
-                                        <span class="badge bg-success">Delivered</span>
-                                    </td>
-                                    <td>$400</td>
-                                    <td>Nov 20, 2022</td>																				
-                                </tr>
-                                <tr>
-                                    <td><a href="order-detail.html">OR756374</a></td>
-                                    <td>Mohit Singh</td>
-                                    <td>example@example.com</td>
-                                    <td>12345678</td>
-                                    <td>
-                                        <span class="badge bg-success">Delivered</span>
-                                    </td>
-                                    <td>$400</td>
-                                    <td>Nov 20, 2022</td>																				
-                                </tr> --}}
+                                
                                 @endforeach
 
                             </tbody>

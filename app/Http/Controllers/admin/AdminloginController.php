@@ -34,8 +34,16 @@ class AdminloginController extends Controller
         $totalbrand =Brand::where('status','1')->count();
 
         $totalproduct= Product::where('status','1')->count();
+       
+        $totalorder= Order::count();
 
-        return view('admin.deshboard',compact('totaluser','totalcategory','totalsubcategory','totalbrand','totalproduct'));
+        $totalearning = Order::sum('grand_total');
+        $processing= Order::whereIn('status',['pending','shipped','out for delivery'])->count();
+        $delivered= Order::where('status','delivered')->count();
+        $cancelled= Order::where('status','cancelled')->count();
+
+
+        return view('admin.deshboard',compact('totaluser','totalcategory','totalsubcategory','totalbrand','totalproduct','totalorder','processing','delivered','cancelled','totalearning'));
     }
 
     public function loginchk(Request $request)
@@ -133,8 +141,8 @@ class AdminloginController extends Controller
        if (Auth::guard('admin')->user()->role == 2)
         // dd($user);
         if(!Hash::check($request->old_password,$user->password)){
-            //session()->flash('error','Your Password is Incorrected');
-            //dd(session());
+           
+            dd($request->old_password,$user->password);
             return response()->json(['error','Your Password is Incorrected']);
            
         }

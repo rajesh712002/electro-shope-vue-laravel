@@ -153,7 +153,7 @@
                             </div>
                             <div class="tab-pane fade" id="shipping" role="tabpanel"
                                 aria-labelledby="shipping-tab">
-                                <p></p>
+                                <p>After Shipping Your Order You Will No Able To Cancle Your Order </p>
                             </div>
                             <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                                 {{-- <img style="width: 100px; height: 70px; object-fit: contain;!important" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}

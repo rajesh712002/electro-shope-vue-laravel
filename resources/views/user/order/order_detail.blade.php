@@ -104,18 +104,18 @@
                                         <div class="row align-items-center">
                                             <div class="col-4 col-md-3 col-xl-2">
                                                 <!-- Image -->
-                                                <a href=""> <img
+                                                <a href="{{ route('viewproduct',$order_items->product->slug) }}"> <img
                                                         src="{{ asset('admin_assets/images/' . $order_items->product->image) }}"></a>
 
                                             </div>
                                             <div class="col">
                                                 <!-- Title -->
-                                                <a href=""> <img
+                                                <a> <img
                                                         style="width: 100px; height: 70px; object-fit: contain ! important"
                                                         src="{{ asset('admin_assets/images/' . $order_items->product->brand->image) }}"></a>
                                                 <p class="mb-4 fs-sm fw-bold">
 
-                                                    <a class="text-body" href="product.html">{{ $order_items->name }}
+                                                    <a class="text-body" href="{{ route('viewproduct', $order_items->product->slug) }}">{{ $order_items->name }}
                                                         X
                                                         <b><u><i>{{ $order_items->qty }}</i></u></b> </a> <br>
                                                     <span class="text-muted"><i class="fa fa-inr"
@@ -124,40 +124,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                    {{-- <li class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-4 col-md-3 col-xl-2">
-                                            <!-- Image -->
-                                            <a href="#"><img src="images/product-2.jpg" alt="..." class="img-fluid"></a>
-                                        </div>
-                                        <div class="col">
-                                            <!-- Title -->
-                                            <p class="mb-4 fs-sm fw-bold">
-                                                <a class="text-body" href="#">Suede cross body Bag x 1</a> <br>
-                                                <span class="text-muted">$49.00</span>
-                                            </p>                                       
-                                        </div>
-                                    </div>
-                                </li>
-                                
-                                <li class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-4 col-md-3 col-xl-2">
-                                            <!-- Image -->
-                                            <a href="#"><img src="images/product-3.jpg" alt="..." class="img-fluid"></a>
-                                            
-                                        </div>
-                                        <div class="col">
-                                            
-                                            <!-- Title -->
-                                            <p class="mb-4 fs-sm fw-bold">
-                                                <a class="text-body" href="#">Sweatshirt with Pocket</a> <br>
-                                                <span class="text-muted">$39.00</span>
-                                            </p>
-                                            
-                                        </div>
-                                    </div>
-                                </li> --}}
+                                  
                                 @endforeach
                             </ul>
                         </div>

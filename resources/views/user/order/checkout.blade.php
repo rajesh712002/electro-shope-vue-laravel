@@ -59,7 +59,7 @@
                                         <div class="mb-3">
                                             <select name="country" id="country" class="form-control"  value="{{(!empty($CustomerAddress)) ? $CustomerAddress->country : ''}}">
                                                 <option value="">Select a Country</option>
-                                                <option value="1">India</option>
+                                                <option value="india">India</option>
                                                 {{-- <option value="2">UK</option> --}}
                                             </select>
                                             <p></p>
@@ -80,7 +80,7 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <input type="text" name="appartment" id="appartment" class="form-control"
-                                                placeholder="Apartment, suite, unit, etc. (optional)"  value="{{(!empty($CustomerAddress)) ? $CustomerAddress->appartment : ''}}">
+                                                placeholder="Apartment, suite, unit, etc. (optional)"  value="{{(!empty($CustomerAddress)) ? $CustomerAddress->apartment : ''}}">
                                                 <p></p>
                                             <h6 style="color: rgb(255, 0,0)" class="error"></h6>
 

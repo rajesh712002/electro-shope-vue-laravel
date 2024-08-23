@@ -58,37 +58,65 @@ class CartController extends Controller
         return view('user.order.cart', compact('product', 'totalSum'));
     }
 
+  
+    // {
+
+    //     $cart = Cart::findOrFail($id);
+
+    //     $userId = Auth::user()->id;
+    //     // Check Cart Id Exists or Not
+    //     $cart_prod_id =  DB::table('carts')
+    //         ->where('product_id', '=', $request->prod_id)
+    //         ->where('user_id', '=', $userId)
+    //         ->exists();
+
+    //     $product = DB::table('carts')
+    //         ->join('users', 'carts.user_id', '=', 'users.id')
+    //         ->join('products', 'carts.product_id', '=', 'products.id')
+    //         ->where('users.id', $userId)
+    //         ->select('products.qty as pqty', 'carts.qty as cqty', 'carts.id as cart_id')
+    //         ->get();
+
+    //     if ($cart_prod_id) {
+    //     } else {
+
+    //         foreach ($product as $products) {
+    //             $cartItem = Cart::find($products->cart_id);
+    //             if ($cartItem && $products->cqty < $products->pqty) {
+    //                 $cartItem->qty += 1;
+    //                 $cartItem->save();
+    //             }
+    //         }
+    //     }
+    //     return redirect()->back();
+    // }
+
+
     public function increaseCartQty(Request $request, $id)
-    {
+{
+    $userId = Auth::user()->id;
 
-        $cart = Cart::findOrFail($id);
+    // Find the specific cart item by its ID
+    $cart = Cart::where('id', $id)
+        ->where('user_id', $userId)
+        ->firstOrFail();
 
-        $userId = Auth::user()->id;
-        $cart_prod_id =  DB::table('carts')
-            ->where('product_id', '=', $request->prod_id)
-            ->where('user_id', '=', $userId)
-            ->exists();
+    // Get product details for the specific cart item
+    $product = DB::table('products')
+        ->where('id', $cart->product_id)
+        ->select('qty as pqty')
+        ->first();
 
-        $product = DB::table('carts')
-            ->join('users', 'carts.user_id', '=', 'users.id')
-            ->join('products', 'carts.product_id', '=', 'products.id')
-            ->where('users.id', $userId)
-            ->select('products.qty as pqty', 'carts.qty as cqty')
-            ->first();
-
-        if ($cart_prod_id) {
-        } else {
-            // dd($product->pqty);
-            // if ($product) {
-            
-            if ($product->cqty != $product->pqty) {
-                $cart->qty +=  1;
-                $cart->save();
-            }
-            // }
+    if ($product) {
+        // Check if the cart quantity is less than the product quantity
+        if ($cart->qty < $product->pqty) {
+            $cart->qty += 1;
+            $cart->save();
         }
-        return redirect()->back();
     }
+
+    return redirect()->back();
+}
 
     public function decreaseCartQty(Request $request, $id)
     {

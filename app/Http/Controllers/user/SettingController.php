@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
+use function Laravel\Prompts\alert;
+
 class SettingController extends Controller
 {
     public function changePassword()
@@ -44,10 +46,10 @@ class SettingController extends Controller
 
         $user = User::select('id', 'password')->where('id', Auth::user()->id)->first();
         // dd($user);
-        if (Hash::check($request->old_password, $user->password)) {
+        if (!Hash::check($request->old_password, $user->password)) {
             //session()->flash('error','Your Password is Incorrected');
             //dd(session());
-            return response()->json(['error', 'Your Password is Incorrected']);
+            return response()->json(['error' => 'Your Password is Incorrected']);
         }
         User::where('id', $user->id)->update([
             'password' => Hash::make($request->new_password)
@@ -141,5 +143,12 @@ class SettingController extends Controller
         $order_item_count = OrderItem::where('order_id',$id)->count();
         
     return view('user.order.order_detail',compact('order','order_item','order_item_count'));
+    }
+
+    public function remove_order($id)
+    {
+        $product = Order::findOrFail($id);
+        $product->delete();
+        return redirect()->back();
     }
 }

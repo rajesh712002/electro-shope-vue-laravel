@@ -53,8 +53,10 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::get('/user/profile', [SettingController::class, 'account'])->name('useraccount');
     Route::post('/user/changeprofile', [SettingController::class, 'changeProfile'])->name('userchangeProfile');
 
+    //Order Process
     Route::get('/order', [SettingController::class, 'view_order'])->name('user.view_order');
     Route::get('/orderdetail/{orderId?}', [SettingController::class, 'orderDetail'])->name('user.order_detail');
+    Route::delete('order/remove_order/{Id}',[SettingController::class,'remove_order'])->name('user.remove_order');
 
     //Cart Process
     Route::get('/cart', [CartController::class, 'index'])->name('user.index');
