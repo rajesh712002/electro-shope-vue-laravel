@@ -1,19 +1,3 @@
-{{-- 
-<h1 class="display-4 text-white mb-3">Latest Phones</h1>
-<p class="mx-md-5 px-5">Get the best deals on the latest smartphones! Discover top features, cutting-edge tech, and exclusive offers. 
-    Limited time discounts on leading brands. Upgrade now and save!</p>
-<a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
-
-<h1 class="display-4 text-white mb-3">New Limited Adition Laptops</h1>
-                            <p class="mx-md-5 px-5">Introducing the Limited Edition Laptops: Sleek design, powerful performance, cutting-edge graphics, 
-                                ultra-lightweight, long-lasting battery, advanced cooling, vibrant display, and premium build quality.</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
-                        </div>
-
-                        <h1 class="display-4 text-white mb-3">Shop Online at Flat 70% off on Branded Watches</h1>
-                            <p class="mx-md-5 px-5">Shop online now and get up to 70% off on branded watches! Don't miss out on this amazing discount. 
-                                Grab your favorite timepieces at unbeatable prices. Limited time offer. Shop today!</p> --}}
-
 @include('user.includes.header')
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
@@ -55,16 +39,20 @@
                                         <tr>
                                             {{-- @dd($product) --}}
                                             <td>
+                                                <a href="{{ route('viewproduct', $item->slug) }}">
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     <img src="{{ asset('admin_assets/images/' . $item->image) }}"
                                                         width="120" height="120">
                                                 </div>
+                                                </a>
                                             </td>
                                             <td>
+                                                <a class="text-dark" href="{{ route('viewproduct', $item->slug) }}">
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     {{-- <h2>{{$product->prod_name}}</h2> --}}
                                                     {{ $item->prod_name }}
                                                 </div>
+                                            </a>
                                             </td>
                                             <td>{{ $item->price }}</td>
                                             <td>
@@ -80,10 +68,7 @@
                                                                 <i class="fa fa-minus"></i>
                                                             </button>
                                                         </form>
-                                                        {{-- <button type="submit"
-                                                            class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
-                                                            <i class="fa fa-minus"></i>
-                                                        </button> --}}
+                                                        
                                                     </div>
                                                     <input type="text" name="quantity"
                                                         class="form-control form-control-sm  border-0 text-center"
@@ -187,7 +172,7 @@
 </main>
 <script>
     function deleteProduct(id) {
-        if (confirm("Do you really want to delete this record ?")) {
+        if (confirm("Do you really want to remove this Item ?")) {
             document.getElementById("delete-product-form-" + id).submit();
         }
     }

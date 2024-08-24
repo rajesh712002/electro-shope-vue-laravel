@@ -34,16 +34,18 @@ class AdminloginController extends Controller
         $totalbrand =Brand::where('status','1')->count();
 
         $totalproduct= Product::where('status','1')->count();
+        
+        $totalearning = Order::sum('grand_total');
        
         $totalorder= Order::count();
-
-        $totalearning = Order::sum('grand_total');
-        $processing= Order::whereIn('status',['pending','shipped','out for delivery'])->count();
+        $pending= Order::where('status','pending')->count();
+        $processing= Order::whereIn('status',['shipped','out for delivery'])->count();
         $delivered= Order::where('status','delivered')->count();
         $cancelled= Order::where('status','cancelled')->count();
 
 
-        return view('admin.deshboard',compact('totaluser','totalcategory','totalsubcategory','totalbrand','totalproduct','totalorder','processing','delivered','cancelled','totalearning'));
+
+        return view('admin.deshboard',compact('totaluser','totalcategory','totalsubcategory','totalbrand','totalproduct','totalorder','pending','processing','delivered','cancelled','totalearning'));
     }
 
     public function loginchk(Request $request)
@@ -84,6 +86,31 @@ class AdminloginController extends Controller
     public function viewOrders(){
         $order = Order::with('user')->get();
         return view('admin.userdata.orders',compact('order'));
+   
+    }
+
+    public function viewPendingOrders(){
+        $order = Order::where('status','pending')->with('user')->get();
+        return view('admin.userdata.orders',compact('order'));
+   
+    }
+
+    public function viewProcessingOrders(){
+        $order = Order::whereIn('status',['shipped','out for delivery'])->with('user')->get();
+        return view('admin.userdata.orders',compact('order'));
+   
+    }
+
+    public function viewCancleOrders(){
+        $order = Order::where('status','=','cancelled')->with('user')->get();
+        return view('admin.userdata.orders',compact('order'));
+   
+    }
+
+    public function viewDeliveredOrders(){
+        $order = Order::where('status','=','delivered')->with('user')->get();
+        return view('admin.userdata.orders',compact('order'));
+
    
     }
 

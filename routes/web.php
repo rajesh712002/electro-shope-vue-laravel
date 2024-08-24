@@ -58,6 +58,10 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::get('/orderdetail/{orderId?}', [SettingController::class, 'orderDetail'])->name('user.order_detail');
     Route::delete('order/remove_order/{Id}',[SettingController::class,'remove_order'])->name('user.remove_order');
 
+    
+
+
+
     //Cart Process
     Route::get('/cart', [CartController::class, 'index'])->name('user.index');
     Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
@@ -169,6 +173,12 @@ Route::middleware([ValidAdmin::class])->group(function () {
     Route::get('/admin/orders', [AdminloginController::class, 'viewOrders'])->name('admin.orders');
     Route::get('/admin/orderdetail/{id?}', [AdminloginController::class, 'viewOrderDetails'])->name('admin.orderdetail');
     Route::put('/admin/updateorderdetail/{id?}', [AdminloginController::class, 'updateUserOrder'])->name('admin.updateorderdetail');
+
+    Route::get('/pendingdorder', [AdminloginController::class, 'viewPendingOrders'])->name('admin.pendingdorder');
+    Route::get('/processingorder', [AdminloginController::class, 'viewProcessingOrders'])->name('admin.processingorder');
+    Route::get('/cancleorder', [AdminloginController::class, 'viewCancleOrders'])->name('admin.cancleorder');
+    Route::get('/deliveredorder', [AdminloginController::class, 'viewDeliveredOrders'])->name('admin.deliveredorder');
+
 
 
     Route::get('/admin/users', [AdminloginController::class, 'users'])->name('admin.users');

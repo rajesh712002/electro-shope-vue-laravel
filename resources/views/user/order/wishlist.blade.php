@@ -28,12 +28,12 @@
                             {{-- @dd($item) --}}
                                 <div class="card-body p-4">
                                     <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
-                                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a
+                                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a href="{{ route('viewproduct', $item->slug) }}"
                                                 class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;">
                                                 <img src="{{ asset('admin_assets/images/'.$item->image)}}" width="120" height="120" >
                                                 <div class="pt-2">
                                                 <h3 class="product-title fs-base mb-2"><a
-                                                        href="shop-single-v1.html">{{ $item->prod_name }}</a></h3>
+                                                       class="text-dark" href="{{ route('viewproduct', $item->slug) }}">{{ $item->prod_name }}</a></h3>
                                                 <div class="fs-lg text-accent pt-2"> <i class="fa fa-inr"
                                                         aria-hidden="true"> {{ $item->price }}</i>
                                                 </div>
@@ -60,8 +60,6 @@
                                             </form>
                                             <button type="submit" onclick="deleteProduct({{ $item->wid }});" class="btn btn-outline-danger btn-sm"
                                                     type="button"><i class="fas fa-trash-alt me-2"></i>Remove</button>
-
-
                                         </div>
                                     </div>
 
@@ -119,7 +117,7 @@
 </main>
 <script>
     function deleteProduct(id) {
-        if (confirm("Do you really want to delete this record ?")) {
+        if (confirm("Do you really want to remove this Item ?")) {
             document.getElementById("delete-product-form-" + id).submit();
         }
     }
