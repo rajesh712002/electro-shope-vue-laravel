@@ -21,6 +21,7 @@ Route::get('/', function () {
 
 
 //USER
+Route::get('/back', [UserController::class, 'back'])->name('user.back');
 
 Route::get('/user/login', [UserController::class, 'login'])->name('userlogin');
 Route::post('/user/loginchk', [UserController::class, 'loginchk'])->name('usercheck');
@@ -57,6 +58,9 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::get('/order', [SettingController::class, 'view_order'])->name('user.view_order');
     Route::get('/orderdetail/{orderId?}', [SettingController::class, 'orderDetail'])->name('user.order_detail');
     Route::delete('order/remove_order/{Id}',[SettingController::class,'remove_order'])->name('user.remove_order');
+
+    Route::post('/user/saverating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
+    
 
     
 
@@ -95,6 +99,7 @@ Route::middleware([ValidUser::class])->group(function () {
 
 
 //ADMIN
+Route::get('/admin/back', [AdminloginController::class, 'back'])->name('admin.back');
 
 Route::get('/admin/login', [AdminloginController::class, 'index'])->name('admin.login');
 Route::post('/admin/adminloginchk', [AdminloginController::class, 'loginchk'])->name('adminckeck');

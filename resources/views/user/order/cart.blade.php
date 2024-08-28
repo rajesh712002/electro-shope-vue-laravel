@@ -85,10 +85,7 @@
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </form>
-                                                        {{-- <button type="submit"
-                                                            class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
-                                                            <i class="fa fa-plus"></i>
-                                                        </button> --}}
+                                                       
                                                     </div>
                                                 </div>
                                             </td>
@@ -96,14 +93,7 @@
                                                 {{ $item->price * $item->cqty }}
                                             </td>
                                             <td>
-                                                {{-- <form method="POST" action="{{route('qty.remove_item', ['rowId' => $item->rowId])}}">
-                                                    @csrf
-                                                            @method('delete')
-                                                    <button type="submit" class="btn btn-sm btn-danger"><i
-                                                            class="fa fa-times"></i></button>
-                                                </form> --}}
-
-
+                                              
                                                 <form id="delete-product-form-{{ $item->cid }}" class="delete_cat"
                                                     method="post" action="{{ route('qty.remove_item', $item->cid) }}">
                                                     @csrf
@@ -161,10 +151,7 @@
                         </div>
                     </div>
                 @endif
-                {{-- <div class="input-group apply-coupan mt-4">
-                        <input type="text" placeholder="Coupon Code" class="form-control">
-                        <button class="btn btn-dark" type="button" id="button-addon2">Apply Coupon</button>
-                    </div> --}}
+             
             </div>
         </div>
         </div>

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +21,7 @@ class ProductController extends Controller
         
 
         $product = Product::with('sub_category', 'brand', 'categorys')->get();
+        $orderID = Order::where('');
         // dd($product->toArray());
         if (!empty($request->get('keyword'))) {
                  $product = $product->where('prod_name', 'like', '%' . $request->get('keyword') . '%');

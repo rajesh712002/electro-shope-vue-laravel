@@ -81,7 +81,6 @@
                         </div>
                         <input type="submit" class="btn btn-dark btn-block btn-lg" value="Email">
                     </form>
-                    {{-- <div class="text-center small">Don't have an account? <a href="{{ route('register') }}">Sign up</a></div> --}}
                 </div>
             </div>
         </section>

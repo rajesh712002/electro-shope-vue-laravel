@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+
+    public function back(){
+        return redirect()->back();
+    }
     public function register()
     {
         return view('user.register');
@@ -52,8 +56,8 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return redirect()->route('register')->withInput()->withErrors($validator);
+         if ($validator->fails()) {
+           return redirect()->route('register')->withInput()->withErrors($validator);
         }
 
         $member = new User();

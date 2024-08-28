@@ -216,7 +216,6 @@
                         </div>
 
 
-                        <!-- CREDIT CARD FORM ENDS HERE -->
 
                     </div>
                 </div>

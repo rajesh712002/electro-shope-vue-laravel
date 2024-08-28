@@ -70,15 +70,7 @@
                         <div class="col-12 pb-1">
                             <div class="d-flex align-items-center justify-content-end mb-4">
                                 <div class="ml-2">
-                                    {{-- <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                                            data-bs-toggle="dropdown">Sorting</button>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#">Latest</a>
-                                            <a class="dropdown-item" href="#">Price High</a>
-                                            <a class="dropdown-item" href="#">Price Low</a>
-                                        </div>
-                                    </div> --}}
+                                
                                     <select id="sort" name="sort" class="form-control">
                                         <option value="latest">Latest</option>
                                         <option value="price_desc">Price High</option>
@@ -108,11 +100,7 @@
                                         </form>
                                         <div class="product-action">
 
-                                            {{-- @if ($prod)
-                                                <a  href="{{ route('user.index') }}">
-                                                    <i class="btn btn-info">Go To Cart</i>
-                                                </a>
-                                            @else --}}
+                                           
                                                 <form action="{{ route('user.addToCart') }}" method="POST">
                                                     {{-- @dd($product) --}}
                                                     @csrf
@@ -142,9 +130,6 @@
                                 </div>
                             </div>
                         @endforeach
-
-
-
                         <div class="col-md-12 pt-5">
                             <nav aria-label="Page navigation example">
                                 {{ $products->onEachSide(1)->links() }}
@@ -173,15 +158,9 @@
         });
         console.log(brandss.toString());
         var url = '{{ url()->current() }}?';
-        //  window.location.href = url+'&brands='+brandss;
     }
 
-    // $.("#sort").change(function(){
-    //     apply_filters();
-    // });
-
-    // url+= '&sort='+$("#sort").val()
-    // window.location.href = url;
+  
 </script>
 
 @include('user.includes.footer')

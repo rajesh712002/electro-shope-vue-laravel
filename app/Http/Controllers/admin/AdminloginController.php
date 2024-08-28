@@ -23,6 +23,10 @@ class AdminloginController extends Controller
         return view('admin.login');
     }
 
+    public function back(){
+        return redirect()->back();
+    }
+
     public function deshboard()
     {
         $totaluser = User::count();

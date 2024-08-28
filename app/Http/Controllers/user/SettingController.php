@@ -134,6 +134,8 @@ class SettingController extends Controller
         return view('user.order.my_orders',compact('order'));
     }
 
+   
+
     public function orderDetail($id = null){
         $user_id = Auth::user()->id;
 

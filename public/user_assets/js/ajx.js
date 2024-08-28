@@ -397,3 +397,52 @@ $("#payment_method_two").on("click", function () {
         $("#CardPaymentForm").removeClass("d-none");
     }
 });
+
+
+//=======//==============//=====================//============================//
+
+$(document).ready(function () {
+    $("#ProductRatingForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                // $("#ProductRatingForm")[0].reset();
+                // alert(response.success);
+                // window.location.href = "";
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    
+                    if (errors.first_name) {
+                        $("#name")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.first_name);
+                    } else {
+                        $("#name")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.first_name);
+                    }
+                }
+            },
+        });
+    });
+});

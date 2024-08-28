@@ -32,7 +32,8 @@
     <meta name="twitter:image" content="" />
     <meta name="twitter:image:alt" content="" />
     <meta name="twitter:card" content="summary_large_image" />
-
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.css') }}">
@@ -53,6 +54,7 @@
     <!-- Fav Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="#" />
 </head>
+{{-- @dd($order) --}}
 
 <main>
     {{-- <form action="" method="GET"> --}}
@@ -68,7 +70,7 @@
             </div>
         </div>
     </section>
-{{-- @dd($product) --}}
+    {{-- @dd($product) --}}
     <section class="section-7 pt-3 mb-3">
         <div class="container">
 
@@ -110,21 +112,21 @@
                         </h2>
                         {{-- @dd(Auth::user()->id) --}}
                         <p>{{ $product->description }}</p>
-                       
-                            <form action="{{ route('user.addToCart') }}" method="POST">
-                                {{-- @dd($product) --}}
-                                @csrf
-                                <input type="hidden" name="prod_id" value="{{ $product->id }}" />
-                                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
-                                <input type="hidden" name="qty" value="1" />
-                                <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
-                                    &nbsp;ADD TO CART</button>
-                            </form>
-                       
+
+                        <form action="{{ route('user.addToCart') }}" method="POST">
+                            {{-- @dd($product) --}}
+                            @csrf
+                            <input type="hidden" name="prod_id" value="{{ $product->id }}" />
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                            <input type="hidden" name="qty" value="1" />
+                            <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
+                                &nbsp;ADD TO CART</button>
+                        </form>
+
 
                     </div>
                 </div>
-
+                {{-- @dd($order->product_id == $product->id) --}}
                 <div class="col-md-12 mt-5">
                     <div class="bg-light">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -155,8 +157,176 @@
                                 aria-labelledby="shipping-tab">
                                 <p>After Shipping Your Order You Will No Able To Cancle Your Order </p>
                             </div>
+
                             <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                                {{-- <img style="width: 100px; height: 70px; object-fit: contain;!important" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
+
+                                {{-- @if ($order && $order->prod_id == $product->id) --}}
+
+                                <div class="col-md-8">
+                                    <form method="POST" action="{{ route('usersaveRating', $product->id) }}"
+                                        id="ProductRatingForm" name="ProductRatingForm">
+                                        @csrf
+                                        <div class="row">
+                                            <h3 class="h4 pb-3">Write a Review</h3>
+                                            <div class="form-group col-md-6 mb-3">
+                                                <label for="name">Name</label>
+                                                <input type="text" class="form-control" name="name"
+                                                    id="name" placeholder="Name">
+                                                <p></p>
+                                                <h6 style="color: red" class="error"></h6>
+                                            </div>
+                                            <div class="form-group col-md-6 mb-3">
+                                                <label for="email">Email</label>
+                                                <input type="email" class="form-control" name="email"
+                                                    id="email" placeholder="Email">
+                                                <p></p>
+                                                <h6 style="color: red" class="error"></h6>
+
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="rating">Rating</label>
+                                                <br>
+                                                <div class="rating" style="width: 10rem">
+                                                    <input id="rating-5" type="radio" name="rating"
+                                                        value="5" /><label for="rating-5"><i
+                                                            class="fas fa-3x fa-star"></i></label>
+                                                    <input id="rating-4" type="radio" name="rating"
+                                                        value="4" /><label for="rating-4"><i
+                                                            class="fas fa-3x fa-star"></i></label>
+                                                    <input id="rating-3" type="radio" name="rating"
+                                                        value="3" /><label for="rating-3"><i
+                                                            class="fas fa-3x fa-star"></i></label>
+                                                    <input id="rating-2" type="radio" name="rating"
+                                                        value="2" /><label for="rating-2"><i
+                                                            class="fas fa-3x fa-star"></i></label>
+                                                    <input id="rating-1" type="radio" name="rating"
+                                                        value="1" /><label for="rating-1"><i
+                                                            class="fas fa-3x fa-star"></i></label>
+                                                    <p></p>
+                                                    <h6 style="color: red" class="error"></h6>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="">How was your overall experience?</label>
+                                                <textarea name="comment" id="comment" class="form-control" cols="30" rows="10"
+                                                    placeholder="How was your overall experience?"></textarea>
+                                                <p></p>
+                                                <h6 style="color: red" class="error"></h6>
+                                            </div>
+                                            <div>
+                                                <button type="submit" id="submit"
+                                                    class="btn btn-dark">Submit</button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-12 mt-5">
+                                    <div class="overall-rating mb-3">
+                                        <div class="d-flex">
+                                            <h1 class="h3 pe-3">{{ number_format($ratingsum / $ratingcount,1) }}</h1>
+                                            <div class="star-rating mt-2"
+                                                title="{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
+                                                <div class="back-stars">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+
+                                                    <div class="front-stars"
+                                                        style="width:{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {{-- @if ($productrat->product_id == $product->id) --}}
+
+                                            <div class="pt-2 ps-2">({{ $ratingcount }}
+                                                Reviews)</div>
+                                            {{-- @endif --}}
+                                        </div>
+                                    </div>
+                                    {{-- @dd($productrat) --}}
+                                    <div class="rating-group mb-4">
+                                        @foreach ($productrat as $productratt)
+                                            @if ($productratt->product_id == $product->id)
+                                                <span> <strong>{{ $productratt->username }}</strong></span>
+                                                <div class="star-rating mt-2"
+                                                    title="{{ ($productratt->rating * 100) / 5 }}%">
+                                                    <div class="back-stars">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+
+                                                        <div class="front-stars"
+                                                            style="width: {{ ($productratt->rating * 100) / 5 }}%">
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="my-3">
+                                                    <p>{{ $productratt->comment }}
+
+                                                    </p>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+
+                                    {{-- 
+                                    <div class="rating-group mb-4">
+                                        <span class="author"><strong>Mohit Singh </strong></span>
+                                        <div class="star-rating mt-2">
+                                            <div class="back-stars">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+
+                                                <div class="front-stars" style="width: 100%">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="my-3">
+                                            <p>I went with the blue model for my new apartment and an very pleased with
+                                                the purchase. I'm definitely someone not used to paying this much for
+                                                furniture, and I am also anxious about buying online, but I am very
+                                                happy with the quality of this couch. For me, it is the perfect mix of
+                                                cushy firmness, and it arrived defect free. It really is well made and
+                                                hopefully will be my main couch for a long time. I paid for the extra
+                                                delivery & box removal, and had an excellent experience as well. I do
+                                                tend move my own furniture, but with an online purchase this expensive,
+                                                that helped relieved my anxiety about having a item this big open up in
+                                                my space without issues. If you need a functional sectional couch and
+                                                like the feel of leather, this really is a great choice.
+
+                                            </p>
+                                        </div>
+                                    </div> --}}
+
+                                </div>
+
+
+
                             </div>
                         </div>
                     </div>
@@ -164,142 +334,11 @@
             </div>
         </div>
     </section>
-    {{-- </form> --}}
 
-    {{-- <section class="pt-5 section-8">
-        <div class="container">
-            <div class="section-title">
-                <h2>Related Products</h2>
-            </div>
-            <div class="col-md-12">
-                <div id="related-products" class="carousel">
-                    <div class="card product-card">
-                        <div class="product-image position-relative">
-                            <a href="" class="product-img"><img class="card-img-top"
-                                    src="images/product-1.jpg" alt=""></a>
-                            <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
-
-                            <div class="product-action">
-                                <a class="btn btn-dark" href="#">
-                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body text-center mt-3">
-                            <a class="h6 link" href="">Dummy Product Title</a>
-                            <div class="price mt-2">
-                                <span class="h5"><strong>$100</strong></span>
-                                <span class="h6 text-underline"><del>$120</del></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card product-card">
-                        <div class="product-image position-relative">
-                            <a href="" class="product-img"><img class="card-img-top"
-                                    src="images/product-1.jpg" alt=""></a>
-                            <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
-
-                            <div class="product-action">
-                                <a class="btn btn-dark" href="#">
-                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body text-center mt-3">
-                            <a class="h6 link" href="">Dummy Product Title</a>
-                            <div class="price mt-2">
-                                <span class="h5"><strong>$100</strong></span>
-                                <span class="h6 text-underline"><del>$120</del></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card product-card">
-                        <div class="product-image position-relative">
-                            <a href="" class="product-img"><img class="card-img-top"
-                                    src="images/product-1.jpg" alt=""></a>
-                            <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
-
-                            <div class="product-action">
-                                <a class="btn btn-dark" href="#">
-                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body text-center mt-3">
-                            <a class="h6 link" href="">Dummy Product Title</a>
-                            <div class="price mt-2">
-                                <span class="h5"><strong>$100</strong></span>
-                                <span class="h6 text-underline"><del>$120</del></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card product-card">
-                        <div class="product-image position-relative">
-                            <a href="" class="product-img"><img class="card-img-top"
-                                    src="images/product-1.jpg" alt=""></a>
-                            <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
-
-                            <div class="product-action">
-                                <a class="btn btn-dark" href="#">
-                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body text-center mt-3">
-                            <a class="h6 link" href="">Dummy Product Title</a>
-                            <div class="price mt-2">
-                                <span class="h5"><strong>$100</strong></span>
-                                <span class="h6 text-underline"><del>$120</del></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card product-card">
-                        <div class="product-image position-relative">
-                            <a href="" class="product-img"><img class="card-img-top"
-                                    src="images/product-1.jpg" alt=""></a>
-                            <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
-
-                            <div class="product-action">
-                                <a class="btn btn-dark" href="#">
-                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body text-center mt-3">
-                            <a class="h6 link" href="">Dummy Product Title</a>
-                            <div class="price mt-2">
-                                <span class="h5"><strong>$100</strong></span>
-                                <span class="h6 text-underline"><del>$120</del></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
 </main>
 
-{{-- <script type="text/javascript">
-    function addToCart(id){
-        // alert(id);
 
-        $.ajax({
-            url:'/addcart',
-            type:'',
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
-            contentType: false,
-            processData: false,
-            data:{id:id},
-            success:function(response){
-
-            }
-        })
-    }
-</script> --}}
 
 
 
 @include('user.includes.footer')
-
