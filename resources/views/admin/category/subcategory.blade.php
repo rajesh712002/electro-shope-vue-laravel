@@ -33,8 +33,9 @@
             @include('admin.message')
             <div class="container-fluid">
                 <div class="card">
-                    <form method="GET">
+                    <form method="get" action="">
                         <div class="card-header">
+
                             <div class="card-tools">
                                 <div class="input-group input-group" style="width: 250px;">
                                     <input type="text" name="keyword" value="{{ Request::get('keyword') }}"

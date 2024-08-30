@@ -224,34 +224,36 @@
 
                                 <div class="col-md-12 mt-5">
                                     <div class="overall-rating mb-3">
-                                        <div class="d-flex">
-                                            <h1 class="h3 pe-3">{{ number_format($ratingsum / $ratingcount,1) }}</h1>
-                                            <div class="star-rating mt-2"
-                                                title="{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
-                                                <div class="back-stars">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                        @if ($ratingcount>0)
+                                            <div class="d-flex">
+                                                <h1 class="h3 pe-3">{{ number_format($ratingsum / $ratingcount, 1) }}
+                                                </h1>
+                                                <div class="star-rating mt-2"
+                                                    title="{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
+                                                    <div class="back-stars">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
 
-                                                    <div class="front-stars"
-                                                        style="width:{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <div class="front-stars"
+                                                            style="width:{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
+
+                                                {{-- @if ($productrat->product_id == $product->id) --}}
+
+                                                <div class="pt-2 ps-2">({{ $ratingcount }}
+                                                    Reviews)</div>
                                             </div>
-
-                                            {{-- @if ($productrat->product_id == $product->id) --}}
-
-                                            <div class="pt-2 ps-2">({{ $ratingcount }}
-                                                Reviews)</div>
-                                            {{-- @endif --}}
-                                        </div>
+                                        @endif
                                     </div>
                                     {{-- @dd($productrat) --}}
                                     <div class="rating-group mb-4">

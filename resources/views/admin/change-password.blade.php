@@ -1,4 +1,6 @@
 {{-- @include('user.includes.header') --}}
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
 @extends('admin.layouts.app')
 
 @section('content')
@@ -29,6 +31,8 @@
                                     @error('old_password')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
+                                <p></p>
+                                <h6 style="color: red" class="error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label for="name">New Password</label>
@@ -38,6 +42,8 @@
                                     @error('new_password')
                                     <p class="invalid-feedback">{{ $message }}</p>
                                 @enderror
+                                <p></p>
+                                <h6 style="color: red" class="error"></h6>
                                     </div>
                                     <div class="mb-3">
                                         <label for="name">Confirm Password</label>
@@ -47,6 +53,8 @@
                                             @error('confirm_password')
                                             <p class="invalid-feedback">{{ $message }}</p>
                                         @enderror
+                                        <p></p>
+                                        <h6 style="color: red" class="error"></h6>
                                     </div>
                                     <div class="d-flex">
                                         <button type="submit" name="submit" id="submit" class="btn btn-dark">Save Password</button>

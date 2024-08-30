@@ -22,26 +22,30 @@
             <!-- Default box -->
             <div class="container-fluid">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-tools">
-                            <div class="input-group input-group" style="width: 250px;">
-                                <input type="text" name="table_search" class="form-control float-right"
-                                    placeholder="Search">
+                    <form method="get" action="">
+                        <div class="card-header">
 
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
+                            <div class="card-tools">
+                                <div class="input-group input-group" style="width: 250px;">
+                                    <input type="text" name="keyword" value="{{ Request::get('keyword') }}"
+                                        class="form-control float-right" placeholder="Search">
+
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-hover text-nowrap">
                             <thead>
                                 <tr>
                                     <th>Orders #</th>
                                     <th>Customer</th>
+                                    <th>Deleviry Address Customer</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Status</th>
@@ -57,6 +61,7 @@
                                         <td><a href="{{ route('admin.orderdetail', $orders->id) }}">{{ $orders->id }}</a>
                                         </td>
                                         <td>{{ $orders->user->name }}</td>
+                                        <td>{{ $orders->first_name }} {{ $orders->last_name }}</td>
                                         <td>{{ $orders->email }}</td>
                                         <td>{{ $orders->mobile }}</td>
                                         <td>
@@ -92,13 +97,7 @@
                         </table>
                     </div>
                     <div class="card-footer clearfix">
-                        <ul class="pagination pagination m-0 float-right">
-                            <li class="page-item"><a class="page-link" href="#">«</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">»</a></li>
-                        </ul>
+                     {{$order->links()}}
                     </div>
                 </div>
             </div>

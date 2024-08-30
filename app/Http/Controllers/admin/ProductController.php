@@ -3,35 +3,52 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\Brand;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Order;
 use App\Models\Subcategory;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Http\Request;
 use function Laravel\Prompts\alert;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
     public function product(Request $request)
     {
-        
 
-        $product = Product::with('sub_category', 'brand', 'categorys')->get();
+
+        $product = Product::with('sub_category', 'brand', 'categorys')->latest();
         $orderID = Order::where('');
         // dd($product->toArray());
         if (!empty($request->get('keyword'))) {
-                 $product = $product->where('prod_name', 'like', '%' . $request->get('keyword') . '%');
-                $product = Product::with('sub_category', 'brand', 'categorys')->paginate(7);
-                return view('admin.product.product', compact('product'));
-            } else {
-                $product = Product::with('sub_category', 'brand', 'categorys')->paginate(7);
-                return view('admin.product.product', compact('product'));
-            }
-//        return view('admin.product.product', compact('product'));
+            $product = $product->where('prod_name', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhere('category_id', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhere('sub_category_id', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhere('brand_id', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhere('description', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhere('price', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhere('qty', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhere('id', 'like', '%' . $request->get('keyword') . '%')
+            ->orWhereHas('categorys', function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->get('keyword') . '%');
+            })
+            ->orWhereHas('sub_category', function ($query) use ($request) {
+                $query->where('subcate_name', 'like', '%' . $request->get('keyword') . '%');
+            })
+            ->orWhereHas('brand', function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->get('keyword') . '%');
+            });
+
+
+            $product = $product->paginate(20);
+            return view('admin.product.product', compact('product'));
+        } else {
+            $product = Product::with('sub_category', 'brand', 'categorys')->paginate(7);
+            return view('admin.product.product', compact('product'));
+        }
     }
 
     public function create_prod()
@@ -39,7 +56,7 @@ class ProductController extends Controller
         $category = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
         $brand = Brand::where('status', 1)->pluck('name', 'id');
-        return view('admin.product.create_product', compact('category', 'brand','subcategory'));
+        return view('admin.product.create_product', compact('category', 'brand', 'subcategory'));
     }
 
     public function store_prod(Request $request)
@@ -94,7 +111,7 @@ class ProductController extends Controller
         $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
         $brand = Brand::where('status', 1)->pluck('name', 'id');
         $product = Product::findOrFail($id);
-        return view('admin.product.update_product', compact('category', 'brand', 'product','subcategory'));
+        return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory'));
     }
 
     public function update_prod(Request $request, $id)
@@ -163,10 +180,12 @@ class ProductController extends Controller
     {
         $brand = Brand::latest();
         if (!empty($request->get('keyword'))) {
-            $brand = $brand->where('name', 'like', '%' . $request->get('keyword') . '%');
+            $brand = $brand->where('name', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('id', 'like', '%' . $request->get('keyword') . '%');
+
             $brand = $brand->paginate(100);
             return view('admin.product.brand', ['brand' => $brand]);
-        }else {
+        } else {
             $brand = $brand->paginate(5);
             return view('admin.product.brand', ['brand' => $brand]);
         }

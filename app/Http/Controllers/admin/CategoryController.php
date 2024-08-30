@@ -20,7 +20,9 @@ class CategoryController extends Controller
     {
         $category = Category::latest();
         if (!empty($request->get('keyword'))) {
-            $category = $category->where('name', 'like', '%' . $request->get('keyword') . '%');
+            $category = $category->where('name', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('id', 'like', '%' . $request->get('keyword') . '%');
+
             $category = $category->paginate(100);
             return view('admin.category.categories', ['category' => $category]);
         } else {
@@ -137,10 +139,16 @@ class CategoryController extends Controller
 
     public function view_subcategory(Request $request)
     {
-        $subcategory = Subcategory::with('category')->get();
         // dd($subcategory->toArray());
         if (!empty($request->get('keyword'))) {
-            $subcategory = $subcategory->where('subcate_name', 'like', '%' . $request->get('keyword') . '%');
+            $subcategory = Subcategory::with('category')->latest();
+            $subcategory = $subcategory->where('subcate_name', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('subcate_id', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('id', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhereHas('category', function ($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->get('keyword') . '%');
+                });
+
             $subcategory = $subcategory->paginate(100);
             return view('admin.category.subcategory', ['subcategory' => $subcategory]);
         } else {

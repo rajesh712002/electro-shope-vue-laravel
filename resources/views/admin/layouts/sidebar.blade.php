@@ -67,6 +67,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ route('admin.viewRating') }}" class="nav-link">
+                    <i class="nav-icon fa fa-comments"></i>
+                    <p>Feedbacks</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route('admin.pages') }}" class="nav-link">
                     <i class="nav-icon  far fa-file-alt"></i>
                     <p>Pages</p>

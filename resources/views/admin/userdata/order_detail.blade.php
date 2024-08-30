@@ -169,18 +169,21 @@
                                     </div>
                                 </div>
                                 <div class="card">
-                                    <div class="card-body">
-                                        <h2 class="h4 mb-3">Send Inovice Email</h2>
-                                        <div class="mb-3">
-                                            <select name="status" id="status" class="form-control">
-                                                <option value="">Customer</option>
-                                                <option value="">Admin</option>
-                                            </select>
+                                    <form action="{{route('admin.sendInvoiceEmail',$order_item->order->id)}}" method="POST" id="sendInvoiceEmail" name="sendInvoiceEmail">
+                                        @csrf
+                                        <div class="card-body">
+                                            <h2 class="h4 mb-3">Send Inovice Email</h2>
+                                            <div class="mb-3">
+                                                <select name="user" id="user" class="form-control">
+                                                    <option value="">Customer</option>
+                                                    {{-- <option value="">Admin</option> --}}
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <button type="submit" id="submit" name="submit" class="btn btn-primary">Send</button>
+                                            </div>
                                         </div>
-                                        <div class="mb-3">
-                                            <button class="btn btn-primary">Send</button>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

@@ -19,6 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Route::get('/orderEmail', function () {
+//     sendEmail(7);
+// });
+
 
 //USER
 Route::get('/back', [UserController::class, 'back'])->name('user.back');
@@ -88,6 +92,9 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
     Route::post('/storecheckout', [CheckoutController::class, 'storeCheckout'])->name('user.storecheckout');
 
+    Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
+
+
 
 
 });
@@ -115,6 +122,8 @@ Route::get('/admin/logout', [AdminloginController::class, 'logout'])->name('admi
 Route::middleware([ValidAdmin::class])->group(function () {
     
     Route::get('/admin/deshboard', [AdminloginController::class, 'deshboard'])->name('admin.deshboard');
+
+    Route::get('/admin/viewrating', [AdminloginController::class, 'viewRating'])->name('admin.viewRating');
     
     Route::get('/admin/changepassword', [AdminloginController::class, 'changePassword'])->name('admin.changePassword');
     Route::post('/admin/showchangepassword', [AdminloginController::class, 'showchangePassword'])->name('admin.showchangePassword');
@@ -178,6 +187,9 @@ Route::middleware([ValidAdmin::class])->group(function () {
     Route::get('/admin/orders', [AdminloginController::class, 'viewOrders'])->name('admin.orders');
     Route::get('/admin/orderdetail/{id?}', [AdminloginController::class, 'viewOrderDetails'])->name('admin.orderdetail');
     Route::put('/admin/updateorderdetail/{id?}', [AdminloginController::class, 'updateUserOrder'])->name('admin.updateorderdetail');
+
+    Route::post('/admin/sendInvoiceEmail/{id?}', [AdminloginController::class, 'sendIvoiceToCustomer'])->name('admin.sendInvoiceEmail');
+
 
     Route::get('/pendingdorder', [AdminloginController::class, 'viewPendingOrders'])->name('admin.pendingdorder');
     Route::get('/processingorder', [AdminloginController::class, 'viewProcessingOrders'])->name('admin.processingorder');

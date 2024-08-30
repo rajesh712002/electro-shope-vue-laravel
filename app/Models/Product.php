@@ -28,4 +28,10 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class,'product_id','id');
     }
+
+    public function rating()
+    {
+        return $this->hasMany(ProductRating::class,'product_id','id');
+    }
+
 }

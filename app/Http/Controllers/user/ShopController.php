@@ -56,7 +56,7 @@ class ShopController extends Controller
         $product = Product::with('brand')->where('slug', $slug)->first();
 
         $productrat = ProductRating::get();
-// dd($productrat);
+            // dd($productrat);
         $order = DB::table('order_items')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where('orders.user_id', '=', $user_id)
@@ -104,10 +104,10 @@ class ShopController extends Controller
 
 
         $userchk = DB::table('product_ratings')
-            ->where('email', $user_email)
+            ->where('email', $request->email)
             ->where('product_id', $id)
-            ->first();
-// dd($userchk);
+            ->exists();
+            // dd($userchk);
         if ($userchk) {
 
             return redirect()->back();

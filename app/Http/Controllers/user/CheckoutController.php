@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\user;
 
 use App\Models\Cart;
+use App\Models\Order;
+use App\Mail\OrderEmail;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
@@ -39,7 +41,7 @@ class CheckoutController extends Controller
         $CustomerAddress = CustomerAddress::where('user_id', '=', $userId)->first();
 
         // dd($CustomerAddress->user_id);
-        return view("user.order.checkout", compact('product', 'totalSum', 'user','CustomerAddress'));
+        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress'));
     }
 
 
@@ -130,7 +132,7 @@ class CheckoutController extends Controller
             $order->grand_total = $totalSum;
             $order->subtotal = $totalSum;
 
-            $order->payment_status = 'paid';
+            $order->payment_status = 'paid on cod';
             // $order->status = $request->status;
             $order->user_id = $user->id;
             $order->first_name = $request->first_name;
@@ -158,7 +160,7 @@ class CheckoutController extends Controller
             $order->grand_total = $totalSum;
             $order->subtotal = $totalSum;
 
-            $order->payment_status = 'paid';
+            $order->payment_status = 'paid with card';
             $order->user_id = $user->id;
             $order->first_name = $request->first_name;
             $order->last_name = $request->last_name;
@@ -205,6 +207,9 @@ class CheckoutController extends Controller
 
         OrderItem::insert($orderItemsData);
 
+        //Send Email Invoice
+
+        sendEmail($order_id);
 
 
         //=======//============//==============//======================//==============================//
@@ -216,5 +221,20 @@ class CheckoutController extends Controller
             $cart = Cart::where('user_id', Auth::user()->id);
             $cart->delete();
         }
+    }
+
+
+    //=======//============//==============//======================//==============================//
+
+    public function orderEmail($orderId) {
+        $order = Order::where('id',$orderId)->first();
+        $mailData = [
+            'subject' => 'Thamks for your order',
+            'order' => $order
+        ];
+
+        dd($order);
+        Mail::to($order->email)->send(new OrderEmail($mailData));
+
     }
 }
