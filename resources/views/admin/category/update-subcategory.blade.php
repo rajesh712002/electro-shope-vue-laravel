@@ -51,6 +51,7 @@
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -59,6 +60,7 @@
                                         <label for="name">Name</label>
                                         <input type="text" name="name" id="name" class=" form-control"
                                             value="{{ old('name',$subcategory->subcate_name) }}" placeholder="Name">
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -67,6 +69,7 @@
                                         <label for="slug">Slug</label>
                                         <input type="text" name="slug" id="slug" class=" form-control"
                                             value="{{ old('slug',$subcategory->slug) }}" placeholder="Slug">
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -75,7 +78,7 @@
                                         <label class="form-label " for="image">Photo </label>
                                         <input type="file" name="image" id="image"
                                             class=" form-control form-control-lg " value="{{ old('image') }}">
-
+                                            <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -87,6 +90,7 @@
                                             <option value="1">Active</option>
                                             <option value="0">Block</option>
                                         </select>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
 
                                     </div>
@@ -97,7 +101,7 @@
                     </div>
                     <div class="pb-5 pt-3">
                         <button type="submit" name="submit" id="submit" class="btn btn-primary">Create</button>
-                        <a href="subcategory.html" class="btn btn-outline-dark ml-3">Cancel</a>
+                        <button type="reset" id="reset">Cancel</button> 
                     </div>
                 </form>
             </div>

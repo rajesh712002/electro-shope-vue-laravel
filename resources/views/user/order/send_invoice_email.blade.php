@@ -9,7 +9,7 @@
 <body style="font-family: Arial, Helvetica, sans-serif; font-size:16px;">
 
     <h1>
-        Thanks for your order||
+       {{$mailData['order']->first_name}} {{$mailData['order']->last_name}} Thanks for your order||
     </h1>
     <h2>
         Your Order Id Is: #{{$mailData['order']->id}}
@@ -53,10 +53,28 @@
             </tr>
 
             <tr>
-                <th  colspan="3" align="right" >Status</th>
+                <th  colspan="3" align="right">Status</th>
                 <td class="btn btn-check" style="color: green">{{$mailData['order']->status}}</td>
             </tr>
 
+            <tr>
+                <th colspan="3">Address</th>
+                <td>{{$mailData['order']->address}}, {{ $mailData['order']->apartment }}<br>
+                    {{ $mailData['order']->state }}, {{ $mailData['order']->city }}, {{ $mailData['order']->pincode }}<br></td>
+            </tr>
+           
+            <tr>
+                <th colspan="3">Mobile No </th>
+                <td>{{$mailData['order']->mobile}}</td>
+            </tr>
+
+            <tr>
+                <th colspan="3">Date </th>
+                <td><time datetime="2019-10-01">
+                    {{ \Carbon\Carbon::parse($mailData['order']->updated_at)->format('d M, Y')}}
+                </time></td>
+            </tr>
+            
             @endif
         </tbody>
     </table>

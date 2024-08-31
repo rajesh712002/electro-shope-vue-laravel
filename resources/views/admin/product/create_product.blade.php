@@ -37,7 +37,7 @@
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" id="name" class=" form-control"
                                                     value="{{ old('name') }}" placeholder="Product Name">
-
+                                                <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -46,6 +46,7 @@
                                                 <label for="slug">Slug</label>
                                                 <input type="text" name="slug" id="slug" class=" form-control"
                                                     value="{{ old('slug') }}" placeholder="Slug">
+                                                    <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -54,7 +55,7 @@
                                                 <label for="description">Description</label>
                                                 <textarea name="description" id="description" cols="30" rows="10" value="{{ old('name') }}"
                                                     class=" summernote" placeholder="Description"></textarea>
-
+                                                <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -67,7 +68,7 @@
                                     <div id="image" class="dropzone dz-clickable">
                                         <input type="file" name="image" id="image"
                                             class=" form-control form-control-lg " value="{{ old('image') }}">
-
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -83,7 +84,7 @@
                                                 <label for="price">Price</label>
                                                 <input type="text" name="price" id="price" class=" form-control"
                                                     placeholder="Price" value="{{ old('price') }}">
-
+                                                <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -110,7 +111,7 @@
                                                 <label for="sku">SKU (Stock Keeping Unit)</label>
                                                 <input type="text" name="sku" id="sku" class=" form-control"
                                                     value="{{ old('sku') }}" placeholder="sku">
-
+                                                <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -122,12 +123,14 @@
                                                         name="track_qty" checked>
                                                     <label for="track_qty" class="custom-control-label">Track
                                                         Quantity</label>
-
+                                                        <p></p>
+                                                        <h6 style="color: red" class="error"></h6>
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <input type="number" min="0" name="qty" id="qty"
                                                     class="form-control" placeholder="Qty">
+                                                    <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -144,6 +147,7 @@
                                             <option value="1">Active</option>
                                             <option value="0">Block</option>
                                         </select>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -161,6 +165,7 @@
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                     <div class="mb-3">
@@ -171,7 +176,8 @@
                                             <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach --}}
                                         </select>
-
+                                        <p></p>
+                                        <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
                             </div>
@@ -186,6 +192,8 @@
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
+                                        <p></p>
+                                        <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +203,8 @@
 
                     <div class="pb-5 pt-3">
                         <button type="submit" name="submit" id="submit" class="btn btn-primary">Create</button>
-                        <a href="products.html" class="btn btn-outline-dark ml-3">Cancel</a>
+                        <button type="reset" id="reset">Cancel</button> 
+
                     </div>
                 </div>
             </form>

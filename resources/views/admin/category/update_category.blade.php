@@ -83,7 +83,8 @@
                     </div>
                     <div class="pb-5 pt-3">
                         <button type="submit" id="submit" name="submit" class="btn btn-primary">Update</button>
-                        <a href="brands.html" class="btn btn-outline-dark ml-3">Cancel</a>
+                        <button type="reset" id="reset">Cancel</button> 
+
                     </div>
                 </form>
             </div>

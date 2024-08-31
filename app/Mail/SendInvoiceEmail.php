@@ -30,7 +30,7 @@ public $mailData;
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Send Invoice Email',
+            subject: 'Invoice Of Order',
         );
     }
 

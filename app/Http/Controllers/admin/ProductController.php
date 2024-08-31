@@ -64,10 +64,13 @@ class ProductController extends Controller
         $rules = [
             'name' => 'required|max:50',
             'description' => 'required',
-            //'image' => 'required',
+            'image' => 'required',
             'price' => 'required|numeric',
             'status' => 'required',
-            // 'category' => 'required'
+            'category' => 'required',
+            'slug' => 'required',
+            'qty' => 'required',
+            'brand' => 'required'
 
         ];
 
@@ -202,7 +205,9 @@ class ProductController extends Controller
         $rules = [
 
             'name' => 'required|max:50',
-            'slug' => 'required|unique:subcategories|max:100'
+            'slug' => 'required|unique:subcategories|max:100',
+            'status' => 'required',
+            'image' => 'required'
 
         ];
 
