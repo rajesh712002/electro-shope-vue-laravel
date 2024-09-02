@@ -126,10 +126,13 @@ class ProductController extends Controller
         $rules = [
             'name' => 'required|max:50',
             'description' => 'required',
-            //'image' => 'required',
+            'image' => 'required',
             'price' => 'required|numeric',
             'status' => 'required',
-            // 'category' => 'required'
+            'category' => 'required',
+            'slug' => 'required',
+            'qty' => 'required',
+            'brand' => 'required'
 
         ];
 

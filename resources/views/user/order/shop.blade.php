@@ -26,6 +26,7 @@
                                     @if ($categorys->isNotEmpty())
                                         @foreach ($categorys as $key => $category)
                                             @if ($category->status == 1)
+                                            <a href="{{ route('usershop', $category->slug) }}">
                                                 <h2 class="accordion-header" id="headingOne">
                                                     @if ($category->subcategory->isNotEmpty())
                                                         <button
@@ -36,6 +37,7 @@
                                                             {{ $category->name }}
                                                         </button>
                                                 </h2>
+                                            </a>
                                             @else
                                                 <a href="{{ route('usershop', $category->slug) }}"
                                                     class="nav-item- nav-link {{ $categorySelected == $category->id ? 'text-danger' : '' }}">{{ $category->name }}</a>
@@ -71,7 +73,8 @@
                             <div class="d-flex align-items-center justify-content-end mb-4">
                                 <div class="ml-2">
                                 
-                                    <select id="sort" name="sort" class="form-control">
+                                    <select id="sort" name="sort" class="form-control" onchange="sortProducts()">
+                                        <option>---Sort---</option>
                                         <option value="latest">Latest</option>
                                         <option value="price_desc">Price High</option>
                                         <option value="price_asc">Price Low</option>
@@ -161,6 +164,15 @@
     }
 
   
+</script>
+
+<script>
+    function sortProducts() {
+        var sortValue = document.getElementById('sort').value;
+        var url = new URL(window.location.href);
+        url.searchParams.set('sort', sortValue);
+        window.location.href = url.href;
+    }
 </script>
 
 @include('user.includes.footer')

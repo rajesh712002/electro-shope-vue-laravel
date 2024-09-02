@@ -39,13 +39,52 @@ class ShopController extends Controller
             $products = $products->where('sub_category_id', $subcategory->id);
             $subcategorySelected = $subcategory->id;
         }
-        $products = $products->orderBy('created_at', 'desc');
+
+        $sort = request()->query('sort');
+        if ($sort == 'price_desc') {
+            $products = $products->orderBy('price', 'desc');
+        } elseif ($sort == 'price_asc') {
+            $products = $products->orderBy('price', 'asc');
+        } else {
+            // Default sorting, for example by latest
+            $products = $products->orderBy('created_at', 'desc');
+        }
+        // $products = $products->orderBy('created_at', 'desc');
         $products = $products->paginate(9);
         $brands = Brand::where('status', '1')->get();
 
         return view('user.order.shop', compact('brands', 'products', 'categorys', 'categorySelected', 'subcategorySelected', 'brandsArray'));
     }
 
+
+    public function shopHighPrice($categoryslug = null, $subcategoryslug = null)
+    {
+
+        $categorySelected = '';
+        $subcategorySelected = '';
+        $brandsArray = [];
+
+        $categorys = Category::withCount('product')->get();
+        $products = Product::where('status', 1);
+        //Filter
+        if (!empty($categoryslug)) {
+            $category = Category::where('slug', $categoryslug)->first();
+            //@dd($category->id);
+            $products = $products->where('category_id', $category->id);
+            $categorySelected = $category->id;
+        }
+        if (!empty($subcategoryslug)) {
+            $subcategory = Subcategory::where('slug', $subcategoryslug)->first();
+            //@dd($subcategory->id);
+            $products = $products->where('sub_category_id', $subcategory->id);
+            $subcategorySelected = $subcategory->id;
+        }
+        $products = $products->orderBy('price', 'desc');
+        $products = $products->paginate(9);
+        $brands = Brand::where('status', '1')->get();
+
+        return view('user.order.shop', compact('brands', 'products', 'categorys', 'categorySelected', 'subcategorySelected', 'brandsArray'));
+    }
 
 
     public function view_product(Request $request, $slug)
