@@ -35,7 +35,6 @@
                                             value="{{ old('name',$brand->name) }}" placeholder="Category Name">
                                             <p></p>
                                         <h6 style="color: red" class="error"></h6>
-                                        <p></p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

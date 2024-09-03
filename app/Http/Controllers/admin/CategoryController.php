@@ -86,11 +86,12 @@ class CategoryController extends Controller
     public function update_cat($id, Request $request)
     {
         $category = Category::findOrFail($id);
+        
         File::delete(public_path('admin_assets/images/' . $category->image));
         //Validation 
         $rules = [
             'name' => 'required|max:50',
-            'slug' => 'required|unique:categories|max:100',
+            'slug' => 'required|max:100|unique:categories,slug,' . $category->id . ',id',
             'status' => 'required|max:50'
 
         ];
@@ -215,7 +216,7 @@ class CategoryController extends Controller
         $rules = [
             'category' => 'required|max:50',
             'name' => 'required|max:50',
-            'slug' => 'required|unique:subcategories|max:100',
+            'slug' => 'required|max:100|unique:subcategories,slug,' . $subcategory->id . ',id',
             'status' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);

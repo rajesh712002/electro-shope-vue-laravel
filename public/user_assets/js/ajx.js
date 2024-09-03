@@ -58,7 +58,7 @@ $(document).ready(function () {
                     } else {
                         $("#new_password")
                             .removeClass("is-invalid")
-                            .siblings("p")
+                            // .siblings("p")
                             .removeClass("invalid-feedback")
                             .html(errors.new_password);
                     }
@@ -72,7 +72,7 @@ $(document).ready(function () {
                     } else {
                         $("#confirm_password")
                             .removeClass("is-invalid")
-                            .siblings("p")
+                            // .siblings("p")
                             .removeClass("invalid-feedback")
                             .html(errors.confirm_password);
                     }
@@ -150,13 +150,13 @@ $(document).ready(function () {
 
             success: function (response) {
                 $("#CheckoutForm")[0].reset();
-                // alert(response.success);
+                alert("Order Placed Successfully");
                 window.location.href = "/cart";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
                     var errors = xhr.responseJSON.errors;
-                 
+                    
                     if (errors.first_name) {
                         $("#first_name")
                             .addClass("is-invalid")
@@ -401,7 +401,7 @@ $("#payment_method_two").on("click", function () {
 
 //=======//==============//=====================//============================//
 
-$(document).ready(function () {
+ $(document).ready(function () {
     $("#ProductRatingForm").on("submit", function (e) {
         e.preventDefault();
         var data = new FormData($(this)[0]);

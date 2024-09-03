@@ -45,16 +45,16 @@ class SettingController extends Controller
         }
 
         $user = User::select('id', 'password')->where('id', Auth::user()->id)->first();
-        // dd($user);
+        @dd($request->old_password);
+
         if (!Hash::check($request->old_password, $user->password)) {
-            //session()->flash('error','Your Password is Incorrected');
-            //dd(session());
-            return response()->json(['error' => 'Your Password is Incorrected']);
+                      return response()->json(['errors' => 'Your Password is Incorrected']);
+        } else {
+            User::where('id', $user->id)->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+            return response()->json(['success', 'Your Password is Changed']);
         }
-        User::where('id', $user->id)->update([
-            'password' => Hash::make($request->new_password)
-        ]);
-        return response()->json(['success', 'Your Password is Changed']);
     }
 
 
@@ -115,14 +115,54 @@ class SettingController extends Controller
             return redirect()->route('user.forgetPassword')->withInput()->withErrors($validator);
         }
 
-       
+        $token = Str::random(60);
+
+        DB::table('password_reset_tokens')->where('email',$request->email)->delete();
+
+        DB::table('password_reset_tokens')->insert([
+            'email' => $request->email,
+            'token' => $token,
+            'created_at' => now()
+        ]);
+
+        // Mail
+        $user = User::where('email',$request->email)->first();
+
+        $formData = [
+            'token' => $token,
+            'user' =>$user
+        ];
+        Mail::to($request->email)->send(new ResetPasswordEmail($formData));
 
         return redirect()->route('user.forgetPassword')->with('success', 'Please Check your inbox to resest your password');
     }
 
-    public function resestForgetPassword()
+    public function resestForgetPassword($token)
     {
-        return view('user.order.forgot_password');
+        $tokenExist = DB::table('password_reset_tokens')->where('token',$token)->first();
+
+        if($tokenExist == null )
+        {
+            return redirect()->back();
+        }
+        return view('user.order.forgot_password_email',['token' => $token]);
+    }
+
+    public function processForgotPasswordEmail(Request $request){
+        $token = $request->token;
+
+        $tokenExist = DB::table('password_reset_tokens')->where('token',$token)->first();
+
+        if($tokenExist == null )
+        {
+            return redirect()->back();
+        }
+        $user = User::where('email',$tokenExist->email)->first();
+        User::where('id',$user->id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+        return redirect()->back();
+        
     }
 
 
@@ -130,21 +170,22 @@ class SettingController extends Controller
     public function view_order()
     {
         $user_id = Auth::user()->id;
-        $order = Order::where('user_id',$user_id)->orderBy('user_id','DESC')->get();
-        return view('user.order.my_orders',compact('order'));
+        $order = Order::where('user_id', $user_id)->orderBy('user_id', 'DESC')->get();
+        return view('user.order.my_orders', compact('order'));
     }
 
-   
 
-    public function orderDetail($id = null){
+
+    public function orderDetail($id = null)
+    {
         $user_id = Auth::user()->id;
 
-        $order = Order::where('user_id',$user_id)->where('id',$id)->first();
+        $order = Order::where('user_id', $user_id)->where('id', $id)->first();
         // dd($order);
-        $order_item = OrderItem::where('order_id',$id)->with('product')->get();
-        $order_item_count = OrderItem::where('order_id',$id)->count();
-        
-    return view('user.order.order_detail',compact('order','order_item','order_item_count'));
+        $order_item = OrderItem::where('order_id', $id)->with('product')->get();
+        $order_item_count = OrderItem::where('order_id', $id)->count();
+
+        return view('user.order.order_detail', compact('order', 'order_item', 'order_item_count'));
     }
 
     public function remove_order($id)

@@ -130,7 +130,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'status' => 'required',
             'category' => 'required',
-            'slug' => 'required',
+            'slug' => 'required|unique:products,slug,' . $product->id . ',id',
             'qty' => 'required',
             'brand' => 'required'
 
@@ -256,7 +256,7 @@ class ProductController extends Controller
         $rules = [
 
             'name' => 'required|max:50',
-            'slug' => 'required|unique:subcategories|max:100',
+            'slug' => 'required|max:100|unique:brands,slug,' . $brand->id . ',id',
             'image' => 'required',
             'status' => 'required'
         ];

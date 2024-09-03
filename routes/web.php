@@ -38,6 +38,8 @@ Route::get('/user/privacy', [UserController::class, 'privacy'])->name('privacy')
 Route::get('/user/forgotpassword', [SettingController::class, 'forgetPassword'])->name('user.forgetPassword');
 Route::post('/user/processforgetfassword', [SettingController::class, 'processForgetPassword'])->name('user.processForgetPassword');
 Route::get('/user/resestforgotpassword/{token?}', [SettingController::class, 'resestForgetPassword'])->name('user.resestForgetPassword');
+Route::post('/user/resestforgotpasswordemail', [SettingController::class, 'processForgotPasswordEmail'])->name('user.processForgotPasswordEmail');
+
 
 
 Route::get('/register', [UserController::class, 'register'])->name('register');

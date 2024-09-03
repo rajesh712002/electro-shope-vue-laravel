@@ -27,7 +27,7 @@ class ResetPasswordEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject:  $this->formData['mailSubject'],
+            subject:  "You Have Requested To Reset Password", //$this->formData['mailSubject'],
         );
     }
 

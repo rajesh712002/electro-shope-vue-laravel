@@ -146,25 +146,7 @@
 </main>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
-<script>
-    $(".brand-label").change(function() {
-        apply_filters();
-    });
 
-    function apply_filters() {
-        var brandss = [];
-
-        $(".brand-label").each(function() {
-            if ($(this).is(":checked") == true) {
-                brandss.push($(this).val());
-            }
-        });
-        console.log(brandss.toString());
-        var url = '{{ url()->current() }}?';
-    }
-
-  
-</script>
 
 <script>
     function sortProducts() {
