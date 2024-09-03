@@ -226,8 +226,9 @@ class CheckoutController extends Controller
 
     //=======//============//==============//======================//==============================//
 
-    public function orderEmail($orderId) {
-        $order = Order::where('id',$orderId)->first();
+    public function orderEmail($orderId)
+    {
+        $order = Order::where('id', $orderId)->first();
         $mailData = [
             'subject' => 'Thamks for your order',
             'order' => $order
@@ -235,6 +236,5 @@ class CheckoutController extends Controller
 
         dd($order);
         Mail::to($order->email)->send(new OrderEmail($mailData));
-
     }
 }

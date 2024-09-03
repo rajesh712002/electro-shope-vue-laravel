@@ -46,7 +46,7 @@
                                                 <label for="slug">Slug</label>
                                                 <input type="text" name="slug" id="slug" class=" form-control"
                                                     value="{{ old('slug') }}" placeholder="Slug">
-                                                    <p></p>
+                                                <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -123,14 +123,14 @@
                                                         name="track_qty" checked>
                                                     <label for="track_qty" class="custom-control-label">Track
                                                         Quantity</label>
-                                                        <p></p>
-                                                        <h6 style="color: red" class="error"></h6>
+                                                    <p></p>
+                                                    <h6 style="color: red" class="error"></h6>
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <input type="number" min="0" name="qty" id="qty"
                                                     class="form-control" placeholder="Qty">
-                                                    <p></p>
+                                                <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
@@ -203,7 +203,7 @@
 
                     <div class="pb-5 pt-3">
                         <button type="submit" name="submit" id="submit" class="btn btn-primary">Create</button>
-                        <button type="reset" id="reset">Cancel</button> 
+                        <button type="reset" id="reset">Cancel</button>
 
                     </div>
                 </div>

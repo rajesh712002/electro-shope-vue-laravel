@@ -296,16 +296,17 @@
                                         <td>{{ $prod->prod_name }}</td>
                                         <td>{{ $prod->categorys->name }}</td>
 
-                                        @if ( $prod->sub_category && $prod->sub_category->subcate_name)
-                                        <td>{{ $prod->sub_category->subcate_name }}</td>
-                                          @else
-                                          <td>___</td>  
+                                        @if ($prod->sub_category && $prod->sub_category->subcate_name)
+                                            <td>{{ $prod->sub_category->subcate_name }}</td>
+                                        @else
+                                            <td>___</td>
                                         @endif
 
-                                         @if ($prod->brand && $prod->brand->name) {{--This checks if $prod->brand is set and if $prod->brand->name is not null before displaying the brand name. --}}
-                                        <td>{{ $prod->brand->name }}</td>
-                                          @else
-                                          <td>___</td>  
+                                        @if ($prod->brand && $prod->brand->name)
+                                            {{-- This checks if $prod->brand is set and if $prod->brand->name is not null before displaying the brand name. --}}
+                                            <td>{{ $prod->brand->name }}</td>
+                                        @else
+                                            <td>___</td>
                                         @endif
 
 

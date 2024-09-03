@@ -51,7 +51,7 @@
                         </div>
                     </form>
                     <div class="card-body table-responsive p-0">
-                      
+
                         <table class="table table-hover text-nowrap" border="2">
                             <tr>
                                 <th>SubCategory ID</th>
@@ -66,7 +66,7 @@
                             <tr>
                                 @if ($subcategory->isNotEmpty())
                                     @foreach ($subcategory as $prod)
-                                    {{-- @dump($prod->category) --}}
+                                        {{-- @dump($prod->category) --}}
                                         <td>{{ $prod->id }}</td>
                                         <td><img width="100" src="{{ asset('admin_assets/images/' . $prod->image) }}"
                                                 alt=""></td>

@@ -91,7 +91,7 @@ class AdminloginController extends Controller
                 ->orWhere('id', 'like', '%' . $request->get('keyword') . '%')
                 ->orWhere('email', 'like', '%' . $request->get('keyword') . '%')
                 ->orWhere('phone', 'like', '%' . $request->get('keyword') . '%');
-                
+
 
             $users = $users->paginate(100);
             return view('admin.userdata.user', ['users' => $users]);
@@ -199,11 +199,9 @@ class AdminloginController extends Controller
     public function showchangePassword(Request $request)
     {
         $rules = [
-
             'old_password' => 'required|min:3|max:30',
             'new_password' => 'required|min:3|max:30',
             'confirm_password' => 'required|same:new_password'
-
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -218,7 +216,7 @@ class AdminloginController extends Controller
             // dd($user);
             if (!Hash::check($request->old_password, $user->password)) {
 
-                dd($request->old_password, $user->password);
+                // dd($request->old_password, $user->password);
                 return response()->json(['error', 'Your Password is Incorrected']);
             }
         User::where('id', $user->id)->update([
@@ -240,7 +238,7 @@ class AdminloginController extends Controller
                 ->orWhereHas('product', function ($query) use ($request) {
                     $query->where('prod_name', 'like', '%' . $request->get('keyword') . '%');
                 });
-                
+
 
             $rating = $rating->paginate(100);
             return view('admin.userdata.view_rating', ['rating' => $rating]);
@@ -252,7 +250,8 @@ class AdminloginController extends Controller
         // return view('admin.userdata.view_rating', compact('rating'));
     }
 
-    public function sendIvoiceToCustomer(Request $request, $orderId){
+    public function sendIvoiceToCustomer(Request $request, $orderId)
+    {
         // echo "hello";
         sendInvoiceEmail($orderId);
         return redirect()->back();

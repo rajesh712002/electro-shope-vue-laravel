@@ -15,7 +15,7 @@
         <div class="container  mt-5">
             <div class="row">
                 <div class="col-md-3">
-                    
+
                     @include('user.includes.account_panel')
                 </div>
                 <div class="col-md-9">
@@ -23,7 +23,7 @@
                         <div class="card-header">
                             <h2 class="h5 mb-0 pt-2 pb-2">My Orders</h2>
                         </div>
-                         {{-- @dd($order_item_count) --}}
+                        {{-- @dd($order_item_count) --}}
 
                         <div class="card-body pb-0">
                             <!-- Info -->
@@ -40,11 +40,11 @@
                                         </div>
                                         <div class="col-6 col-lg-3">
                                             <!-- Heading -->
-                                            <h6 class="heading-xxxs text-muted">{{$order->status}} date:</h6>
+                                            <h6 class="heading-xxxs text-muted">{{ $order->status }} date:</h6>
                                             <!-- Text -->
                                             <p class="mb-lg-0 fs-sm fw-bold">
                                                 <time datetime="2019-10-01">
-                                                    {{ \Carbon\Carbon::parse($order->updated_at)->format('d M, Y')}}
+                                                    {{ \Carbon\Carbon::parse($order->updated_at)->format('d M, Y') }}
                                                 </time>
                                             </p>
                                         </div>
@@ -90,7 +90,7 @@
                         <div class="card-footer p-3">
 
                             <!-- Heading -->
-                            <h6 class="mb-7 h5 mt-4">Order Items ({{$order_item_count}})</h6>
+                            <h6 class="mb-7 h5 mt-4">Order Items ({{ $order_item_count }})</h6>
 
                             <!-- Divider -->
                             <hr class="my-3">
@@ -104,18 +104,18 @@
                                         <div class="row align-items-center">
                                             <div class="col-4 col-md-3 col-xl-2">
                                                 <!-- Image -->
-                                                <a href="{{ route('viewproduct',$order_items->product->slug) }}"> <img
+                                                <a href="{{ route('viewproduct', $order_items->product->slug) }}"> <img
                                                         src="{{ asset('admin_assets/images/' . $order_items->product->image) }}"></a>
 
                                             </div>
                                             <div class="col">
                                                 <!-- Title -->
-                                                <a> <img
-                                                        style="width: 100px; height: 70px; object-fit: contain ! important"
+                                                <a> <img style="width: 100px; height: 70px; object-fit: contain ! important"
                                                         src="{{ asset('admin_assets/images/' . $order_items->product->brand->image) }}"></a>
                                                 <p class="mb-4 fs-sm fw-bold">
 
-                                                    <a class="text-body" href="{{ route('viewproduct', $order_items->product->slug) }}">{{ $order_items->name }}
+                                                    <a class="text-body"
+                                                        href="{{ route('viewproduct', $order_items->product->slug) }}">{{ $order_items->name }}
                                                         X
                                                         <b><u><i>{{ $order_items->qty }}</i></u></b> </a> <br>
                                                     <span class="text-muted"><i class="fa fa-inr"
@@ -124,7 +124,6 @@
                                             </div>
                                         </div>
                                     </li>
-                                  
                                 @endforeach
                             </ul>
                         </div>

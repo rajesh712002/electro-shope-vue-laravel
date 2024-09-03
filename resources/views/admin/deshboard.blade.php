@@ -15,7 +15,7 @@
         <!-- /.container-fluid -->
     </section>
     <!-- Main content -->
-   
+
 
     <head>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -66,8 +66,8 @@
                                                 <p class="m-b-0">Categories</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.category')}}" class="small-box-footer text-dark">More info <i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.category') }}" class="small-box-footer text-dark">More info
+                                            <i class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -82,8 +82,8 @@
                                                 <p class="m-b-0">Sub Categories</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.subcategory')}}" class="small-box-footer text-dark">More info <i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.subcategory') }}" class="small-box-footer text-dark">More
+                                            info <i class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -98,8 +98,8 @@
                                                 <p class="m-b-0">Products</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.product')}}" class="small-box-footer text-dark">More info <i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.product') }}" class="small-box-footer text-dark">More info
+                                            <i class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -114,8 +114,8 @@
                                                 <p class="m-b-0">Total Brands</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.brand')}}" class="small-box-footer text-dark">More info <i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.brand') }}" class="small-box-footer text-dark">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -130,8 +130,8 @@
                                                 <p class="m-b-0">Users</p>
                                             </div>
                                         </div>
-                                        <a href="{{ route('admin.users') }}" class="small-box-footer text-dark">More info <i
-                                                class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.users') }}" class="small-box-footer text-dark">More info
+                                            <i class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -142,12 +142,12 @@
                                                 <span><i class="fa fa-shopping-cart f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{$totalorder}}</b>
+                                                <b>{{ $totalorder }}</b>
                                                 <p class="m-b-0">Total Orders</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.orders')}}" class="small-box-footer text-dark">More info <i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.orders') }}" class="small-box-footer text-dark">More info
+                                            <i class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -158,12 +158,13 @@
                                                 <span><i class="fa fa-genderless f-s-70" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{$pending}}</b>
+                                                <b>{{ $pending }}</b>
                                                 <p class="m-b-0">Pending Orders</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.pendingdorder')}}" class="small-box-footer text-dark">More info<i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.pendingdorder') }}"
+                                            class="small-box-footer text-dark">More info<i
+                                                class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -174,12 +175,13 @@
                                                 <span><i class="fa fa-spinner f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{$processing}}</b>
+                                                <b>{{ $processing }}</b>
                                                 <p class="m-b-0">Processing Orders</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.processingorder')}}" class="small-box-footer text-dark">More info <i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.processingorder') }}"
+                                            class="small-box-footer text-dark">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -190,12 +192,13 @@
                                                 <span><i class="fa fa-check f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{$delivered}}</b>
+                                                <b>{{ $delivered }}</b>
                                                 <p class="m-b-0">Delivered Orders</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.deliveredorder')}}" class="small-box-footer text-dark">More info<i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.deliveredorder') }}"
+                                            class="small-box-footer text-dark">More info<i
+                                                class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -206,12 +209,13 @@
                                                 <span><i class="fa fa-times f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{$cancelled}}</b>
+                                                <b>{{ $cancelled }}</b>
                                                 <p class="m-b-0">Cancelled Orders</p>
                                             </div>
                                         </div>
-                                        <a href="{{route('admin.cancleorder')}}" class="small-box-footer text-dark">More info <i
-                                            class="fas fa-arrow-circle-right"></i></a>
+                                        <a href="{{ route('admin.cancleorder') }}"
+                                            class="small-box-footer text-dark">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -222,11 +226,11 @@
                                                 <span><i class="fa fa-inr f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{$totalearning}}</b>
+                                                <b>{{ $totalearning }}</b>
                                                 <p class="m-b-0">Total Earnings</p>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
 
@@ -243,7 +247,7 @@
                     <script src="{{ asset('admin_assets/js/js/lib/sticky-kit-master/dist/sticky-kit.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/js/js/custom.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/plugins/jquery/jquery.min.js') }}"></script>
-                   
+
                     <script src="{{ asset('admin_assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/js/adminlte.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/js/demo.js') }}"></script>

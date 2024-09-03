@@ -23,7 +23,8 @@
         <section class="content">
             <!-- Default box -->
             <div class="container-fluid">
-                <form method="POST" action="{{ route('admin.store_brand') }}" name="BrandForm" id="BrandForm" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('admin.store_brand') }}" name="BrandForm" id="BrandForm"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="card">
                         <div class="card-body">
@@ -33,9 +34,9 @@
                                         <label for="name">Name</label>
                                         <input type="text" name="name" id="name" class=" form-control"
                                             value="{{ old('name') }}" placeholder="Category Name">
-                                            <p></p>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -43,7 +44,7 @@
                                         <label for="slug">Slug</label>
                                         <input type="text" name="slug" id="slug" class=" form-control"
                                             value="{{ old('slug') }}" placeholder="Slug">
-                                            <p></p>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -75,7 +76,7 @@
                     </div>
                     <div class="pb-5 pt-3">
                         <button class="btn btn-primary">Create</button>
-                        <button type="reset" id="reset">Cancel</button> 
+                        <button type="reset" id="reset">Cancel</button>
                     </div>
                 </form>
             </div>

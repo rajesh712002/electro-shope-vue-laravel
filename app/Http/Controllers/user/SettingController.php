@@ -48,7 +48,7 @@ class SettingController extends Controller
         @dd($request->old_password);
 
         if (!Hash::check($request->old_password, $user->password)) {
-                      return response()->json(['errors' => 'Your Password is Incorrected']);
+            return response()->json(['errors' => 'Your Password is Incorrected']);
         } else {
             User::where('id', $user->id)->update([
                 'password' => Hash::make($request->new_password)
@@ -117,7 +117,7 @@ class SettingController extends Controller
 
         $token = Str::random(60);
 
-        DB::table('password_reset_tokens')->where('email',$request->email)->delete();
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         DB::table('password_reset_tokens')->insert([
             'email' => $request->email,
@@ -126,11 +126,11 @@ class SettingController extends Controller
         ]);
 
         // Mail
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         $formData = [
             'token' => $token,
-            'user' =>$user
+            'user' => $user
         ];
         Mail::to($request->email)->send(new ResetPasswordEmail($formData));
 
@@ -139,30 +139,28 @@ class SettingController extends Controller
 
     public function resestForgetPassword($token)
     {
-        $tokenExist = DB::table('password_reset_tokens')->where('token',$token)->first();
+        $tokenExist = DB::table('password_reset_tokens')->where('token', $token)->first();
 
-        if($tokenExist == null )
-        {
+        if ($tokenExist == null) {
             return redirect()->back();
         }
-        return view('user.order.forgot_password_email',['token' => $token]);
+        return view('user.order.forgot_password_email', ['token' => $token]);
     }
 
-    public function processForgotPasswordEmail(Request $request){
+    public function processForgotPasswordEmail(Request $request)
+    {
         $token = $request->token;
 
-        $tokenExist = DB::table('password_reset_tokens')->where('token',$token)->first();
+        $tokenExist = DB::table('password_reset_tokens')->where('token', $token)->first();
 
-        if($tokenExist == null )
-        {
+        if ($tokenExist == null) {
             return redirect()->back();
         }
-        $user = User::where('email',$tokenExist->email)->first();
-        User::where('id',$user->id)->update([
+        $user = User::where('email', $tokenExist->email)->first();
+        User::where('id', $user->id)->update([
             'password' => Hash::make($request->new_password)
         ]);
         return redirect()->back();
-        
     }
 
 

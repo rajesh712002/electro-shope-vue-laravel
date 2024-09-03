@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    
+
     <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/slick.css') }}">
@@ -43,7 +43,7 @@
         <section class=" section-10">
             <div class="container">
                 <div class="login-form">
-                    <form action="{{route('user.processForgetPassword')}}" method="post">
+                    <form action="{{ route('user.processForgetPassword') }}" method="post">
                         @csrf
                         <div class="row d-flex justify-content-center">
                             @if (Session::has('success'))
@@ -60,10 +60,10 @@
                             <input type="email" name="email" id="email"
                                 class="@error('email') is-invalid
                                @enderror form-control"
-                                    value="{{ old('email') }}" placeholder="Enter Email">
-                                @error('email')
-                                    <p class="invalid-feedback">{{ $message }}</p>
-                                @enderror
+                                value="{{ old('email') }}" placeholder="Enter Email">
+                            @error('email')
+                                <p class="invalid-feedback">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         {{-- <div class="form-group">
@@ -77,7 +77,7 @@
                         </div> --}}
 
                         <div class="form-group small">
-                            <a href="{{route('userlogin')}}" class="forgot-link">Login</a>
+                            <a href="{{ route('userlogin') }}" class="forgot-link">Login</a>
                         </div>
                         <input type="submit" class="btn btn-dark btn-block btn-lg" value="Email">
                     </form>

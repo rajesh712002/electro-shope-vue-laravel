@@ -86,7 +86,7 @@ class CategoryController extends Controller
     public function update_cat($id, Request $request)
     {
         $category = Category::findOrFail($id);
-        
+
         File::delete(public_path('admin_assets/images/' . $category->image));
         //Validation 
         $rules = [

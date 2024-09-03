@@ -1,5 +1,6 @@
 @include('user.includes.header')
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
 
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
@@ -40,19 +41,19 @@
                                             {{-- @dd($product) --}}
                                             <td>
                                                 <a href="{{ route('viewproduct', $item->slug) }}">
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    <img src="{{ asset('admin_assets/images/' . $item->image) }}"
-                                                        width="120" height="120">
-                                                </div>
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <img src="{{ asset('admin_assets/images/' . $item->image) }}"
+                                                            width="120" height="120">
+                                                    </div>
                                                 </a>
                                             </td>
                                             <td>
                                                 <a class="text-dark" href="{{ route('viewproduct', $item->slug) }}">
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    {{-- <h2>{{$product->prod_name}}</h2> --}}
-                                                    {{ $item->prod_name }}
-                                                </div>
-                                            </a>
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        {{-- <h2>{{$product->prod_name}}</h2> --}}
+                                                        {{ $item->prod_name }}
+                                                    </div>
+                                                </a>
                                             </td>
                                             <td>{{ $item->price }}</td>
                                             <td>
@@ -68,7 +69,7 @@
                                                                 <i class="fa fa-minus"></i>
                                                             </button>
                                                         </form>
-                                                        
+
                                                     </div>
                                                     <input type="text" name="quantity"
                                                         class="form-control form-control-sm  border-0 text-center"
@@ -85,7 +86,7 @@
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </form>
-                                                       
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -93,7 +94,7 @@
                                                 {{ $item->price * $item->cqty }}
                                             </td>
                                             <td>
-                                              
+
                                                 <form id="delete-product-form-{{ $item->cid }}" class="delete_cat"
                                                     method="post" action="{{ route('qty.remove_item', $item->cid) }}">
                                                     @csrf
@@ -151,7 +152,7 @@
                         </div>
                     </div>
                 @endif
-             
+
             </div>
         </div>
         </div>

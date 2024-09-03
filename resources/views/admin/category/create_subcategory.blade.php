@@ -33,7 +33,8 @@
             </div>
             <!-- Default box -->
             <div class="container-fluid">
-                <form action="{{ route('admin.store_subcat') }}" id="SubCategoryForm" name="SubCategoryForm" enctype="multipart/form-data">
+                <form action="{{ route('admin.store_subcat') }}" id="SubCategoryForm" name="SubCategoryForm"
+                    enctype="multipart/form-data">
                     @method('post')
                     @csrf
                     <div class="card">
@@ -60,7 +61,7 @@
                                         <label for="name">Name</label>
                                         <input type="text" name="name" id="name" class=" form-control"
                                             value="{{ old('name') }}" placeholder="Name">
-                                            <p></p>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -69,7 +70,7 @@
                                         <label for="slug">Slug</label>
                                         <input type="text" name="slug" id="slug" class=" form-control"
                                             value="{{ old('slug') }}" placeholder="Slug">
-                                            <p></p>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>

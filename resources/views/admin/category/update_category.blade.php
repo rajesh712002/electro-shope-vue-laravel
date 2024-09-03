@@ -83,7 +83,7 @@
                     </div>
                     <div class="pb-5 pt-3">
                         <button type="submit" id="submit" name="submit" class="btn btn-primary">Update</button>
-                        <button type="reset" id="reset">Cancel</button> 
+                        <button type="reset" id="reset">Cancel</button>
 
                     </div>
                 </form>

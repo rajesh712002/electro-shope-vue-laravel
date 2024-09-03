@@ -114,7 +114,7 @@
                                  name="cpassword">
                          </div><br>
                          <div class="form-group small">
-                             <a href="#" class="forgot-link">Forgot Password?</a>
+                             {{-- <a href="#" class="forgot-link">Forgot Password?</a> --}}
                          </div> <br>
                          <button type="submit" id="submit" class="btn btn-dark btn-block btn-lg"
                              value="Register">Register</button>

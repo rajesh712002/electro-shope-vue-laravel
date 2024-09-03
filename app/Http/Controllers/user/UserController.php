@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
 
-    public function back(){
+    public function back()
+    {
         return redirect()->back();
     }
     public function register()
@@ -24,9 +25,8 @@ class UserController extends Controller
 
     public function index()
     {
-        // $category=Category::withCount('product')->get();
-        // $product=Product::orderBy('created_at', 'desc')->limit(12)->get();
-        return view('user.index');//,compact('category','product'));
+
+        return view('user.index');
     }
 
     public function login()
@@ -36,9 +36,9 @@ class UserController extends Controller
 
     public function deshboard()
     {
-        $category=Category::withCount('product')->get();
-        $product=Product::orderBy('created_at', 'desc')->limit(12)->get();
-        return view('user.deshboard',compact('category','product'));
+        $category = Category::withCount('product')->get();
+        $product = Product::orderBy('created_at', 'desc')->limit(12)->get();
+        return view('user.deshboard', compact('category', 'product'));
     }
 
 
@@ -56,8 +56,8 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-         if ($validator->fails()) {
-           return redirect()->route('register')->withInput()->withErrors($validator);
+        if ($validator->fails()) {
+            return redirect()->route('register')->withInput()->withErrors($validator);
         }
 
         $member = new User();
@@ -82,7 +82,7 @@ class UserController extends Controller
         if (Auth::attempt($validate)) {
             if (Auth::guard('web')->user()->role == 1) {
                 return redirect()->route('userdeshboard');
-            } else {//else if (Auth::guard('web')->user()->role != 1) {
+            } else { //else if (Auth::guard('web')->user()->role != 1) {
                 return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
             }
         } else {
@@ -103,7 +103,7 @@ class UserController extends Controller
     }
 
 
-   
+
 
     public function view_order()
     {
@@ -112,20 +112,22 @@ class UserController extends Controller
 
     public function wishlist()
     {
-         return view('user.order.wishlist');
+        return view('user.order.wishlist');
     }
 
-    public function aboutUs(){
+    public function aboutUs()
+    {
         return view('user.order.about-us');
     }
 
-    
-    public function contactUs(){
+
+    public function contactUs()
+    {
         return view('user.order.contact-us');
     }
 
-    public function privacy(){
+    public function privacy()
+    {
         return view('user.order.privacy');
     }
-    
 }

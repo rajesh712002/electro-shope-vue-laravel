@@ -6,10 +6,9 @@
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
                     @if (Auth::check())
-                    <li class="breadcrumb-item"><a class="white-text" href="{{route('userindex')}}">Home</a></li>
-                       @else
-                       <li class="breadcrumb-item"><a class="white-text" href="{{route('userdeshboard')}}">Home</a></li>
-
+                        <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a></li>
+                    @else
+                        <li class="breadcrumb-item"><a class="white-text" href="{{ route('userdeshboard') }}">Home</a></li>
                     @endif
                     <li class="breadcrumb-item">Contact Us</li>
                 </ol>
@@ -21,54 +20,60 @@
         <div class="container">
             <div class="section-title mt-5 ">
                 <h2>Love to Hear From You</h2>
-            </div>   
+            </div>
         </div>
     </section>
 
     <section>
-        <div class="container">          
+        <div class="container">
             <div class="row">
                 <div class="col-md-6 mt-3 pe-lg-5">
-                    <p>Founded in 2024, Electro-Shop has come a long way from its beginnings. When we first started out, our
-                        passion for providing top-notch electronics drove us to start our own business. We now serve customers all
+                    <p>Founded in 2024, Electro-Shop has come a long way from its beginnings. When we first started out,
+                        our
+                        passion for providing top-notch electronics drove us to start our own business. We now serve
+                        customers all
                         over India.</p>
                     <address>
                         <h3>Get In Touch</h3>
                         <p> <br>
-                        123 feet Rind Road, Ahmedabad, India <br></p>
-                    <a href="tel:9808237221">9808237221</a><br>
-                    <a href="mailto:electro2024@gamil.com">electro2024@gamil.com</a>
-                    </address>                    
+                            123 feet Rind Road, Ahmedabad, India <br></p>
+                        <a href="tel:9808237221">9808237221</a><br>
+                        <a href="mailto:electro2024@gamil.com">electro2024@gamil.com</a>
+                    </address>
                 </div>
 
                 <div class="col-md-6">
                     <form class="shake" role="form" method="post" id="contactForm" name="contact-form">
                         <div class="mb-3">
                             <label class="mb-2" for="name">Name</label>
-                            <input class="form-control" id="name" type="text" name="name" required data-error="Please enter your name">
+                            <input class="form-control" id="name" type="text" name="name" required
+                                data-error="Please enter your name">
                             <div class="help-block with-errors"></div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="mb-2" for="email">Email</label>
-                            <input class="form-control" id="email" type="email" name="email" required data-error="Please enter your Email">
+                            <input class="form-control" id="email" type="email" name="email" required
+                                data-error="Please enter your Email">
                             <div class="help-block with-errors"></div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="mb-2">Subject</label>
-                            <input class="form-control" id="msg_subject" type="text" name="subject" required data-error="Please enter your message subject">
+                            <input class="form-control" id="msg_subject" type="text" name="subject" required
+                                data-error="Please enter your message subject">
                             <div class="help-block with-errors"></div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="message" class="mb-2">Message</label>
                             <textarea class="form-control" rows="3" id="message" name="message" required data-error="Write your message"></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
-                      
+
                         <div class="form-submit">
-                            <button class="btn btn-dark" type="submit" id="form-submit"><i class="material-icons mdi mdi-message-outline"></i> Send Message</button>
+                            <button class="btn btn-dark" type="submit" id="form-submit"><i
+                                    class="material-icons mdi mdi-message-outline"></i> Send Message</button>
                             <div id="msgSubmit" class="h3 text-center hidden"></div>
                             <div class="clearfix"></div>
                         </div>

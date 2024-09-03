@@ -63,7 +63,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
+
                     if (errors.status) {
                         $("#status")
                             .addClass("is-invalid")
@@ -91,7 +91,6 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.image);
                     }
-
                 }
             },
         });
@@ -160,7 +159,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
+
                     if (errors.status) {
                         $("#status")
                             .addClass("is-invalid")
@@ -301,7 +300,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
+
                     if (errors.status) {
                         $("#status")
                             .addClass("is-invalid")
@@ -411,7 +410,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
+
                     if (errors.status) {
                         $("#status")
                             .addClass("is-invalid")
@@ -514,7 +513,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
+
                     if (errors.status) {
                         $("#status")
                             .addClass("is-invalid")
@@ -610,7 +609,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
+
                     if (errors.status) {
                         $("#status")
                             .addClass("is-invalid")
@@ -709,8 +708,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
-                      
+
                     if (errors.description) {
                         $("#description")
                             .addClass("is-invalid")
@@ -725,7 +723,6 @@ $(document).ready(function () {
                             .html(errors.description);
                     }
 
-                      
                     if (errors.price) {
                         $("#price")
                             .addClass("is-invalid")
@@ -739,7 +736,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.price);
                     }
-                      
+
                     if (errors.qty) {
                         $("#qty")
                             .addClass("is-invalid")
@@ -877,8 +874,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.slug);
                     }
-                    
-                      
+
                     if (errors.description) {
                         $("#description")
                             .addClass("is-invalid")
@@ -893,7 +889,6 @@ $(document).ready(function () {
                             .html(errors.description);
                     }
 
-                      
                     if (errors.price) {
                         $("#price")
                             .addClass("is-invalid")
@@ -907,7 +902,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.price);
                     }
-                      
+
                     if (errors.qty) {
                         $("#qty")
                             .addClass("is-invalid")
@@ -983,46 +978,46 @@ $(document).ready(function () {
     });
 });
 
-
 //=======//==============//=====================//=========================//=================================================//
 //=======//==============//=====================//=========================//=================================================//
 
 //For Dynamic Category to SubCategory
 
 $(document).ready(function () {
-    
-    $("#category").on('change',function () {
+    $("#category").on("change", function () {
         var category_id = $(this).val();
-        $('#sub_category').html('');
+        $("#sub_category").html("");
         // if (category_id) {
-            $.ajax({
-                url: "/admin/getsubcategories/" + category_id,
-                type: "GET",
-                dataType: "json",
-                success: function (data) {
-                    $("#sub_category").empty();
+        $.ajax({
+            url: "/admin/getsubcategories/" + category_id,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $("#sub_category").empty();
+                $("#sub_category").append(
+                    '<option value="">---Select Subcategory---</option>'
+                );
+                $.each(data, function (key, value) {
                     $("#sub_category").append(
-                        '<option value="">---Select Subcategory---</option>'
+                        '<option value="' +
+                            value.id +
+                            '">' +
+                            value.subcate_name +
+                            "</option>"
                     );
-                    $.each(data, function (key, value) {
-                        $("#sub_category").append(
-                            '<option value="' + value.id +'">' + value.subcate_name + "</option>"
-                        );
-                    });
-                    
-                    // $('#sub_category').html('<option value="">Select Subcategory</option>');
-                    // $.each(data, function(key, value) {
-                    //     $('#sub_category').append('<option value="'+value.id+'">'+value.subcate_name+'</option>');
-                    // });
-                },
-            });
-       // }
+                });
+
+                // $('#sub_category').html('<option value="">Select Subcategory</option>');
+                // $.each(data, function(key, value) {
+                //     $('#sub_category').append('<option value="'+value.id+'">'+value.subcate_name+'</option>');
+                // });
+            },
+        });
+        // }
     });
 });
 
-
-
- //=======//==============//=====================//=========================//=================================================//
+//=======//==============//=====================//=========================//=================================================//
 //=======//==============//=====================//=========================//=================================================//
 
 //for Admin Password Reset/Change
@@ -1060,8 +1055,7 @@ $(document).ready(function () {
                     //         .find(".error, .error_no_margin")
                     //         .text("** " + value[0] + "!");
                     // });
-                  
-                    
+
                     if (errors.old_password) {
                         $("#old_password")
                             .addClass("is-invalid")
@@ -1103,14 +1097,11 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.confirm_password);
                     }
-                
-                    
                 }
             },
         });
     });
 });
-
 
 //=================================================================================
 //Email Send

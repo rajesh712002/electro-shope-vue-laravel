@@ -67,7 +67,7 @@
                                         @foreach ($category as $prod)
                                             <td>{{ $prod->id }}</td>
                                             <td><img width="100" src="{{ asset('admin_assets/images/' . $prod->image) }}"
-                                                alt=""></td>
+                                                    alt=""></td>
                                             <td>{{ $prod->name }}</td>
                                             <td>{{ $prod->slug }}</td>
                                             <td>

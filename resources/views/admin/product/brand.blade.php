@@ -55,8 +55,8 @@
                                     @foreach ($brand as $prod)
                                         <td>{{ $prod->id }}</td>
                                         <td><img width="100" src="{{ asset('admin_assets/images/' . $prod->image) }}"
-                                            alt=""></td>
-                                          
+                                                alt=""></td>
+
                                         <td>{{ $prod->name }}</td>
                                         <td>{{ $prod->slug }}</td>
                                         <td>
@@ -81,7 +81,7 @@
 
                                         <td>
 
-                                            <a href="{{route('admin.edit_brand', $prod->id)}}">
+                                            <a href="{{ route('admin.edit_brand', $prod->id) }}">
                                                 <svg class="filament-link-icon w-4 h-4 mr-1"
                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                     fill="currentColor" aria-hidden="true">

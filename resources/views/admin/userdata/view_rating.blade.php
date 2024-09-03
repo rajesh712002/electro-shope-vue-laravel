@@ -57,8 +57,8 @@
                             <tr>
                                 @if ($rating->isNotEmpty())
                                     @foreach ($rating as $ratings)
-                                        <td><img src="{{ asset('admin_assets/images/' . $ratings->product->image) }}" width="120"
-                                                height="120"></td>
+                                        <td><img src="{{ asset('admin_assets/images/' . $ratings->product->image) }}"
+                                                width="120" height="120"></td>
                                         <td>{{ $ratings->product_id }}</td>
                                         <td>{{ $ratings->product->prod_name }}</td>
                                         <td>{{ $ratings->rating }}</td>
@@ -72,7 +72,7 @@
                         </table>
                     </div>
                     <div class="card-footer clearfix">
-                      {{$rating->links()}}
+                        {{ $rating->links() }}
                     </div>
                 </div>
             </div>

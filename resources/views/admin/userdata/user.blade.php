@@ -41,7 +41,7 @@
                         </div>
                     </form>
                     <div class="card-body table-responsive p-0">
-                       
+
 
                         <table class="table table-hover text-nowrap" border="2">
                             <tr>
@@ -58,10 +58,10 @@
                                     @foreach ($users as $user)
                                         @if ($user->role == 1)
                                             <td>{{ $user->id }}</td>
-                                            
+
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
-                                            
+
                             <tr></tr>
                             @endif
                             @endforeach
@@ -70,7 +70,7 @@
                         </table>
                     </div>
                     <div class="card-footer clearfix">
-                        {{$users->links()}}
+                        {{ $users->links() }}
                     </div>
                 </div>
             </div>

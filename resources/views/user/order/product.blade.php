@@ -224,7 +224,7 @@
 
                                 <div class="col-md-12 mt-5">
                                     <div class="overall-rating mb-3">
-                                        @if ($ratingcount>0)
+                                        @if ($ratingcount > 0)
                                             <div class="d-flex">
                                                 <h1 class="h3 pe-3">{{ number_format($ratingsum / $ratingcount, 1) }}
                                                 </h1>

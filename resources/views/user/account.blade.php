@@ -21,7 +21,8 @@
                 </div>
                 <div class="col-md-9">
                     {{-- @dd($user) --}}
-                    <form method="POST" id="ProfileUpdateForm" name="ProfileUpdateForm" action="{{route('userchangeProfile')}}">
+                    <form method="POST" id="ProfileUpdateForm" name="ProfileUpdateForm"
+                        action="{{ route('userchangeProfile') }}">
                         @csrf
                         <div class="card">
                             <div class="card-header">
@@ -31,17 +32,17 @@
                                 <div class="row">
                                     <div class="mb-3">
                                         <label for="name">Name</label>
-                                        <input type="text" name="name" id="name" value="{{$user->name}}"
+                                        <input type="text" name="name" id="name" value="{{ $user->name }}"
                                             placeholder="Enter Your Name" class="form-control">
                                     </div>
                                     <div class="mb-3">
                                         <label for="email">Email</label>
-                                        <input type="text" name="email" id="email" value="{{$user->email}}"
+                                        <input type="text" name="email" id="email" value="{{ $user->email }}"
                                             placeholder="Enter Your Email" class="form-control">
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone">Phone</label>
-                                        <input type="text" name="phone" id="phone" value="{{$user->phone}}"
+                                        <input type="text" name="phone" id="phone" value="{{ $user->phone }}"
                                             placeholder="Enter Your Phone" class="form-control">
                                     </div>
 

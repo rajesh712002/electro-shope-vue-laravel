@@ -156,7 +156,7 @@ $(document).ready(function () {
             error: function (xhr) {
                 if (xhr.status === 422) {
                     var errors = xhr.responseJSON.errors;
-                    
+
                     if (errors.first_name) {
                         $("#first_name")
                             .addClass("is-invalid")
@@ -240,7 +240,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.appartment);
                     }
-                  
+
                     if (errors.city) {
                         $("#city")
                             .addClass("is-invalid")
@@ -254,7 +254,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.city);
                     }
-                    
+
                     if (errors.state) {
                         $("#state")
                             .addClass("is-invalid")
@@ -310,7 +310,7 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.expiry_date);
                     }
-                   
+
                     if (errors.zip) {
                         $("#zip")
                             .addClass("is-invalid")
@@ -338,7 +338,6 @@ $(document).ready(function () {
                             .removeClass("invalid-feedback")
                             .html(errors.cvv);
                     }
-
                 }
             },
         });
@@ -398,10 +397,9 @@ $("#payment_method_two").on("click", function () {
     }
 });
 
-
 //=======//==============//=====================//============================//
 
- $(document).ready(function () {
+$(document).ready(function () {
     $("#ProductRatingForm").on("submit", function (e) {
         e.preventDefault();
         var data = new FormData($(this)[0]);
@@ -427,7 +425,7 @@ $("#payment_method_two").on("click", function () {
             error: function (xhr) {
                 if (xhr.status === 422) {
                     var errors = xhr.responseJSON.errors;
-                    
+
                     if (errors.first_name) {
                         $("#name")
                             .addClass("is-invalid")

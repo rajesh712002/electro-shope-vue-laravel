@@ -26,18 +26,18 @@
                                     @if ($categorys->isNotEmpty())
                                         @foreach ($categorys as $key => $category)
                                             @if ($category->status == 1)
-                                            <a href="{{ route('usershop', $category->slug) }}">
-                                                <h2 class="accordion-header" id="headingOne">
-                                                    @if ($category->subcategory->isNotEmpty())
-                                                        <button
-                                                            class="accordion-button collapsed {{ $categorySelected == $category->id ? 'text-danger' : '' }}"
-                                                            type="button" data-bs-toggle="collapse"
-                                                            data-bs-target="#collapseOne-{{ $key }}"
-                                                            aria-expanded="false" aria-controls="collapseOne">
-                                                            {{ $category->name }}
-                                                        </button>
-                                                </h2>
-                                            </a>
+                                                <a href="{{ route('usershop', $category->slug) }}">
+                                                    <h2 class="accordion-header" id="headingOne">
+                                                        @if ($category->subcategory->isNotEmpty())
+                                                            <button
+                                                                class="accordion-button collapsed {{ $categorySelected == $category->id ? 'text-danger' : '' }}"
+                                                                type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#collapseOne-{{ $key }}"
+                                                                aria-expanded="false" aria-controls="collapseOne">
+                                                                {{ $category->name }}
+                                                            </button>
+                                                    </h2>
+                                                </a>
                                             @else
                                                 <a href="{{ route('usershop', $category->slug) }}"
                                                     class="nav-item- nav-link {{ $categorySelected == $category->id ? 'text-danger' : '' }}">{{ $category->name }}</a>
@@ -72,8 +72,9 @@
                         <div class="col-12 pb-1">
                             <div class="d-flex align-items-center justify-content-end mb-4">
                                 <div class="ml-2">
-                                
-                                    <select id="sort" name="sort" class="form-control" onchange="sortProducts()">
+
+                                    <select id="sort" name="sort" class="form-control"
+                                        onchange="sortProducts()">
                                         <option>---Sort---</option>
                                         <option value="latest">Latest</option>
                                         <option value="price_desc">Price High</option>
@@ -94,25 +95,26 @@
                                                 src="{{ asset('admin_assets/images/' . $prod->image) }}"
                                                 alt="">
                                         </a>
-                                        <form method="POST" action="{{route('user.addToWishlist')}}">
+                                        <form method="POST" action="{{ route('user.addToWishlist') }}">
                                             @csrf
                                             <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
 
-                                            <button type="submit" class="whishlist "><i class="far fa-heart"></i></button>
+                                            <button type="submit" class="whishlist "><i
+                                                    class="far fa-heart"></i></button>
                                         </form>
                                         <div class="product-action">
 
-                                           
-                                                <form action="{{ route('user.addToCart') }}" method="POST">
-                                                    {{-- @dd($product) --}}
-                                                    @csrf
-                                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
-                                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
-                                                    <input type="hidden" name="qty" value="1" />
-                                                    <button type="submit" class="btn btn-dark"><i
-                                                            class="fas fa-shopping-cart"></i> Add To Cart</button>
-                                                </form>
+
+                                            <form action="{{ route('user.addToCart') }}" method="POST">
+                                                {{-- @dd($product) --}}
+                                                @csrf
+                                                <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                                <input type="hidden" name="qty" value="1" />
+                                                <button type="submit" class="btn btn-dark"><i
+                                                        class="fas fa-shopping-cart"></i> Add To Cart</button>
+                                            </form>
                                             {{-- @endif --}}
                                         </div>
                                     </div>

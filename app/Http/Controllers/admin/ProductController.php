@@ -25,22 +25,22 @@ class ProductController extends Controller
         // dd($product->toArray());
         if (!empty($request->get('keyword'))) {
             $product = $product->where('prod_name', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhere('category_id', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhere('sub_category_id', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhere('brand_id', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhere('description', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhere('price', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhere('qty', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhere('id', 'like', '%' . $request->get('keyword') . '%')
-            ->orWhereHas('categorys', function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->get('keyword') . '%');
-            })
-            ->orWhereHas('sub_category', function ($query) use ($request) {
-                $query->where('subcate_name', 'like', '%' . $request->get('keyword') . '%');
-            })
-            ->orWhereHas('brand', function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->get('keyword') . '%');
-            });
+                ->orWhere('category_id', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('sub_category_id', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('brand_id', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('description', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('price', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('qty', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhere('id', 'like', '%' . $request->get('keyword') . '%')
+                ->orWhereHas('categorys', function ($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->get('keyword') . '%');
+                })
+                ->orWhereHas('sub_category', function ($query) use ($request) {
+                    $query->where('subcate_name', 'like', '%' . $request->get('keyword') . '%');
+                })
+                ->orWhereHas('brand', function ($query) use ($request) {
+                    $query->where('name', 'like', '%' . $request->get('keyword') . '%');
+                });
 
 
             $product = $product->paginate(20);

@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    
+
 
     <main>
         <section class="section-5 pt-3 pb-3 mb-3 bg-white">
@@ -75,6 +75,3 @@
         </section>
     </main>
     @include('user.includes.footer')
-
-
-    

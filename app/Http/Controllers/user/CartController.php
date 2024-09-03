@@ -41,6 +41,7 @@ class CartController extends Controller
 
         // dd($cart_prod_id);
 
+        //show item in cart
         $product = DB::table('carts')
             ->join('users', 'carts.user_id', '=', 'users.id')
             ->join('products', 'carts.product_id', '=', 'products.id')
@@ -58,7 +59,7 @@ class CartController extends Controller
         return view('user.order.cart', compact('product', 'totalSum'));
     }
 
-  
+
     // {
 
     //     $cart = Cart::findOrFail($id);
@@ -93,30 +94,30 @@ class CartController extends Controller
 
 
     public function increaseCartQty(Request $request, $id)
-{
-    $userId = Auth::user()->id;
+    {
+        $userId = Auth::user()->id;
 
-    // Find the specific cart item by its ID
-    $cart = Cart::where('id', $id)
-        ->where('user_id', $userId)
-        ->firstOrFail();
+        //  cart item by its ID
+        $cart = Cart::where('id', $id)
+            ->where('user_id', $userId)
+            ->firstOrFail();
 
-    // Get product details for the specific cart item
-    $product = DB::table('products')
-        ->where('id', $cart->product_id)
-        ->select('qty as pqty')
-        ->first();
+        //  product details for the specific cart item
+        $product = DB::table('products')
+            ->where('id', $cart->product_id)
+            ->select('qty as pqty')
+            ->first();
 
-    if ($product) {
-        // Check if the cart quantity is less than the product quantity
-        if ($cart->qty < $product->pqty) {
-            $cart->qty += 1;
-            $cart->save();
+        if ($product) {
+            // Check if the cart quantity is less than the product quantity
+            if ($cart->qty < $product->pqty) {
+                $cart->qty += 1;
+                $cart->save();
+            }
         }
-    }
 
-    return redirect()->back();
-}
+        return redirect()->back();
+    }
 
     public function decreaseCartQty(Request $request, $id)
     {

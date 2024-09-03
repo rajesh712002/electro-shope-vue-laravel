@@ -95,27 +95,27 @@ class ShopController extends Controller
         $product = Product::with('brand')->where('slug', $slug)->first();
 
         $productrat = ProductRating::get();
-            // dd($productrat);
+        // dd($productrat);
         $order = DB::table('order_items')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where('orders.user_id', '=', $user_id)
             ->select('orders.user_id as orUid', 'order_items.product_id as prod_id')
             ->first();
 
-            $ratingcount =DB::table('product_ratings')
-            ->join('products','products.id','=','product_ratings.product_id')
-            ->where('products.slug','=',$slug)
+        $ratingcount = DB::table('product_ratings')
+            ->join('products', 'products.id', '=', 'product_ratings.product_id')
+            ->where('products.slug', '=', $slug)
             // ->select('order_items.rating')
             ->count();
 
-            $ratingsum =DB::table('product_ratings')
-            ->join('products','products.id','=','product_ratings.product_id')
-            ->where('products.slug','=',$slug)
+        $ratingsum = DB::table('product_ratings')
+            ->join('products', 'products.id', '=', 'product_ratings.product_id')
+            ->where('products.slug', '=', $slug)
             ->sum('product_ratings.rating');
 
-            // $ratingsum = OrderItem::get();
+        // $ratingsum = OrderItem::get();
         // dd($ratingcount);
-        return view("user.order.product", compact('product', 'order','productrat','ratingcount','ratingsum'));
+        return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum'));
     }
 
 
@@ -146,7 +146,7 @@ class ShopController extends Controller
             ->where('email', $request->email)
             ->where('product_id', $id)
             ->exists();
-            // dd($userchk);
+        // dd($userchk);
         if ($userchk) {
 
             return redirect()->back();

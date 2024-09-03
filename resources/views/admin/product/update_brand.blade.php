@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
 @section('content')
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -22,7 +23,8 @@
         <section class="content">
             <!-- Default box -->
             <div class="container-fluid">
-                <form method="POST" action="{{ route('admin.update_brand',$brand->id) }}" name="UpdateBrandForm" id="UpdateBrandForm" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('admin.update_brand', $brand->id) }}" name="UpdateBrandForm"
+                    id="UpdateBrandForm" enctype="multipart/form-data">
                     @csrf
                     @method('put')
                     <div class="card">
@@ -32,8 +34,8 @@
                                     <div class="mb-3">
                                         <label for="name">Name</label>
                                         <input type="text" name="name" id="name" class=" form-control"
-                                            value="{{ old('name',$brand->name) }}" placeholder="Category Name">
-                                            <p></p>
+                                            value="{{ old('name', $brand->name) }}" placeholder="Category Name">
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -41,8 +43,8 @@
                                     <div class="mb-3">
                                         <label for="slug">Slug</label>
                                         <input type="text" name="slug" id="slug" class=" form-control"
-                                            value="{{ old('slug',$brand->slug) }}" placeholder="Slug">
-                                            <p></p>
+                                            value="{{ old('slug', $brand->slug) }}" placeholder="Slug">
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -73,7 +75,7 @@
                     </div>
                     <div class="pb-5 pt-3">
                         <button type="submit" name="submit" id="submit" class="btn btn-primary">Update</button>
-                        <button type="reset" id="reset">Cancel</button> 
+                        <button type="reset" id="reset">Cancel</button>
 
                     </div>
                 </form>

@@ -1,6 +1,6 @@
 {{-- @include('user.includes.header') --}}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/style.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('user_assets/css/slick.css') }}">
@@ -13,15 +13,16 @@ integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLAS
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;500&family=Raleway:ital,wght@0,400;0,600;0,800;1,200&family=Roboto+Condensed:wght@400;700&family=Roboto:wght@300;400;700;900&display=swap"
-rel="stylesheet">
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;500&family=Raleway:ital,wght@0,400;0,600;0,800;1,200&family=Roboto+Condensed:wght@400;700&family=Roboto:wght@300;400;700;900&display=swap"
+    rel="stylesheet">
 
 <!-- Fav Icon -->
 <link rel="shortcut icon" type="image/x-icon" href="#" />
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
 
 <main>
-    
+
 
     <section class=" section-11 ">
         <div class="container  mt-5">
@@ -40,7 +41,7 @@ rel="stylesheet">
 
                             <div class="card-body p-4">
                                 <div class="row">
-                                   <input type="hidden" value="{{$token}}" name="token" id="token">
+                                    <input type="hidden" value="{{ $token }}" name="token" id="token">
                                     <div class="mb-3">
                                         <label for="name">New Password</label>
                                         <input type="password" name="new_password" id="new_password"

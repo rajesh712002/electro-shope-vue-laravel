@@ -8,34 +8,44 @@
                     <!-- <img src="images/carousel-1.jpg" class="d-block w-100" alt=""> -->
 
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/phones.png' ) }}" />
-                        <a href="{{route('usershop')}}"> <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/phones.png' ) }}" /></a>
-                        <img src="{{ asset('admin_assets/images/phones.png' ) }}" alt="" />
+                        <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/phones.png') }}" />
+                        <a href="{{ route('usershop') }}">
+                            <source media="(min-width: 800px)"
+                                srcset="{{ asset('admin_assets/images/phones.png') }}" />
+                        </a>
+                        <img src="{{ asset('admin_assets/images/phones.png') }}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
                             <h1 class="display-4 text-white mb-3">Latest Phones</h1>
-                            <p class="mx-md-5 px-5">Get the best deals on the latest smartphones! Discover top features, cutting-edge tech, and exclusive offers. 
+                            <p class="mx-md-5 px-5">Get the best deals on the latest smartphones! Discover top features,
+                                cutting-edge tech, and exclusive offers.
                                 Limited time discounts on leading brands. Upgrade now and save!</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{ route('usershop') }}">Shop Now</a>
                         </div>
                     </div>
                 </div>
                 <div class="carousel-item">
 
                     <picture>
-                        <a href="{{route('usershop')}}"><source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/leptopss.png' ) }}" />
-                        <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/leptopss.png' ) }}" />
-                         <img src="{{ asset('admin_assets/images/leptopss.png' ) }}" alt="" /></a>
+                        <a href="{{ route('usershop') }}">
+                            <source media="(max-width: 799px)"
+                                srcset="{{ asset('admin_assets/images/leptopss.png') }}" />
+                            <source media="(min-width: 800px)"
+                                srcset="{{ asset('admin_assets/images/leptopss.png') }}" />
+                            <img src="{{ asset('admin_assets/images/leptopss.png') }}" alt="" />
+                        </a>
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
                             <h1 class="display-4 text-white mb-3">New Limited Adition Laptops</h1>
-                            <p class="mx-md-5 px-5">Introducing the Limited Edition Laptops: Sleek design, powerful performance, cutting-edge graphics, 
-                                ultra-lightweight, long-lasting battery, advanced cooling, vibrant display, and premium build quality.</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
+                            <p class="mx-md-5 px-5">Introducing the Limited Edition Laptops: Sleek design, powerful
+                                performance, cutting-edge graphics,
+                                ultra-lightweight, long-lasting battery, advanced cooling, vibrant display, and premium
+                                build quality.</p>
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{ route('usershop') }}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -43,17 +53,22 @@
                     <!-- <img src="images/carousel-3.jpg" class="d-block w-100" alt=""> -->
 
                     <picture>
-                        <a href="{{route('usershop')}}"> <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/watchs.png' ) }}" />
-                        <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/watchs.png' ) }}" />
-                        <img src="{{ asset('admin_assets/images/watchs.png' ) }}" alt="" /></a>
+                        <a href="{{ route('usershop') }}">
+                            <source media="(max-width: 799px)"
+                                srcset="{{ asset('admin_assets/images/watchs.png') }}" />
+                            <source media="(min-width: 800px)"
+                                srcset="{{ asset('admin_assets/images/watchs.png') }}" />
+                            <img src="{{ asset('admin_assets/images/watchs.png') }}" alt="" />
+                        </a>
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3">
                             <h1 class="display-4 text-white mb-3">Shop Online at Flat 70% off on Branded Watches</h1>
-                            <p class="mx-md-5 px-5">Shop online now and get up to 70% off on branded watches! Don't miss out on this amazing discount. 
+                            <p class="mx-md-5 px-5">Shop online now and get up to 70% off on branded watches! Don't miss
+                                out on this amazing discount.
                                 Grab your favorite timepieces at unbeatable prices. Limited time offer. Shop today!</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{route('usershop')}}">Shop Now</a>
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{ route('usershop') }}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -118,7 +133,8 @@
 
                                             <img style="width: 100px; height: 100px; object-fit:contain ;"
                                                 class="imgfluid"
-                                                src="{{ asset('admin_assets/images/' . $item->image) }}" alt="">
+                                                src="{{ asset('admin_assets/images/' . $item->image) }}"
+                                                alt="">
 
                                         </div>
                                     </a>
@@ -158,17 +174,18 @@
                     <div class="col-md-3">
                         <div class="card product-card">
                             <div class="product-image position-relative">
-                                <a href="{{route('viewproduct',$prod->slug)}}">
-                                <img style="width: 200px; height: 200px; object-fit: contain;" class="cardimgtop"
-                                    src="{{ asset('admin_assets/images/' . $prod->image) }}" alt="">
-                                {{-- <a class="whishlist" href="222"><i class="far fa-heart"></i></a> --}}
-                                <form method="POST" action="{{route('user.addToWishlist')}}">
-                                    @csrf
-                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
-                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                <a href="{{ route('viewproduct', $prod->slug) }}">
+                                    <img style="width: 200px; height: 200px; object-fit: contain;" class="cardimgtop"
+                                        src="{{ asset('admin_assets/images/' . $prod->image) }}" alt="">
+                                    {{-- <a class="whishlist" href="222"><i class="far fa-heart"></i></a> --}}
+                                    <form method="POST" action="{{ route('user.addToWishlist') }}">
+                                        @csrf
+                                        <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
 
-                                    <button type="submit" class="whishlist "><i class="far fa-heart"></i></button>
-                                </form>
+                                        <button type="submit" class="whishlist "><i
+                                                class="far fa-heart"></i></button>
+                                    </form>
                                 </a>
                                 <div class="product-action">
                                     {{-- <a class="btn btn-dark" href="{{route('viewproduct',$prod->slug)}}">
@@ -179,20 +196,21 @@
                                         <i class="btn btn-info">Go To Cart</i>
                                     </a>
                                 @else --}}
-                                <form action="{{ route('user.addToCart') }}" method="POST">
-                                    {{-- @dd($product) --}}
-                                    @csrf
-                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
-                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
-                                    <input type="hidden" name="qty" value="1" />
-                                    <button type="submit" class="btn btn-dark"><i
-                                            class="fas fa-shopping-cart"></i> Add To Cart</button>
-                                </form>
-                                {{-- @endif --}}
+                                    <form action="{{ route('user.addToCart') }}" method="POST">
+                                        {{-- @dd($product) --}}
+                                        @csrf
+                                        <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                        <input type="hidden" name="qty" value="1" />
+                                        <button type="submit" class="btn btn-dark"><i
+                                                class="fas fa-shopping-cart"></i> Add To Cart</button>
+                                    </form>
+                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <div class="card-body text-center mt-3">
-                                <a class="h6 link" style="text-decoration: none" href="{{route('viewproduct',$prod->slug)}}">{{ $prod->prod_name }}</a>
+                                <a class="h6 link" style="text-decoration: none"
+                                    href="{{ route('viewproduct', $prod->slug) }}">{{ $prod->prod_name }}</a>
                                 <div class="price mt-2">
                                     <span class="h5"><strong><i class="fa fa-inr" aria-hidden="true"> </i>
                                             {{ $prod->price }}</strong></span>

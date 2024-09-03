@@ -33,7 +33,8 @@
             </div>
             <!-- Default box -->
             <div class="container-fluid">
-                <form action="{{ route('admin.update_subcate',$subcategory->id) }}" id="SubCategoryForm" name="UpdateSubCategoryForm" method="POST">
+                <form action="{{ route('admin.update_subcate', $subcategory->id) }}" id="SubCategoryForm"
+                    name="UpdateSubCategoryForm" method="POST">
                     @method('put')
                     @csrf
                     <div class="card">
@@ -44,7 +45,8 @@
                                     <div class="mb-3">
                                         <label for="category">Category</label>
 
-                                        <select name="category" id="category" class="form-control" value="{{ old('category') }}">
+                                        <select name="category" id="category" class="form-control"
+                                            value="{{ old('category') }}">
                                             <option value="">---select---</option>
 
                                             @foreach ($options as $key => $value)
@@ -59,7 +61,7 @@
                                     <div class="mb-3">
                                         <label for="name">Name</label>
                                         <input type="text" name="name" id="name" class=" form-control"
-                                            value="{{ old('name',$subcategory->subcate_name) }}" placeholder="Name">
+                                            value="{{ old('name', $subcategory->subcate_name) }}" placeholder="Name">
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
@@ -68,7 +70,7 @@
                                     <div class="mb-3">
                                         <label for="slug">Slug</label>
                                         <input type="text" name="slug" id="slug" class=" form-control"
-                                            value="{{ old('slug',$subcategory->slug) }}" placeholder="Slug">
+                                            value="{{ old('slug', $subcategory->slug) }}" placeholder="Slug">
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
@@ -78,14 +80,15 @@
                                         <label class="form-label " for="image">Photo </label>
                                         <input type="file" name="image" id="image"
                                             class=" form-control form-control-lg " value="{{ old('image') }}">
-                                            <p></p>
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="status">Status</label>
-                                        <select name="status" id="status" class=" form-control"  value="{{ old('status',$subcategory->status) }}">
+                                        <select name="status" id="status" class=" form-control"
+                                            value="{{ old('status', $subcategory->status) }}">
                                             <option value="">---select---</option>
                                             <option value="1">Active</option>
                                             <option value="0">Block</option>
@@ -101,7 +104,7 @@
                     </div>
                     <div class="pb-5 pt-3">
                         <button type="submit" name="submit" id="submit" class="btn btn-primary">Create</button>
-                        <button type="reset" id="reset">Cancel</button> 
+                        <button type="reset" id="reset">Cancel</button>
                     </div>
                 </form>
             </div>

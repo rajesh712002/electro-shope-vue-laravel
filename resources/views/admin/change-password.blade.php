@@ -65,7 +65,6 @@
                                             <button type="submit" name="submit" id="submit" class="btn btn-dark">Save
                                                 Password</button>
                                             <button type="reset" id="reset">Cancel</button>
-
                                         </div>
                                     </div>
                                 </div>

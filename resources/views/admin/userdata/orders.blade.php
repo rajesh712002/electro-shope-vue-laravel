@@ -86,18 +86,17 @@
                                             @endif
                                             {{-- <span class="badge bg-success">Delivered</span> --}}
                                         </td>
-                                        <td>{{$orders->payment_status}}</td>
+                                        <td>{{ $orders->payment_status }}</td>
                                         <td><i class="fa fa-inr" aria-hidden="true"></i> {{ $orders->grand_total }}</td>
                                         <td>{{ \Carbon\Carbon::parse($orders->created_at)->format('d M, Y') }}</td>
                                     </tr>
-                                
                                 @endforeach
 
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer clearfix">
-                     {{$order->links()}}
+                        {{ $order->links() }}
                     </div>
                 </div>
             </div>

@@ -56,34 +56,34 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::get('/user/viewproduct/{slug}', [ShopController::class, 'view_product'])->name('viewproduct');
 
     Route::get('/user/index', [UserController::class, 'index'])->name('userindex');
-    
+
     Route::get('/user/profile', [SettingController::class, 'account'])->name('useraccount');
     Route::post('/user/changeprofile', [SettingController::class, 'changeProfile'])->name('userchangeProfile');
 
     //Order Process
     Route::get('/order', [SettingController::class, 'view_order'])->name('user.view_order');
     Route::get('/orderdetail/{orderId?}', [SettingController::class, 'orderDetail'])->name('user.order_detail');
-    Route::delete('order/remove_order/{Id}',[SettingController::class,'remove_order'])->name('user.remove_order');
+    Route::delete('order/remove_order/{Id}', [SettingController::class, 'remove_order'])->name('user.remove_order');
 
     Route::post('/user/saverating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
-    
 
-    
+
+
 
 
 
     //Cart Process
     Route::get('/cart', [CartController::class, 'index'])->name('user.index');
     Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
-    Route::put('cart/increase/{rowId}',[CartController::class,'increaseCartQty'])->name('qty.increase');
-    Route::put('cart/decrease/{rowId}',[CartController::class,'decreaseCartQty'])->name('qty.decrease');
-    Route::delete('cart/remove_item/{rowId}',[CartController::class,'remove_item'])->name('qty.remove_item');
+    Route::put('cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
+    Route::put('cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
+    Route::delete('cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
 
 
     //Wishlist Process
     Route::get('/wishlist', [CartController::class, 'wishlist'])->name('user.wishlist');
     Route::post('/addwishlist', [CartController::class, 'addToWishlist'])->name('user.addToWishlist');
-    Route::delete('/removewishlist/{id}',[CartController::class,'remove_wishlist'])->name('user.remove_wishlist');
+    Route::delete('/removewishlist/{id}', [CartController::class, 'remove_wishlist'])->name('user.remove_wishlist');
 
     Route::delete('/moveToCart/{id}', [CartController::class, 'moveToCart'])->name('user.moveToCart');
 
@@ -95,15 +95,11 @@ Route::middleware([ValidUser::class])->group(function () {
     Route::post('/storecheckout', [CheckoutController::class, 'storeCheckout'])->name('user.storecheckout');
 
     Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
-
-
-
-
 });
 
 
 
- //=======//==============//=====================//============================//===================================//==========================================//
+//=======//==============//=====================//============================//===================================//==========================================//
 //=======//==============//=====================//============================//===================================//==========================================//
 
 
@@ -122,11 +118,11 @@ Route::get('/admin/logout', [AdminloginController::class, 'logout'])->name('admi
 
 // Admin-Products
 Route::middleware([ValidAdmin::class])->group(function () {
-    
+
     Route::get('/admin/deshboard', [AdminloginController::class, 'deshboard'])->name('admin.deshboard');
 
     Route::get('/admin/viewrating', [AdminloginController::class, 'viewRating'])->name('admin.viewRating');
-    
+
     Route::get('/admin/changepassword', [AdminloginController::class, 'changePassword'])->name('admin.changePassword');
     Route::post('/admin/showchangepassword', [AdminloginController::class, 'showchangePassword'])->name('admin.showchangePassword');
 
