@@ -234,7 +234,7 @@ class CheckoutController extends Controller
             'order' => $order
         ];
 
-        dd($order);
+        // dd($order);
         Mail::to($order->email)->send(new OrderEmail($mailData));
     }
 }

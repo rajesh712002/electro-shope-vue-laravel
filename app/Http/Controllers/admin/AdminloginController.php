@@ -41,7 +41,7 @@ class AdminloginController extends Controller
 
         $totalproduct = Product::where('status', '1')->count();
 
-        $totalearning = Order::sum('grand_total');
+        $totalearning = Order::where('status', 'delivered')->sum('grand_total');
 
         $totalorder = Order::count();
         $pending = Order::where('status', 'pending')->count();
