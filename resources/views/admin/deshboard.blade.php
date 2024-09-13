@@ -247,7 +247,7 @@
                     <script src="{{ asset('admin_assets/js/js/lib/sticky-kit-master/dist/sticky-kit.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/js/js/custom.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/plugins/jquery/jquery.min.js') }}"></script>
-
+                    <script src="{{ asset('admin_assets/plugins/jquery/jquery.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/js/adminlte.min.js') }}"></script>
                     <script src="{{ asset('admin_assets/js/demo.js') }}"></script>

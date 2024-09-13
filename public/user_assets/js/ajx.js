@@ -420,24 +420,66 @@ $(document).ready(function () {
             success: function (response) {
                 // $("#ProductRatingForm")[0].reset();
                 // alert(response.success);
-                // window.location.href = "";
+                window.location.href = "/user/viewproduct";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
                     var errors = xhr.responseJSON.errors;
 
-                    if (errors.first_name) {
+                    if (errors.name) {
                         $("#name")
                             .addClass("is-invalid")
                             .siblings("p")
                             .addClass("invalid-feedback")
-                            .html(errors.first_name);
+                            .html(errors.name);
                     } else {
                         $("#name")
                             .removeClass("is-invalid")
                             // .siblings("p")
                             .removeClass("invalid-feedback")
-                            .html(errors.first_name);
+                            .html(errors.name);
+                    }
+
+                    if (errors.rating) {
+                        $("#rating")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.rating);
+                    } else {
+                        $("#rating")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.rating);
+                    }
+
+                    if (errors.comment) {
+                        $("#comment")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.comment);
+                    } else {
+                        $("#comment")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.comment);
+                    }
+
+                    if (errors.email) {
+                        $("#email")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.email);
+                    } else {
+                        $("#email")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.email);
                     }
                 }
             },

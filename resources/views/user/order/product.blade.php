@@ -55,7 +55,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="#" />
 </head>
 {{-- @dd($order) --}}
-
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
 <main>
     {{-- <form action="" method="GET"> --}}
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
@@ -201,7 +202,7 @@
                                         <div class="form-group mb-3">
                                             <label for="rating">Rating</label>
                                             <br>
-                                            <div class="rating" style="width: 10rem">
+                                            <div class="rating" style="width: 10rem" name="rating">
                                                 <input id="rating-5" type="radio" name="rating"
                                                     value="5" /><label for="rating-5"><i
                                                         class="fas fa-3x fa-star"></i></label>
@@ -351,6 +352,7 @@
         </div>
         </div>
     </section>
+    <script src="{{ asset('user_assets/js/ajx.js') }}"></script>
 
 </main>
 

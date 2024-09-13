@@ -55,7 +55,7 @@
                             @endif
                         </div>
 
-                        <h4 class="modal-title">Enter Email to Login</h4>
+                        <h4 class="modal-title">Enter Email For Login</h4>
                         <div class="form-group">
                             <input type="email" name="email" id="email"
                                 class="@error('email') is-invalid
@@ -79,7 +79,7 @@
                         <div class="form-group small">
                             <a href="{{ route('userlogin') }}" class="forgot-link">Login</a>
                         </div>
-                        <input type="submit" class="btn btn-dark btn-block btn-lg" value="Email">
+                        <input type="submit" class="btn btn-dark btn-block btn-lg" value="Send">
                     </form>
                 </div>
             </div>

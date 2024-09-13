@@ -169,7 +169,7 @@ class AdminloginController extends Controller
 
     public function updateUserOrder(Request $request, $id = null)
     {
-        $order_update = Order::where('id', $id)->update(['status' => $request->status]);
+        $order_update = Order::where('id', $id)->update( ['status' => $request->status]);
         return redirect()->back();
     }
 

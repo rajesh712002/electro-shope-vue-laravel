@@ -49,6 +49,7 @@ class CartController extends Controller
             ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
             ->get();
 
+            //in cart raw
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->where('carts.user_id', $userId)

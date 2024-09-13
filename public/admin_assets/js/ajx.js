@@ -356,7 +356,7 @@ $(document).ready(function () {
 
             success: function (response) {
                 $("#UpdateSubCategoryForm")[0].reset();
-                alert(response.success);
+                // alert(response.success);
                 window.location.href = "/admin/subcategory";
             },
             error: function (xhr) {
