@@ -20,6 +20,11 @@
             <div class="row">
                 <div class="col-md-8">
                     {{-- @dd($carts) --}}
+                    @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                     @if ($product->count() > 0)
 
                         <div class="table-responsive">

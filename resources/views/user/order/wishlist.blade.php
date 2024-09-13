@@ -18,6 +18,11 @@
                     @include('user.includes.account_panel')
                 </div>
                 <div class="col-md-9">
+                    @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
                     <div class="card">
                         <div class="card-header">
                             <h2 class="h5 mb-0 pt-2 pb-2">My Wishlist</h2>

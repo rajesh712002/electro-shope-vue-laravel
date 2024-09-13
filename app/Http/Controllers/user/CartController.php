@@ -31,7 +31,9 @@ class CartController extends Controller
             $cart->save();
         }
 
-        return redirect()->back();
+        return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
+
+        // alert('Product Add Successfully');
     }
 
 
@@ -184,7 +186,7 @@ class CartController extends Controller
             $cart->user_id = $request->user_id;
             $cart->save();
         }
-        return redirect()->back();
+        return redirect()->route('user.wishlist')->with('status', 'Product added to Wishlist successfully.');
     }
 
     public function remove_wishlist($id)
