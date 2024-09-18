@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
+use Stripe;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
@@ -41,7 +43,7 @@ class CheckoutController extends Controller
         $CustomerAddress = CustomerAddress::where('user_id', '=', $userId)->first();
 
         // dd($CustomerAddress->user_id);
-        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress'));
+        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress','userId'));
     }
 
 
@@ -150,6 +152,31 @@ class CheckoutController extends Controller
         }
 
         if ($request->payment_method == 'card') {
+            
+            
+            
+            \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+            // dd(config('services.stripe.secret'));
+
+            
+            
+            
+            Stripe\Charge::create ([
+                
+                "amount" => $totalSum * 100,
+                
+                "currency" => "inr",
+                
+                "source" => $request->stripeToken,
+                
+                "description" => "New Order Payment Recieved Successfully."
+                
+            ]);
+            
+            
+            
+            Session::flash('success', 'Payment successful!');
+           
             $shipping = 0;
             $discount = 0;
             $subtotal = $totalSum;
@@ -174,6 +201,7 @@ class CheckoutController extends Controller
             $order->mobile = $request->mobile;
             $order->notes = $request->order_notes;
             $order->save();
+
         }
 
 

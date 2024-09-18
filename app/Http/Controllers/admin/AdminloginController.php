@@ -10,8 +10,9 @@ use App\Models\Category;
 use App\Models\OrderItem;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\ProductRating;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -24,10 +25,7 @@ class AdminloginController extends Controller
         return view('admin.login');
     }
 
-    public function back()
-    {
-        return redirect()->back();
-    }
+   
 
     public function deshboard()
     {
@@ -44,14 +42,20 @@ class AdminloginController extends Controller
         $totalearning = Order::where('status', 'delivered')->sum('grand_total');
 
         $totalorder = Order::count();
-        $pending = Order::where('status', 'pending')->count();
-        $processing = Order::whereIn('status', ['shipped', 'out for delivery'])->count();
-        $delivered = Order::where('status', 'delivered')->count();
-        $cancelled = Order::where('status', 'cancelled')->count();
+        // $pending = Order::where('status', 'pending')->count();
+        // $processing = Order::whereIn('status', ['shipped', 'out for delivery'])->count();
+        // $delivered = Order::where('status', operator: 'delivered')->count();
+        // $cancelled = Order::where('status', 'cancelled')->count();
+
+        $orders = Order::select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->get();
+
+        $statusCounts = $orders->pluck('total', 'status')->toArray();
 
 
 
-        return view('admin.deshboard', compact('totaluser', 'totalcategory', 'totalsubcategory', 'totalbrand', 'totalproduct', 'totalorder', 'pending', 'processing', 'delivered', 'cancelled', 'totalearning'));
+        return view('admin.deshboard', compact('totaluser', 'totalcategory', 'statusCounts', 'totalsubcategory', 'totalbrand', 'totalproduct', 'totalorder',  'totalearning'));
     }
 
     public function loginchk(Request $request)
@@ -169,7 +173,7 @@ class AdminloginController extends Controller
 
     public function updateUserOrder(Request $request, $id = null)
     {
-        $order_update = Order::where('id', $id)->update( ['status' => $request->status]);
+        $order_update = Order::where('id', $id)->update(['status' => $request->status]);
         return redirect()->back();
     }
 

@@ -81,7 +81,7 @@ class UserController extends Controller
 
         if (Auth::attempt($validate)) {
             if (Auth::guard('web')->user()->role == 1) {
-                return redirect()->route('userdeshboard');
+                return redirect()->route('userindex');
             } else { //else if (Auth::guard('web')->user()->role != 1) {
                 return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
             }

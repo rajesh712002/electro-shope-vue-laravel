@@ -64,7 +64,7 @@
                                         <div class="mb-3">
                                             <select name="country" id="country" class="form-control"
                                                 value="{{ !empty($CustomerAddress) ? $CustomerAddress->country : '' }}">
-                                                <option value="">Select a Country</option>
+                                                {{-- <option value="">Select a Country</option> --}}
                                                 <option value="india">India</option>
                                                 {{-- <option value="2">UK</option> --}}
                                             </select>
@@ -162,7 +162,8 @@
                                 @foreach ($product as $products)
                                     <div class="d-flex justify-content-between pb-2">
                                         <div class="h6">{{ $products->prod_name }} X
-                                            <b><u><i>{{ $products->cqty }}</i></u></b></div>
+                                            <b><u><i>{{ $products->cqty }}</i></u></b>
+                                        </div>
                                         <div class="h6"><i class="fa fa-inr"
                                                 aria-hidden="true">{{ $products->price * $products->cqty }}
                                             </i></div>
@@ -185,6 +186,8 @@
                             </div>
                         </div>
 
+                    {{-- Payment Detail --}}
+
                         <div class="card payment-form ">
                             <h3 class="card-title h5 mb-3">Payment Details</h3>
                             <div class="">
@@ -198,39 +201,60 @@
                                 <label for="payment_method_two" class="form-check-label">Card</label>
                             </div>
                             <div class="card-body p-0 d-none" id="CardPaymentForm">
-                                <div class="mb-3">
-                                    <label for="card_number" class="mb-2">Card Number</label>
-                                    <input type="text" name="card_number" id="card_number"
-                                        placeholder="Valid Card Number" class="form-control"
-                                        value="{{ old('card_number') }}">
-                                    <p></p>
-                                    <h6 style="color: rgb(255, 0,0)" class="error"></h6>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="expiry_date" class="mb-2">Expiry Date</label>
-                                        <input type="text" name="expiry_date" id="expiry_date"
-                                            placeholder="MM/YYYY" class="form-control"
-                                            value="{{ old('expiry_date') }}">
+                                {{-- <form method="" action="" id=""> --}}
+                                    <div class="mb-3">
+                                        <br>
+                                        <label for="card_number" class="mb-2">Card Holder Name</label>
+                                        <input type="text" name="card_number" id="card_number"
+                                            placeholder="Valid Card Holder Name" class="form-control"
+                                            value="{{ old('card_number') }}">
                                         <p></p>
                                         <h6 style="color: rgb(255, 0,0)" class="error"></h6>
 
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label for="cvv" class="mb-2">CVV Code</label>
-                                        <input type="text" name="cvv" id="cvv" placeholder="123"
-                                            class="form-control" value="{{ old('cvv') }}">
+                                    <div class="mb-3">
+                                        <label for="card_number" class="mb-2">Card Number</label>
+                                        <input type="text" name="card_number" id="card_number"
+                                            placeholder="Valid Card Number" class="form-control"
+                                            value="{{ old('card_number') }}">
                                         <p></p>
                                         <h6 style="color: rgb(255, 0,0)" class="error"></h6>
 
                                     </div>
-                                </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="expiry_month" class="mb-2">Expiry Month</label>
+                                            <input type="text" name="expiry_month" id="expiry_month"
+                                                placeholder="MM" class="form-control"
+                                                value="{{ old('expiry_month') }}">
+                                            <p></p>
+                                            <h6 style="color: rgb(255, 0,0)" class="error"></h6>
 
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="expiry_year" class="mb-2">Expiry Year</label>
+                                            <input type="text" name="expiry_year" id="expiry_year"
+                                                placeholder="YYYY" class="form-control"
+                                                value="{{ old('expiry_year') }}">
+                                            <p></p>
+                                            <h6 style="color: rgb(255, 0,0)" class="error"></h6>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="cvv" class="mb-2">CVV Code</label>
+                                            <input type="text" name="cvv" id="cvv" placeholder="123"
+                                                class="form-control" value="{{ old('cvv') }}">
+                                            <p></p>
+                                            <h6 style="color: rgb(255, 0,0)" class="error"></h6>
+
+                                        </div>
+                                    </div>
+                                {{-- </form> --}}
                             </div>
                             <div class="pt-4">
-                                <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
+                                <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }} Pay Now </button>
                             </div>
                         </div>
 
@@ -244,5 +268,144 @@
 </main>
 <script src="{{ asset('user_assets/js/ajx.js') }}"></script>
 
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+   
+
+<script type="text/javascript">
+
+ 
+
+$(function() {
+
+ 
+
+    /*------------------------------------------
+
+    --------------------------------------------
+
+    Stripe Payment Code
+
+    --------------------------------------------
+
+    --------------------------------------------*/
+
+   
+
+    var $form = $(".require-validation");
+
+     
+
+    $('form.require-validation').bind('submit', function(e) {
+
+        var $form = $(".require-validation"),
+
+        inputSelector = ['input[type=email]', 'input[type=password]',
+
+                         'input[type=text]', 'input[type=file]',
+
+                         'textarea'].join(', '),
+
+        $inputs = $form.find('.required').find(inputSelector),
+
+        $errorMessage = $form.find('div.error'),
+
+        valid = true;
+
+        $errorMessage.addClass('hide');
+
+   
+
+        $('.has-error').removeClass('has-error');
+
+        $inputs.each(function(i, el) {
+
+          var $input = $(el);
+
+          if ($input.val() === '') {
+
+            $input.parent().addClass('has-error');
+
+            $errorMessage.removeClass('hide');
+
+            e.preventDefault();
+
+          }
+
+        });
+
+     
+
+        if (!$form.data('cc-on-file')) {
+
+          e.preventDefault();
+
+          Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+
+          Stripe.createToken({
+
+            number: $('#card_number').val(),
+
+            cvc: $('#cvv').val(),
+
+            exp_month: $('#expiry_month').val(),
+
+            exp_year: $('#expiry_year').val()
+
+          }, stripeResponseHandler);
+
+        }
+
+   
+
+    });
+
+     
+
+    /*------------------------------------------
+
+    --------------------------------------------
+
+    Stripe Response Handler
+
+    --------------------------------------------
+
+    --------------------------------------------*/
+
+    function stripeResponseHandler(status, response) {
+
+        if (response.error) {
+
+            $('.error')
+
+                .removeClass('hide')
+
+                .find('.alert')
+
+                .text(response.error.message);
+
+        } else {
+
+            /* token contains id, last4, and card type */
+
+            var token = response[$userId];
+
+                 
+
+            $form.find('input[type=text]').empty();
+
+            $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+
+            $form.get(0).submit();
+
+        }
+
+    }
+
+     
+
+});
+
+</script>
 
 @include('user.includes.footer')

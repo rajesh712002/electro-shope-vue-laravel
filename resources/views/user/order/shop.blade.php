@@ -84,6 +84,11 @@
                             </div>
                         </div>
 
+                        @if (session('status'))
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
+                        @endif
 
                         @foreach ($products as $prod)
                             <div class="col-md-4">
@@ -99,8 +104,7 @@
                                             @csrf
                                             <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
-
-                                            <button type="submit" class="whishlist "><i
+                                            <button type="submit" class="whishlist "> <i
                                                     class="far fa-heart"></i></button>
                                         </form>
                                         <div class="product-action">

@@ -158,7 +158,7 @@
                                                 <span><i class="fa fa-genderless f-s-70" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{ $pending }}</b>
+                                                <b>{{ $statusCounts['pending']?? 0}}</b>
                                                 <p class="m-b-0">Pending Orders</p>
                                             </div>
                                         </div>
@@ -175,7 +175,7 @@
                                                 <span><i class="fa fa-spinner f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{ $processing }}</b>
+                                                <b>{{ ($statusCounts['shipped']?? 0)+($statusCounts['out for delivery']?? 0) }}</b>
                                                 <p class="m-b-0">Processing Orders</p>
                                             </div>
                                         </div>
@@ -192,7 +192,7 @@
                                                 <span><i class="fa fa-check f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{ $delivered }}</b>
+                                                <b>{{ $statusCounts['delivered']?? 0 }}</b>
                                                 <p class="m-b-0">Delivered Orders</p>
                                             </div>
                                         </div>
@@ -209,7 +209,7 @@
                                                 <span><i class="fa fa-times f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{ $cancelled }}</b>
+                                                <b>{{  $statusCounts['cancelled']?? 0 }}</b>
                                                 <p class="m-b-0">Cancelled Orders</p>
                                             </div>
                                         </div>
@@ -226,7 +226,7 @@
                                                 <span><i class="fa fa-inr f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                <b>{{ $totalearning }}</b>
+                                                {{-- <b>{{ $totalearning }}</b> --}}
                                                 <p class="m-b-0">Total Earnings</p>
                                             </div>
                                         </div>

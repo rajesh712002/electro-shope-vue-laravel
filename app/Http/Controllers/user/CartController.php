@@ -51,7 +51,7 @@ class CartController extends Controller
             ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
             ->get();
 
-            //in cart raw
+        //in cart raw
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->where('carts.user_id', $userId)
@@ -173,20 +173,25 @@ class CartController extends Controller
 
     public function addToWishlist(Request $request)
     {
-        $userId = Auth::user()->id;
-        $cart_prod_id =  DB::table('wishlists')
-            ->where('product_id', '=', $request->prod_id)
-            ->where('user_id', '=', $userId)
-            ->exists();
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+            $cart_prod_id =  DB::table('wishlists')
+                ->where('product_id', '=', $request->prod_id)
+                ->where('user_id', '=', $userId)
+                ->exists();
 
-        if ($cart_prod_id) {
-        } else {
-            $cart = new  Wishlist();
-            $cart->product_id = $request->prod_id;
-            $cart->user_id = $request->user_id;
-            $cart->save();
+            if ($cart_prod_id) {
+            } else {
+                $cart = new  Wishlist();
+                $cart->product_id = $request->prod_id;
+                $cart->user_id = $request->user_id;
+                $cart->save();
+            }
+            return redirect()->route('usershop')->with('status', 'Product added to Wishlist successfully.');
         }
-        return redirect()->route('user.wishlist')->with('status', 'Product added to Wishlist successfully.');
+        else{
+            
+        }
     }
 
     public function remove_wishlist($id)
