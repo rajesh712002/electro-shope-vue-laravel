@@ -34,7 +34,7 @@ class UserController extends Controller
         return view('user.login');
     }
 
-    public function deshboard()
+    public function dashboard()
     {
         $category = Category::withCount('product')->get();
         $product = Product::orderBy('created_at', 'desc')->limit(12)->get();
@@ -43,7 +43,7 @@ class UserController extends Controller
 
 
     //Store User Information
-    public function store(Request $request)
+    public function storeRegister(Request $request)
     {
         $rules = [
 
@@ -72,7 +72,7 @@ class UserController extends Controller
     }
 
 
-    public function loginchk(Request $request)
+    public function loginCheck(Request $request)
     {
         $validate = $request->validate([
             'email' => 'required|max:100',

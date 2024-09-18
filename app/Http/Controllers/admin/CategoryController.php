@@ -31,12 +31,12 @@ class CategoryController extends Controller
         }
     }
 
-    public function create_cat()
+    public function createCategory()
     {
         return view('admin.category.create_category');
     }
 
-    public function store_cat(Request $request)
+    public function storeCategory(Request $request)
     {
         //Validation 
         $rules = [
@@ -74,7 +74,7 @@ class CategoryController extends Controller
     //UPDATE Category
 
 
-    public function edit_cat($id)
+    public function editCategory($id)
     {
         $category = Category::findOrFail($id);
         return view('admin.category.update_category', [
@@ -83,7 +83,7 @@ class CategoryController extends Controller
     }
 
 
-    public function update_cat($id, Request $request)
+    public function updateCategory($id, Request $request)
     {
         $category = Category::findOrFail($id);
 
@@ -121,7 +121,7 @@ class CategoryController extends Controller
 
 
     //DELETE Category
-    public function destroy_cat($id)
+    public function destroyCategory($id)
     {
         $category = Category::findOrFail($id);
 
@@ -138,7 +138,7 @@ class CategoryController extends Controller
 
     //SUB-CATEGORY ========================================================================================================================================
 
-    public function view_subcategory(Request $request)
+    public function viewSubcategory(Request $request)
     {
         // dd($subcategory->toArray());
         if (!empty($request->get('keyword'))) {
@@ -159,14 +159,14 @@ class CategoryController extends Controller
         }
     }
 
-    public function create_subcat()
+    public function createSubcategory()
     {
         // $cat = Category::all();
         // return view('admin.category.create_subcategory', ['cat' => $cat]); //['cat'=>$cat]);
         $options = Category::where('status', 1)->pluck('name', 'id');
         return view('admin.category.create_subcategory', compact('options'));
     }
-    public function store_subcat(Request $request)
+    public function storeSubcategory(Request $request)
     {
         $rules = [
             'category' => 'required|max:50',
@@ -202,14 +202,14 @@ class CategoryController extends Controller
     //UPDATE 
 
 
-    public function edit_subcate($id)
+    public function editSubcategory($id)
     {
         $options = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::findOrFail($id);
         return view('admin.category.update-subcategory', compact('options', 'subcategory'));
     }
 
-    public function update_subcate($id, Request $request)
+    public function updateSubcategory($id, Request $request)
     {
         $subcategory = Subcategory::findOrFail($id);
         File::delete(public_path('admin_assets/images/' . $subcategory->image));
@@ -241,7 +241,7 @@ class CategoryController extends Controller
 
     //Delete Sub Category
 
-    public function destroy_subcat($id)
+    public function destroySubcategory($id)
     {
         $subcategory = Subcategory::findOrFail($id);
 

@@ -51,7 +51,7 @@ class ProductController extends Controller
         }
     }
 
-    public function create_prod()
+    public function createProduct()
     {
         $category = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
@@ -59,7 +59,7 @@ class ProductController extends Controller
         return view('admin.product.create_product', compact('category', 'brand', 'subcategory'));
     }
 
-    public function store_prod(Request $request)
+    public function storeProduct(Request $request)
     {
         $rules = [
             'name' => 'required|max:50',
@@ -108,7 +108,7 @@ class ProductController extends Controller
     //Update Product
 
 
-    public function edit_prod($id)
+    public function editProduct($id)
     {
         $category = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
@@ -117,7 +117,7 @@ class ProductController extends Controller
         return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory'));
     }
 
-    public function update_prod(Request $request, $id)
+    public function updateProduct(Request $request, $id)
     {
         $product = Product::findOrFail($id);
         // File::delete(public_path('admin_assets/images/' . $product->image));
@@ -167,7 +167,7 @@ class ProductController extends Controller
     }
 
 
-    public function destroy_product($id)
+    public function destroyProduct($id)
     {
         $product = Product::findOrFail($id);
 
@@ -197,12 +197,12 @@ class ProductController extends Controller
         }
     }
 
-    public function create_brand()
+    public function createBrand()
     {
         return view('admin.product.create_brand');
     }
 
-    public function store_brand(Request $request)
+    public function storeBrand(Request $request)
     {
 
         $rules = [
@@ -240,7 +240,7 @@ class ProductController extends Controller
     }
 
 
-    public function edit_brand($id)
+    public function editBrand($id)
     {
         $brand = Brand::findOrFail($id);
         return view('admin.product.update_brand', [
@@ -248,7 +248,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function update_brand($id, Request $request)
+    public function updateBrand($id, Request $request)
     {
 
         $brand = Brand::findOrFail($id);
@@ -285,7 +285,7 @@ class ProductController extends Controller
 
 
     //DELETE Brand
-    public function destroy_brand($id)
+    public function destroyBrand($id)
     {
         $brand = Brand::findOrFail($id);
 

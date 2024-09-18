@@ -36,8 +36,8 @@ Route::get('/back', [UserController::class, 'back'])->name('user.back');
 Route::prefix('user')->group(function () {
 
     Route::get('/login', [UserController::class, 'login'])->name('userlogin');
-    Route::post('/login', [UserController::class, 'loginchk'])->name('usercheck');
-    // Route::get('/dashboard', [UserController::class, 'deshboard'])->name('userdeshboard');
+    Route::post('/login', [UserController::class, 'loginCheck'])->name('usercheck');
+    // Route::get('/dashboard', [UserController::class, 'dashboard'])->name('userdeshboard');
 
     Route::get('/about-us', [UserController::class, 'aboutUs'])->name('aboutus');
     Route::get('/contact-us', [UserController::class, 'contactUs'])->name('contactus');
@@ -51,7 +51,7 @@ Route::prefix('user')->group(function () {
 
 
     Route::get('/register', [UserController::class, 'register'])->name('register');
-    Route::post('/register', [UserController::class, 'store'])->name('userstore');
+    Route::post('/register', [UserController::class, 'storeRegister'])->name('userstore');
 
     Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
 });
@@ -143,25 +143,25 @@ Route::middleware([ValidAdmin::class])->group(function () {
 
         Route::get('/category', [CategoryController::class, 'category'])->name('admin.category');
         //Insert Category
-        Route::get('/create-categories', [CategoryController::class, 'create_cat'])->name('admin.create_cat');
-        Route::post('/categories', [CategoryController::class, 'store_cat'])->name('admin.store_cat');
+        Route::get('/create-categories', [CategoryController::class, 'createCategory'])->name('admin.create_cat');
+        Route::post('/categories', [CategoryController::class, 'storeCategory'])->name('admin.store_cat');
         //Update Category
-        Route::get('/{category}/edit', [CategoryController::class, 'edit_cat'])->name('admin.edit_cat');
-        Route::put('/{category}', [CategoryController::class, 'update_cat'])->name('admin.update_cat');
+        Route::get('/{category}/edit', [CategoryController::class, 'editCategory'])->name('admin.edit_cat');
+        Route::put('/{category}', [CategoryController::class, 'updateCategory'])->name('admin.update_cat');
         //Delete Category
-        Route::delete('/{category}', [CategoryController::class, 'destroy_cat'])->name('admin.destroy_cat');
+        Route::delete('/{category}', [CategoryController::class, 'destroyCategory'])->name('admin.destroy_cat');
 
         //================================================================================================================================================================
 
-        Route::get('/subcategory', [CategoryController::class, 'view_subcategory'])->name('admin.subcategory');
+        Route::get('/subcategory', [CategoryController::class, 'viewSubcategory'])->name('admin.subcategory');
         //Insert SubCategory
-        Route::get('/create-subcategories', [CategoryController::class, 'create_subcat'])->name('admin.create_subcat');
-        Route::post('/subcategories', [CategoryController::class, 'store_subcat'])->name('admin.store_subcat');
+        Route::get('/create-subcategories', [CategoryController::class, 'createSubcategory'])->name('admin.create_subcat');
+        Route::post('/subcategories', [CategoryController::class, 'storeSubcategory'])->name('admin.store_subcat');
         //Update SubCategory
-        Route::get('/update-subcategories/{subcategory}', [CategoryController::class, 'edit_subcate'])->name('admin.edit_subcate');
-        Route::put('/subcategories/{subcategory}', [CategoryController::class, 'update_subcate'])->name('admin.update_subcate');
+        Route::get('/update-subcategories/{subcategory}', [CategoryController::class, 'editSubcategory'])->name('admin.edit_subcate');
+        Route::put('/subcategories/{subcategory}', [CategoryController::class, 'updateSubcategory'])->name('admin.update_subcate');
         //Delete SubCategory
-        Route::delete('/delete-subcategory/{subcategory}', [CategoryController::class, 'destroy_subcat'])->name('admin.destroy_subcat');
+        Route::delete('/delete-subcategory/{subcategory}', [CategoryController::class, 'destroySubcategory'])->name('admin.destroy_subcat');
 
 
         Route::get('admin/get-categories', [CategoryController::class, 'getCategories']);
@@ -171,25 +171,25 @@ Route::middleware([ValidAdmin::class])->group(function () {
 
         Route::get('/brand', [ProductController::class, 'brand'])->name('admin.brand');
         //Insert Brand
-        Route::get('/createbrand', [ProductController::class, 'create_brand'])->name('admin.create_brand');
-        Route::post('/brands', [ProductController::class, 'store_brand'])->name('admin.store_brand');
+        Route::get('/createbrand', [ProductController::class, 'createBrand'])->name('admin.create_brand');
+        Route::post('/brands', [ProductController::class, 'storeBrand'])->name('admin.store_brand');
         //Update Brand
-        Route::get('/edit-brand/{brand}', [ProductController::class, 'edit_brand'])->name('admin.edit_brand');
-        Route::put('/update-brand/{brand}', [ProductController::class, 'update_brand'])->name('admin.update_brand');
+        Route::get('/edit-brand/{brand}', [ProductController::class, 'editBrand'])->name('admin.edit_brand');
+        Route::put('/update-brand/{brand}', [ProductController::class, 'updateBrand'])->name('admin.update_brand');
         //Delete Brand
-        Route::delete('/delete-brand/{brand}', [ProductController::class, 'destroy_brand'])->name('admin.destroy_brand');
+        Route::delete('/delete-brand/{brand}', [ProductController::class, 'destroyBrand'])->name('admin.destroy_brand');
 
         //================================================================================================================================================================
 
         Route::get('/product', [ProductController::class, 'product'])->name('admin.product');
         //Insert Product
-        Route::get('/create-products', [ProductController::class, 'create_prod'])->name('admin.create_prod');
-        Route::post('/products', [ProductController::class, 'store_prod'])->name('admin.store_prod');
+        Route::get('/create-products', [ProductController::class, 'createProduct'])->name('admin.create_prod');
+        Route::post('/products', [ProductController::class, 'storeProduct'])->name('admin.store_prod');
         //Update Product
-        Route::get('/edit-products/{product}', [ProductController::class, 'edit_prod'])->name('admin.edit_prod');
-        Route::put('/update-product/{product}', [ProductController::class, 'update_prod'])->name('admin.update_prod');
+        Route::get('/edit-products/{product}', [ProductController::class, 'editProduct'])->name('admin.edit_prod');
+        Route::put('/update-product/{product}', [ProductController::class, 'updateProduct'])->name('admin.update_prod');
         //Delete Product
-        Route::delete('/delete-product/{product}', [ProductController::class, 'destroy_product'])->name('admin.destroy_product');
+        Route::delete('/delete-product/{product}', [ProductController::class, 'destroyProduct'])->name('admin.destroy_product');
 
         //================================================================================================================================================================
 
