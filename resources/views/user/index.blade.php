@@ -181,7 +181,7 @@
                                     <form method="POST" action="{{ route('user.addToWishlist') }}">
                                         @csrf
                                         <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
-                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                        <input type="hidden" name="user_id" value="{{ chechUserLogin() }}" />
 
                                         <button type="submit" class="whishlist "><i
                                                 class="far fa-heart"></i></button>
@@ -200,7 +200,7 @@
                                         {{-- @dd($product) --}}
                                         @csrf
                                         <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
-                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                                        <input type="hidden" name="user_id" value="{{ chechUserLogin() }}" />
                                         <input type="hidden" name="qty" value="1" />
                                         <button type="submit" class="btn btn-dark"><i
                                                 class="fas fa-shopping-cart"></i> Add To Cart</button>

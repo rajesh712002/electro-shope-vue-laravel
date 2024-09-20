@@ -40,7 +40,7 @@ class CategoryController extends Controller
     {
         //Validation 
         $rules = [
-            'name' => 'required|max:50',
+            'name' => 'required|string|max:50',
             'slug' => 'required|unique:categories|max:100',
             'status' => 'required|max:50',
             'image' => 'required',

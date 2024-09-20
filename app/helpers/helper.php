@@ -15,58 +15,74 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 
+function chechUserLogin()
+{
+    if (Auth::check()) {
+        return $userId = Auth::user()->id;
+    } else {
+    }
+}
+
 function getcategory()
 {
-    return  $category = Category::withCount('product','subcategory')->get();
+    return  $category = Category::withCount('product', 'subcategory')->get();
 }
 
 
 
-function getproduct(){
+function getproduct()
+{
     return $product = Product::orderBy('created_at', 'desc')->limit(12)->get();
-
 }
 
-function cartCount(){
-    $userId = Auth::user()->id;
-    return $totalItemCount  = DB::table('carts')
-        ->where('user_id', $userId)
-        ->count();
+function cartCount()
+{
+    if (Auth::check()) {
+
+        $userId = Auth::user()->id;
+        return $totalItemCount  = DB::table('carts')
+            ->where('user_id', $userId)
+            ->count();
+    }
 }
 
 
-function orderItemCount(){
-    $userId = Auth::user()->id;
-    return $orderItemCount  = DB::table('order_items')
-        ->where('user_id', $userId)
-        ->count();
+function orderItemCount()
+{
+    if (Auth::check()) {
+
+        $userId = Auth::user()->id;
+        return $orderItemCount  = DB::table('order_items')
+            ->where('user_id', $userId)
+            ->count();
+    }
 }
 
-function productImage($id){
-    return $product = Product::where('id',$id)->select('image')->get();
+function productImage($id)
+{
+    return $product = Product::where('id', $id)->select('image')->get();
 }
 
- function sendEmail($orderId){
-    $order = Order::with('orderItem')->where('id',$orderId)->first();
+function sendEmail($orderId)
+{
+    $order = Order::with('orderItem')->where('id', $orderId)->first();
     $mailData = [
         'subject' => 'Thanks for your order',
         'order' => $order
     ];
-    
+
     Mail::to($order->email)->send(new OrderEmail($mailData));
     // dd($order);
 }
 
-function sendInvoiceEmail($orderId){
-    $order = Order::with('orderItem')->where('id',$orderId)->first();
+function sendInvoiceEmail($orderId)
+{
+    $order = Order::with('orderItem')->where('id', $orderId)->first();
     $mailData = [
         'subject' => 'Thanks for your order',
         'order' => $order
     ];
-    
+
     Mail::to($order->email)->send(new SendInvoiceEmail($mailData));
     // dd($order);
 }
-
-
-

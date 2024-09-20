@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Stripe;
 // use Session;
 use Illuminate\Http\Request;
@@ -8,59 +9,74 @@ use Illuminate\Support\Facades\Session;
 
 class StripePaymentController extends Controller
 {
-     /**
 
-     * success response method.
 
-     *
+   //* success response method.
 
-     * @return \Illuminate\Http\Response
 
-     */
 
-     public function stripe()
+   public function stripe(Request $request)
 
-     {
-         return view('user.order.checkout');
-     }
- 
-    
- //0205@1234
-     /**
- 
-      * success response method.
- 
-      *
- 
-      * @return \Illuminate\Http\Response
- 
-      */
- 
-     public function stripePost(Request $request)
- 
-     {
-        // view('user.order.about-us');
- 
-         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-         Stripe\Charge::create (params: [
- 
-                 "amount" => 100 * 100,
- 
-                 "currency" => "inr",
- 
-                 "source" => $request->stripeToken,
- 
-                 "description" => "New Order Payment Recieved Successfully."
- 
-         ]);
- 
-      
- 
-         Session::flash('success', 'Payment successful!');
- 
-              
- 
-        //  return redirect()->back();
- 
-     }
+   {
+      // Set your secret key. Remember to switch to your live secret key in production.
+      // See your keys here: https://dashboard.stripe.com/apikeys
+      $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
+      // dd($stripe);
+      $response = $stripe->checkout->sessions->create([
+         'line_items' => [
+            [
+               'price_data' => [
+                  'currency' => 'usd',
+                  'product_data' => [
+                     'name' => $request->prod_name
+                  ],
+                  'unit_amount' => $request->price * 100,
+                  // 'tax_behavior' => 'exclusive',
+               ],
+               'quantity' => $request->quantity,
+            ],
+         ],
+         'mode' => 'payment',
+         'success_url' => route('successs') . '?session_id={CHECKOUT_SESSION_ID}',
+         'cancel_url' => route('cancell'),
+      ]);
+      // dd($response);
+
+      if (isset($response->id) && $response->id != '') {
+         session()->put('prod_name', $request->prod_name);
+         session()->put('quantity', $request->quantity);
+         session()->put('price', $request->price);
+         return redirect($response->url);
+      } else {
+         return redirect()->route('cancell');
+      }
+      // dd($response);
+   }
+
+
+
+
+
+   // * success response method.
+
+
+
+
+
+   public function success(Request $request)
+   {
+      // if (isset($request->session_id)) {
+
+      //    $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
+      //    // dd($stripe);
+      //    $response = $stripe->checkout->sessions->retrieve($request->session_id);
+      //    dd($response);
+         return "Payment Is Successful";
+      // }
+   }
+
+   public function cancel()
+   {
+      return "Payment Is Unsuccessful";
+   }
 }

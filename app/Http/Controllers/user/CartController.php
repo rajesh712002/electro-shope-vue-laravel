@@ -16,6 +16,8 @@ class CartController extends Controller
 {
     public function addToCart(Request $request)
     {
+        if (Auth::check()) {
+
         $userId = Auth::user()->id;
         $cart_prod_id =  DB::table('carts')
             ->where('product_id', '=', $request->prod_id)
@@ -32,13 +34,16 @@ class CartController extends Controller
         }
 
         return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
-
+    }
         // alert('Product Add Successfully');
     }
 
 
     public function index()
     {
+
+        if (Auth::check()) {
+
         $userId = Auth::user()->id;
 
         // dd($cart_prod_id);
@@ -60,6 +65,7 @@ class CartController extends Controller
             ->first();
         // dd($product);
         return view('user.order.cart', compact('product', 'totalSum'));
+        }   
     }
 
 

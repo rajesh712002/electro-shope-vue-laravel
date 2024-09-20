@@ -16,12 +16,13 @@ class ValidAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
-        if(Auth::guard('admin')->check()){
-           
-        return $next($request);
-        }
-        else{
+
+        if (Auth::guard('admin')->check()) {
+            if (Auth::guard('admin')->user()->role == 2) {
+
+                return $next($request);
+            }
+        } else {
             return redirect()->route('admin.login');
         }
     }

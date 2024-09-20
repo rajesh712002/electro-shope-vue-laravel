@@ -28,9 +28,13 @@
                 <div class="footer-card">
                     <h3>My Account</h3>
                     <ul>
-                        <li><a href="{{ route('userlogin') }}" title="Sell">Login</a></li>
-                        <li><a href="{{ route('register') }}" title="Advertise">Register</a></li>
-                        <li><a href="#" title="Contact Us">My Orders</a></li>
+                        @if (Auth::check())
+                            <li><a href="{{ route('user.view_order') }}" title="Contact Us">My Orders</a></li>
+                            <li><a href="{{ route('user.logout') }}">Logout</a></li>
+                        @else
+                            <li><a href="{{ route('userlogin') }}" title="Sell">Login</a></li>
+                            <li><a href="{{ route('register') }}" title="Advertise">Register</a></li>
+                        @endif
                     </ul>
                 </div>
             </div>

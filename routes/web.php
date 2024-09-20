@@ -15,10 +15,11 @@ use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\user\CheckoutController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
+use App\Http\Controllers\PaypalController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // Route::get('/orderEmail', function () {
 //     sendEmail(7);
@@ -26,15 +27,23 @@ Route::get('/', function () {
 
 
 //USER
-Route::get('/back', [UserController::class, 'back'])->name('user.back');
 
-// Route::prefix('user')->name('user.')->group(function() {
-//     Route::get('contactus', [UserController::class, 'contactUs'])->name('contactus');
-//     // Other user routes...
-// });
+Route::get('/', action: [UserController::class, 'index'])->name('userindex');
+
+Route::get('/testing', function () {
+         return view('user.order.testing');
+     });
+
+     Route::get('/test', function () {
+        return view('user.order.test');
+    });
 
 Route::prefix('user')->group(function () {
-
+    Route::get('/cart', [CartController::class, 'index'])->name('user.index');
+    Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
+    Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
+    Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
+    Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
     Route::get('/login', [UserController::class, 'login'])->name('userlogin');
     Route::post('/login', [UserController::class, 'loginCheck'])->name('usercheck');
     // Route::get('/dashboard', [UserController::class, 'dashboard'])->name('userdeshboard');
@@ -55,13 +64,23 @@ Route::prefix('user')->group(function () {
 
     Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
 });
+
+
 //=======//==============//====================
 //  ==>  Payment Integration
 
+//Stripe
 
-// Route::get('stripe',[StripePaymentController::class,('stripe')])->name('viewStripe');
-Route::post('stripe/store', [StripePaymentController::class, 'stripePost'])->name('processStripe');
+Route::post('stripe',[StripePaymentController::class,'stripe'])->name('stripe');
+Route::get('successs',[StripePaymentController::class,'success'])->name('successs');
+Route::get('cancell',[StripePaymentController::class,'cancel'])->name('cancell');
 
+
+//Paypal
+
+Route::post('paypal',[PaypalController::class,'paypal'])->name('paypal');
+Route::get('success',[PaypalController::class,'success'])->name('success');
+Route::get('cancel',[PaypalController::class,'cancel'])->name('cancel');
 
 
 Route::middleware([ValidUser::class])->group(function () {
@@ -74,7 +93,6 @@ Route::middleware([ValidUser::class])->group(function () {
         Route::get('/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop'])->name('usershop');
         Route::get('/view-product/{slug}', [ShopController::class, 'view_product'])->name('viewproduct');
 
-        Route::get('/index', [UserController::class, 'index'])->name('userindex');
 
         Route::get('/profile', [SettingController::class, 'account'])->name('useraccount');
         Route::post('/change-profile', [SettingController::class, 'changeProfile'])->name('userchangeProfile');
@@ -87,11 +105,7 @@ Route::middleware([ValidUser::class])->group(function () {
         Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
 
         //Cart Process
-        Route::get('/cart', [CartController::class, 'index'])->name('user.index');
-        Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
-        Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
-        Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
-        Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
+       
 
 
         //Wishlist Process

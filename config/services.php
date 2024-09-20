@@ -14,9 +14,9 @@ return [
     |
     */
 
-    'stripe' => [
-        'secret' => env('STRIPE_SECRET'),
-    ],
+    // 'stripe' => [
+    //     'secret' => env('STRIPE_TEST_PK'),
+    // ],
 
 
     'postmark' => [

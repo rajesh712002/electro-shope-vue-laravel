@@ -151,7 +151,7 @@ $(document).ready(function () {
             success: function (response) {
                 $("#CheckoutForm")[0].reset();
                 alert("Order Placed Successfully");
-                window.location.href = "/cart";
+                window.location.href = "/user/cart";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
@@ -367,7 +367,7 @@ $(document).ready(function () {
             success: function (response) {
                 // $("#DecreaseCartForm")[0].reset();
                 // alert(response.success);
-                window.location.href = "/cart";
+                window.location.href = "/user/cart";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {

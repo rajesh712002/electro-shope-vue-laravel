@@ -36,7 +36,7 @@
                             </li>
                         @else
                             <li class="breadcrumb-item"><a class="white-text"
-                                    href="{{ route('userdeshboard') }}">Home</a></li>
+                                    href="{{ route('userindex') }}">Home</a></li>
                         @endif
                         <li class="breadcrumb-item">Login</li>
                     </ol>

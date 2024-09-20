@@ -17,7 +17,9 @@ class ValidUser
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            return $next($request);
+            if (Auth::guard('web')->user()->role == 1) {
+                return $next($request);
+            }
         } else {
             return redirect()->route('userlogin');
         }

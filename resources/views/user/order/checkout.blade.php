@@ -195,7 +195,14 @@
                                     id="payment_method_one">
                                 <label for="payment_method_one" class="form-check-label">COD</label>
                             </div>
-
+                            <div class="">
+                                <input type="radio" name="payment_method" value="card" id="payment_method_two">
+                                <label for="payment_method_two" class="form-check-label">Pay With Stripe</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" name="payment_method" value="card" id="payment_method_two">
+                                <label for="payment_method_two" class="form-check-label">Pay With PayPal</label>
+                            </div>
                             <div class="">
                                 <input type="radio" name="payment_method" value="card" id="payment_method_two">
                                 <label for="payment_method_two" class="form-check-label">Card</label>
