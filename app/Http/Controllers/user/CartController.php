@@ -65,7 +65,9 @@ class CartController extends Controller
             ->first();
         // dd($product);
         return view('user.order.cart', compact('product', 'totalSum'));
-        }   
+        }   else{
+            return view('user.order.cart');
+        }
     }
 
 

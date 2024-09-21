@@ -40,10 +40,10 @@ class CategoryController extends Controller
     {
         //Validation 
         $rules = [
-            'name' => 'required|string|max:50',
-            'slug' => 'required|unique:categories|max:100',
+            'name' => 'required|alpha_num|max:50',
+            'slug' => 'required|alpha_num|unique:categories|max:100',
             'status' => 'required|max:50',
-            'image' => 'required',
+            'image' => 'required|image',
 
         ];
 
@@ -90,8 +90,8 @@ class CategoryController extends Controller
         File::delete(public_path('admin_assets/images/' . $category->image));
         //Validation 
         $rules = [
-            'name' => 'required|max:50',
-            'slug' => 'required|max:100|unique:categories,slug,' . $category->id . ',id',
+            'name' => 'required|alpha_num|max:50',
+            'slug' => 'required|alpha_num|max:100|unique:categories,slug,' . $category->id . ',id',
             'status' => 'required|max:50'
 
         ];
@@ -170,8 +170,8 @@ class CategoryController extends Controller
     {
         $rules = [
             'category' => 'required|max:50',
-            'name' => 'required|max:50',
-            'slug' => 'required|unique:subcategories|max:100',
+            'name' => 'required|alpha_num|max:50',
+            'slug' => 'required|alpha_num|unique:subcategories|max:100',
             'status' => 'required'
 
         ];
@@ -215,8 +215,8 @@ class CategoryController extends Controller
         File::delete(public_path('admin_assets/images/' . $subcategory->image));
         $rules = [
             'category' => 'required|max:50',
-            'name' => 'required|max:50',
-            'slug' => 'required|max:100|unique:subcategories,slug,' . $subcategory->id . ',id',
+            'name' => 'required|alpha_num|max:50',
+            'slug' => 'required|alpha_num|max:100|unique:subcategories,slug,' . $subcategory->id . ',id',
             'status' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);

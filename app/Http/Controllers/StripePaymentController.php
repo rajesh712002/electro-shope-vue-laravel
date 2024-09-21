@@ -71,12 +71,16 @@ class StripePaymentController extends Controller
       //    // dd($stripe);
       //    $response = $stripe->checkout->sessions->retrieve($request->session_id);
       //    dd($response);
-         return "Payment Is Successful";
+      return redirect()->route('user.index')->with('status', 'Payment Is Successful and Your Order Is Placed');
+
+         // return "Payment Is Successful";
       // }
    }
 
    public function cancel()
    {
-      return "Payment Is Unsuccessful";
+      return redirect()->route('user.index')->with('status', 'Payment Is Unsuccessful.');
+
+     // return "Payment Is Unsuccessful";
    }
 }

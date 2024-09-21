@@ -50,15 +50,20 @@ class PaypalController extends Controller
         $response = $provider->capturePaymentOrder($request->token);
         // dd($response);
         if (isset($response['status']) && $response['status'] == 'COMPLETED') {
-            
-            return "Payment Is Successful";
+
+            return redirect()->route('user.index')->with('status', 'Payment Is Successful and Your Order Is Placed');
+
+            // return "Payment Is Successful";
         } else {
             return redirect()->route('cancel');
         }
     }
 
-    public function cancel(){
-        return "Payment Is Unsuccessful";
+    public function cancel()
+    {
+        
+        return redirect()->route('user.index')->with('status', 'Payment Is Unsuccessful.');
 
+        // return "Payment Is Unsuccessful";
     }
 }

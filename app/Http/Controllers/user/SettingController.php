@@ -31,7 +31,7 @@ class SettingController extends Controller
         $rules = [
 
             'old_password' => 'required|min:3|max:30',
-            'new_password' => 'required|min:3|max:30',
+            'new_password' => 'required|different:old_password|min:3|max:30',
             'confirm_password' => 'required|same:new_password'
 
         ];
@@ -72,9 +72,9 @@ class SettingController extends Controller
         $userId = Auth::user()->id;
         $rules = [
 
-            'name' => 'required|min:3|max:30',
-            'email' => 'required|max:100|unique:users,email,' . $userId . ',id',
-            'phone' => 'required|min:10|max:10'
+            'name' => 'required|string|min:3|max:30',
+            'email' => 'required|email|max:100|unique:users,email,' . $userId . ',id',
+            'phone' => 'required|integer|min:10|max:10'
             // 'address' => 'required'
 
         ];

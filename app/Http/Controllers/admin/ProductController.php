@@ -62,15 +62,15 @@ class ProductController extends Controller
     public function storeProduct(Request $request)
     {
         $rules = [
-            'name' => 'required|max:50',
+            'name' => 'required|alpha_num|max:50',
             'description' => 'required',
-            'image' => 'required',
+            'image' => 'required|image',
             'price' => 'required|numeric',
             'status' => 'required',
             'category' => 'required',
-            'slug' => 'required',
-            'qty' => 'required',
-            'brand' => 'required'
+            'slug' => 'required|alpha_num',
+            'qty' => 'required|numeric',
+            'brand' => 'required|alpha_num'
 
         ];
 
@@ -124,14 +124,14 @@ class ProductController extends Controller
 
 
         $rules = [
-            'name' => 'required|max:50',
+            'name' => 'required|alpha_num|max:50',
             'description' => 'required',
-            'image' => 'required',
+            'image' => 'required|image',
             'price' => 'required|numeric',
             'status' => 'required',
             'category' => 'required',
-            'slug' => 'required|unique:products,slug,' . $product->id . ',id',
-            'qty' => 'required',
+            'slug' => 'required|alpha_num|unique:products,slug,' . $product->id . ',id',
+            'qty' => 'required|numeric',
             'brand' => 'required'
 
         ];
@@ -207,10 +207,10 @@ class ProductController extends Controller
 
         $rules = [
 
-            'name' => 'required|max:50',
-            'slug' => 'required|unique:subcategories|max:100',
+            'name' => 'required|alpha_num|max:50',
+            'slug' => 'required|alpha_num|unique:subcategories|max:100',
             'status' => 'required',
-            'image' => 'required'
+            'image' => 'required|image'
 
         ];
 
@@ -255,9 +255,9 @@ class ProductController extends Controller
         File::delete(public_path('admin_assets/images/' . $brand->image));
         $rules = [
 
-            'name' => 'required|max:50',
-            'slug' => 'required|max:100|unique:brands,slug,' . $brand->id . ',id',
-            'image' => 'required',
+            'name' => 'required|alpha_num|max:50',
+            'slug' => 'required|alpha_num|max:100|unique:brands,slug,' . $brand->id . ',id',
+            'image' => 'required|image',
             'status' => 'required'
         ];
 

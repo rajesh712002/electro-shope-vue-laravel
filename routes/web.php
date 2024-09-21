@@ -44,6 +44,7 @@ Route::prefix('user')->group(function () {
     Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
     Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
     Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
+  
     Route::get('/login', [UserController::class, 'login'])->name('userlogin');
     Route::post('/login', [UserController::class, 'loginCheck'])->name('usercheck');
     // Route::get('/dashboard', [UserController::class, 'dashboard'])->name('userdeshboard');
@@ -83,7 +84,7 @@ Route::get('success',[PaypalController::class,'success'])->name('success');
 Route::get('cancel',[PaypalController::class,'cancel'])->name('cancel');
 
 
-Route::middleware([ValidUser::class])->group(function () {
+// Route::middleware([ValidUser::class])->group(function () {
     Route::prefix('user')->group(function () {
 
 
@@ -124,7 +125,7 @@ Route::middleware([ValidUser::class])->group(function () {
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
     });
-});
+// });
 
 
 

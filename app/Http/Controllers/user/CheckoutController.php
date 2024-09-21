@@ -70,15 +70,15 @@ class CheckoutController extends Controller
 
 
         $rules = [
-            'first_name' => 'required|max:50',
-            'last_name' => 'required|max:50',
-            'email' => 'required|max:50',
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'email' => 'required|email|max:50',
             'country' => 'required',
             'address' => 'required|max:50',
-            'city' => 'required|max:50',
-            'state' => 'required|max:50',
-            'zip' => 'required|max:10',
-            'mobile' => 'required|max:10|min:10',
+            'city' => 'required|string|max:50',
+            'state' => 'required|string|max:50',
+            'zip' => 'required|numeric|max:10',
+            'mobile' => 'required|integer|max:10|min:10',
             // 'card_number' => 'required|max:10',
             // 'expiry_date' => 'required|max:10',
             // 'cvv' => 'required|max:10',
@@ -154,28 +154,10 @@ class CheckoutController extends Controller
         if ($request->payment_method == 'card') {
             
             
-            
-            \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-            // dd(config('services.stripe.secret'));
-
+          
             
             
             
-            Stripe\Charge::create ([
-                
-                "amount" => $totalSum * 100,
-                
-                "currency" => "inr",
-                
-                "source" => $request->stripeToken,
-                
-                "description" => "New Order Payment Recieved Successfully."
-                
-            ]);
-            
-            
-            
-            Session::flash('success', 'Payment successful!');
            
             $shipping = 0;
             $discount = 0;

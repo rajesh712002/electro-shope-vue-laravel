@@ -125,8 +125,8 @@ class ShopController extends Controller
     public function saveRating(Request $request, $id)
     {
         $validate = [
-            'name' => 'required',
-            'email' => 'required|max:100',
+            'name' => 'required|string',
+            'email' => 'required|email|max:100',
             'comment' => 'required',
             'rating' => 'required'
 

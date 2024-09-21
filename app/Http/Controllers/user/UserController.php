@@ -47,10 +47,10 @@ class UserController extends Controller
     {
         $rules = [
 
-            'name' => 'required|min:3|max:30',
-            'email' => 'required|unique:users|email|max:100',
+            'name' => 'required|string|min:3|max:30',
+            'email' => 'required|email|unique:users|email|max:100',
             'password' => 'required|min:8|max:50',
-            'phone' => 'required|min:10|max:10',
+            'phone' => 'required|integer|min:10|max:10',
 
         ];
 
@@ -75,7 +75,7 @@ class UserController extends Controller
     public function loginCheck(Request $request)
     {
         $validate = $request->validate([
-            'email' => 'required|max:100',
+            'email' => 'required|email|max:100',
             'password' => 'required|min:5|max:50'
         ]);
 

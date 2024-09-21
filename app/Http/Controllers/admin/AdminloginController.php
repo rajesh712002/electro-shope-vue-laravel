@@ -61,7 +61,7 @@ class AdminloginController extends Controller
     public function loginchk(Request $request)
     {
         $validate = $request->validate([
-            'email' => 'required|max:100',
+            'email' => 'required|email|max:100',
             'password' => 'required|min:8|max:50'
         ]);
 
