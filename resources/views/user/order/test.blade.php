@@ -10,6 +10,7 @@
     
     <form action="{{route('stripe')}}" method="post">
         @csrf
+        
         <input type="hidden" name="price" value="77">
         <input type="hidden" name="prod_name" value="Watch">
         <input type="hidden" name="quantity" value="1">

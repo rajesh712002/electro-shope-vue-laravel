@@ -385,15 +385,28 @@ $(document).ready(function () {
 });
 
 //=======//==============//=====================//============================//
+
 $("#payment_method_one").on("click", function () {
     if ($(this).is(":checked") == true) {
-        $("#CardPaymentForm").addClass("d-none");
+        $("#CardPaymentFormOne").removeClass("d-none");
+        $("#CardPaymentFormTwo").addClass("d-none");
+        $("#CardPaymentFormThree").addClass("d-none");
     }
 });
 
 $("#payment_method_two").on("click", function () {
     if ($(this).is(":checked") == true) {
-        $("#CardPaymentForm").removeClass("d-none");
+        $("#CardPaymentFormTwo").removeClass("d-none");
+        $("#CardPaymentFormOne").addClass("d-none");
+        $("#CardPaymentFormThree").addClass("d-none");
+    }
+});
+
+$("#payment_method_three").on("click", function () {
+    if ($(this).is(":checked") == true) {
+        $("#CardPaymentFormThree").removeClass("d-none");
+        $("#CardPaymentFormOne").addClass("d-none");
+        $("#CardPaymentFormTwo").addClass("d-none");
     }
 });
 

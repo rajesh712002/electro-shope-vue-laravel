@@ -186,7 +186,7 @@
                             </div>
                         </div>
 
-                    {{-- Payment Detail --}}
+                        {{-- Payment Detail --}}
 
                         <div class="card payment-form ">
                             <h3 class="card-title h5 mb-3">Payment Details</h3>
@@ -194,82 +194,56 @@
                                 <input checked type="radio" name="payment_method" value="cod"
                                     id="payment_method_one">
                                 <label for="payment_method_one" class="form-check-label">COD</label>
+
+                                <div class="pt-4" id="CardPaymentFormOne">
+                                    <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                                        Pay On COD </button>
+                                </div>
                             </div>
-                            <div class="">
-                                <input type="radio" name="payment_method" value="card" id="payment_method_two">
-                                <label for="payment_method_two" class="form-check-label">Pay With Stripe</label>
-                            </div>
-                            <div class="">
-                                <input type="radio" name="payment_method" value="card" id="payment_method_two">
-                                <label for="payment_method_two" class="form-check-label">Pay With PayPal</label>
-                            </div>
-                            <div class="">
-                                <input type="radio" name="payment_method" value="card" id="payment_method_two">
-                                <label for="payment_method_two" class="form-check-label">Card</label>
-                            </div>
-                            <div class="card-body p-0 d-none" id="CardPaymentForm">
-                                {{-- <form method="" action="" id=""> --}}
-                                    <div class="mb-3">
-                                        <br>
-                                        <label for="card_number" class="mb-2">Card Holder Name</label>
-                                        <input type="text" name="card_number" id="card_number"
-                                            placeholder="Valid Card Holder Name" class="form-control"
-                                            value="{{ old('card_number') }}">
-                                        <p></p>
-                                        <h6 style="color: rgb(255, 0,0)" class="error"></h6>
-
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="card_number" class="mb-2">Card Number</label>
-                                        <input type="text" name="card_number" id="card_number"
-                                            placeholder="Valid Card Number" class="form-control"
-                                            value="{{ old('card_number') }}">
-                                        <p></p>
-                                        <h6 style="color: rgb(255, 0,0)" class="error"></h6>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="expiry_month" class="mb-2">Expiry Month</label>
-                                            <input type="text" name="expiry_month" id="expiry_month"
-                                                placeholder="MM" class="form-control"
-                                                value="{{ old('expiry_month') }}">
-                                            <p></p>
-                                            <h6 style="color: rgb(255, 0,0)" class="error"></h6>
-
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="expiry_year" class="mb-2">Expiry Year</label>
-                                            <input type="text" name="expiry_year" id="expiry_year"
-                                                placeholder="YYYY" class="form-control"
-                                                value="{{ old('expiry_year') }}">
-                                            <p></p>
-                                            <h6 style="color: rgb(255, 0,0)" class="error"></h6>
-
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label for="cvv" class="mb-2">CVV Code</label>
-                                            <input type="text" name="cvv" id="cvv" placeholder="123"
-                                                class="form-control" value="{{ old('cvv') }}">
-                                            <p></p>
-                                            <h6 style="color: rgb(255, 0,0)" class="error"></h6>
-
-                                        </div>
-                                    </div>
-                                {{-- </form> --}}
-                            </div>
-                            <div class="pt-4">
-                                <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }} Pay Now </button>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-                </div>
             </form>
+            
+            <div class="">
+                <input type="radio" name="payment_method" value="stripecard" id="payment_method_two">
+                <label for="payment_method_two" class="form-check-label">Pay With Stripe</label>
+                <div class="pt-4" id="CardPaymentFormTwo">
+                    <form action="{{ route('stripe') }}" method="post">
+                        @csrf
+                        @foreach ($product as $products)
+                            <input type="hidden" name="price[]" value="{{ $products->price }}">
+                            <input type="hidden" name="prod_name[]" value="{{ $products->prod_name }}">
+                            <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
+                        @endforeach
+
+                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                            Pay Now </button>
+                    </form>
+                </div>
+            </div>
+            <div class="">
+                <input type="radio" name="payment_method" value="paypal" id="payment_method_three">
+                <label for="payment_method_two" class="form-check-label">Pay With PayPal</label>
+                <div class="pt-4" id="CardPaymentFormThree">
+                    <form action="{{ route('paypal') }}" method="post">
+                        @csrf
+                        @foreach ($product as $products)
+                            <input type="hidden" name="price[]" value="{{ $products->price }}">
+                            <input type="hidden" name="prod_name[]" value="{{ $products->prod_name }}">
+                            <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
+                        @endforeach
+
+                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                            Pay Now </button>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+        </div>
+        </div>
         </div>
     </section>
 </main>
@@ -277,142 +251,139 @@
 
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
-   
+
 
 <script type="text/javascript">
+    $(function() {
 
- 
 
-$(function() {
 
- 
+        /*------------------------------------------
 
-    /*------------------------------------------
+        --------------------------------------------
 
-    --------------------------------------------
+        Stripe Payment Code
 
-    Stripe Payment Code
+        --------------------------------------------
 
-    --------------------------------------------
+        --------------------------------------------*/
 
-    --------------------------------------------*/
 
-   
 
-    var $form = $(".require-validation");
+        var $form = $(".require-validation");
 
-     
 
-    $('form.require-validation').bind('submit', function(e) {
 
-        var $form = $(".require-validation"),
+        $('form.require-validation').bind('submit', function(e) {
 
-        inputSelector = ['input[type=email]', 'input[type=password]',
+            var $form = $(".require-validation"),
 
-                         'input[type=text]', 'input[type=file]',
+                inputSelector = ['input[type=email]', 'input[type=password]',
 
-                         'textarea'].join(', '),
+                    'input[type=text]', 'input[type=file]',
 
-        $inputs = $form.find('.required').find(inputSelector),
+                    'textarea'
+                ].join(', '),
 
-        $errorMessage = $form.find('div.error'),
+                $inputs = $form.find('.required').find(inputSelector),
 
-        valid = true;
+                $errorMessage = $form.find('div.error'),
 
-        $errorMessage.addClass('hide');
+                valid = true;
 
-   
+            $errorMessage.addClass('hide');
 
-        $('.has-error').removeClass('has-error');
 
-        $inputs.each(function(i, el) {
 
-          var $input = $(el);
+            $('.has-error').removeClass('has-error');
 
-          if ($input.val() === '') {
+            $inputs.each(function(i, el) {
 
-            $input.parent().addClass('has-error');
+                var $input = $(el);
 
-            $errorMessage.removeClass('hide');
+                if ($input.val() === '') {
 
-            e.preventDefault();
+                    $input.parent().addClass('has-error');
 
-          }
+                    $errorMessage.removeClass('hide');
+
+                    e.preventDefault();
+
+                }
+
+            });
+
+
+
+            if (!$form.data('cc-on-file')) {
+
+                e.preventDefault();
+
+                Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+
+                Stripe.createToken({
+
+                    number: $('#card_number').val(),
+
+                    cvc: $('#cvv').val(),
+
+                    exp_month: $('#expiry_month').val(),
+
+                    exp_year: $('#expiry_year').val()
+
+                }, stripeResponseHandler);
+
+            }
+
+
 
         });
 
-     
 
-        if (!$form.data('cc-on-file')) {
 
-          e.preventDefault();
+        /*------------------------------------------
 
-          Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+        --------------------------------------------
 
-          Stripe.createToken({
+        Stripe Response Handler
 
-            number: $('#card_number').val(),
+        --------------------------------------------
 
-            cvc: $('#cvv').val(),
+        --------------------------------------------*/
 
-            exp_month: $('#expiry_month').val(),
+        function stripeResponseHandler(status, response) {
 
-            exp_year: $('#expiry_year').val()
+            if (response.error) {
 
-          }, stripeResponseHandler);
+                $('.error')
+
+                    .removeClass('hide')
+
+                    .find('.alert')
+
+                    .text(response.error.message);
+
+            } else {
+
+                /* token contains id, last4, and card type */
+
+                var token = response[$userId];
+
+
+
+                $form.find('input[type=text]').empty();
+
+                $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+
+                $form.get(0).submit();
+
+            }
 
         }
 
-   
+
 
     });
-
-     
-
-    /*------------------------------------------
-
-    --------------------------------------------
-
-    Stripe Response Handler
-
-    --------------------------------------------
-
-    --------------------------------------------*/
-
-    function stripeResponseHandler(status, response) {
-
-        if (response.error) {
-
-            $('.error')
-
-                .removeClass('hide')
-
-                .find('.alert')
-
-                .text(response.error.message);
-
-        } else {
-
-            /* token contains id, last4, and card type */
-
-            var token = response[$userId];
-
-                 
-
-            $form.find('input[type=text]').empty();
-
-            $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
-
-            $form.get(0).submit();
-
-        }
-
-    }
-
-     
-
-});
-
 </script>
 
 @include('user.includes.footer')

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\StripePaymentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -43,7 +44,7 @@ class CheckoutController extends Controller
         $CustomerAddress = CustomerAddress::where('user_id', '=', $userId)->first();
 
         // dd($CustomerAddress->user_id);
-        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress','userId'));
+        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress', 'userId'));
     }
 
 
@@ -77,8 +78,8 @@ class CheckoutController extends Controller
             'address' => 'required|max:50',
             'city' => 'required|string|max:50',
             'state' => 'required|string|max:50',
-            'zip' => 'required|numeric|max:10',
-            'mobile' => 'required|integer|max:10|min:10',
+            'zip' => 'required|digits_between:3,10',
+            'mobile' => 'required|digits:10',
             // 'card_number' => 'required|max:10',
             // 'expiry_date' => 'required|max:10',
             // 'cvv' => 'required|max:10',
@@ -91,10 +92,15 @@ class CheckoutController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Store in session
+        
         $user = Auth::user();
 
 
         //=======//============//==============//======================//==============================//
+
+
+
 
         //        Store Customer Address
 
@@ -115,8 +121,22 @@ class CheckoutController extends Controller
                 'notes' => $request->order_notes,
 
             ]
-
+                
         );
+
+        $request->session()->put('order_data', [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'country' => $request->country,
+            'address' => $request->address,
+            'apartment' => $request->apartment,
+            'city' => $request->city,
+            'state' => $request->state,
+            'pincode' => $request->zip,
+            'mobile' => $request->mobile,
+            'notes' => $request->order_notes,
+        ]);
 
 
         //=======//============//==============//======================//==============================//
@@ -151,39 +171,38 @@ class CheckoutController extends Controller
             $order->save();
         }
 
-        if ($request->payment_method == 'card') {
-            
-            
-          
-            
-            
-            
-           
-            $shipping = 0;
-            $discount = 0;
-            $subtotal = $totalSum;
+        if ($request->payment_method == 'stripecard') {
 
-            $order = new Order();
-            $order->subtotal = $totalSum;
-            $order->shipping = $shipping;
-            $order->grand_total = $totalSum;
-            $order->subtotal = $totalSum;
+            // $stripe = new StripePaymentController();
 
-            $order->payment_status = 'paid with card';
-            $order->user_id = $user->id;
-            $order->first_name = $request->first_name;
-            $order->last_name = $request->last_name;
-            $order->email = $request->email;
-            $order->country = $request->country;
-            $order->address = $request->address;
-            $order->apartment =  $request->appartment;
-            $order->city = $request->city;
-            $order->state = $request->state;
-            $order->pincode =  $request->zip;
-            $order->mobile = $request->mobile;
-            $order->notes = $request->order_notes;
-            $order->save();
+            // $result = $stripe->stripe($request);
 
+            // dd($result);
+
+            // $shipping = 0;
+            // $discount = 0;
+            // $subtotal = $totalSum;
+
+            // $order = new Order();
+            // $order->subtotal = $totalSum;
+            // $order->shipping = $shipping;
+            // $order->grand_total = $totalSum;
+            // $order->subtotal = $totalSum;
+
+            // $order->payment_status = 'paid with Stripe Card';
+            // $order->user_id = $user->id;
+            // $order->first_name = $request->first_name;
+            // $order->last_name = $request->last_name;
+            // $order->email = $request->email;
+            // $order->country = $request->country;
+            // $order->address = $request->address;
+            // $order->apartment =  $request->appartment;
+            // $order->city = $request->city;
+            // $order->state = $request->state;
+            // $order->pincode =  $request->zip;
+            // $order->mobile = $request->mobile;
+            // $order->notes = $request->order_notes;
+            // $order->save();
         }
 
 

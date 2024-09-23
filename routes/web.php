@@ -39,11 +39,6 @@ Route::get('/testing', function () {
     });
 
 Route::prefix('user')->group(function () {
-    Route::get('/cart', [CartController::class, 'index'])->name('user.index');
-    Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
-    Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
-    Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
-    Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
   
     Route::get('/login', [UserController::class, 'login'])->name('userlogin');
     Route::post('/login', [UserController::class, 'loginCheck'])->name('usercheck');
@@ -84,7 +79,7 @@ Route::get('success',[PaypalController::class,'success'])->name('success');
 Route::get('cancel',[PaypalController::class,'cancel'])->name('cancel');
 
 
-// Route::middleware([ValidUser::class])->group(function () {
+Route::middleware([ValidUser::class])->group(function () {
     Route::prefix('user')->group(function () {
 
 
@@ -106,7 +101,11 @@ Route::get('cancel',[PaypalController::class,'cancel'])->name('cancel');
         Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
 
         //Cart Process
-       
+        Route::get('/cart', [CartController::class, 'index'])->name('user.index');
+        Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
+        Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
+        Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
+        Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
 
 
         //Wishlist Process
@@ -125,7 +124,7 @@ Route::get('cancel',[PaypalController::class,'cancel'])->name('cancel');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
     });
-// });
+});
 
 
 
@@ -144,9 +143,9 @@ Route::get('/admin/logout', [AdminloginController::class, 'logout'])->name('admi
 
 // Admin-Products
 Route::middleware([ValidAdmin::class])->group(function () {
-    Route::prefix('admin')->group(function () {
+    Route::prefix(prefix: 'admin')->group(callback: function (): void {
 
-        Route::get('/dashboard', [AdminloginController::class, 'deshboard'])->name('admin.deshboard');
+        Route::get(uri: '/dashboard', action: [AdminloginController::class, 'deshboard'])->name(name: 'admin.deshboard');
 
         Route::get('/view-rating', [AdminloginController::class, 'viewRating'])->name('admin.viewRating');
 
