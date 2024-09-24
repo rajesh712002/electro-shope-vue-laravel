@@ -170,6 +170,7 @@
                 <h2>Latest Produsts</h2>
             </div>
             <div class="row pb-3">
+                {{-- @dd( session()->get('cart', [])); --}}
                 @foreach (getproduct() as $prod)
                     <div class="col-md-3">
                         <div class="card product-card">
@@ -188,20 +189,18 @@
                                     </form>
                                 </a>
                                 <div class="product-action">
-                                    {{-- <a class="btn btn-dark" href="{{route('viewproduct',$prod->slug)}}">
-                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                    </a> --}}
-                                    {{-- @if (Cart::instance('cart')->content()->where('id', $prod->id)->count() > 0)
-                                    <a class="btn btn-dark" href="{{ route('user.index') }}">
-                                        <i class="btn btn-info">Go To Cart</i>
-                                    </a>
-                                @else --}}
+                                  
                                     <form action="{{ route('user.addToCart') }}" method="POST">
                                         {{-- @dd($product) --}}
                                         @csrf
                                         <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                         <input type="hidden" name="user_id" value="{{ chechUserLogin() }}" />
                                         <input type="hidden" name="qty" value="1" />
+                                        <input type="hidden" name="price" value="{{$prod->price}}" />
+                                        <input type="hidden" name="name" value="{{$prod->prod_name}}" />
+                                        <input type="hidden" name="image" value="{{$prod->image}}" />
+                                        <input type="hidden" name="max_qty" value="{{$prod->qty}}" />
+
                                         <button type="submit" class="btn btn-dark"><i
                                                 class="fas fa-shopping-cart"></i> Add To Cart</button>
                                     </form>

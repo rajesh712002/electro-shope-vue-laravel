@@ -134,8 +134,12 @@
                         {{-- @dd($product) --}}
                         @csrf
                         <input type="hidden" name="prod_id" value="{{ $product->id }}" />
-                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+                        <input type="hidden" name="user_id" value="{{ checkUserLogin() }}" />
                         <input type="hidden" name="qty" value="1" />
+                        <input type="hidden" name="price" value="{{$product->price}}" />
+                        <input type="hidden" name="name" value="{{$product->prod_name}}" />
+                        <input type="hidden" name="image" value="{{$product->image}}" />
+                        <input type="hidden" name="max_qty" value="{{$product->qty}}" />
                         <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
                             &nbsp;ADD TO CART</button>
                     </form>
@@ -304,42 +308,6 @@
                                     @endforeach
                                 </div>
 
-                                {{-- 
-                                    <div class="rating-group mb-4">
-                                        <span class="author"><strong>Mohit Singh </strong></span>
-                                        <div class="star-rating mt-2">
-                                            <div class="back-stars">
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-
-                                                <div class="front-stars" style="width: 100%">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="my-3">
-                                            <p>I went with the blue model for my new apartment and an very pleased with
-                                                the purchase. I'm definitely someone not used to paying this much for
-                                                furniture, and I am also anxious about buying online, but I am very
-                                                happy with the quality of this couch. For me, it is the perfect mix of
-                                                cushy firmness, and it arrived defect free. It really is well made and
-                                                hopefully will be my main couch for a long time. I paid for the extra
-                                                delivery & box removal, and had an excellent experience as well. I do
-                                                tend move my own furniture, but with an online purchase this expensive,
-                                                that helped relieved my anxiety about having a item this big open up in
-                                                my space without issues. If you need a functional sectional couch and
-                                                like the feel of leather, this really is a great choice.
-
-                                            </p>
-                                        </div>
-                                    </div> --}}
 
                             </div>
 

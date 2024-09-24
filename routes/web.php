@@ -6,6 +6,7 @@ use App\Http\Middleware\ValidAdmin;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\user\CartController;
 use App\Http\Controllers\user\ShopController;
 use App\Http\Controllers\user\UserController;
@@ -15,7 +16,7 @@ use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\user\CheckoutController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
-use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\Auth\AuthenticationController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -31,17 +32,17 @@ use App\Http\Controllers\PaypalController;
 Route::get('/', action: [UserController::class, 'index'])->name('userindex');
 
 Route::get('/testing', function () {
-         return view('user.order.testing');
-     });
+    return view('user.order.testing');
+});
 
-     Route::get('/test', function () {
-        return view('user.order.test');
-    });
+Route::get('/test', function () {
+    return view('user.order.test');
+});
 
 Route::prefix('user')->group(function () {
-  
-    Route::get('/login', [UserController::class, 'login'])->name('userlogin');
-    Route::post('/login', [UserController::class, 'loginCheck'])->name('usercheck');
+
+    Route::get('/login', [AuthenticationController::class, 'userLogin'])->name('userlogin');
+    Route::post('/login', [AuthenticationController::class, 'userLoginCheck'])->name('usercheck');
     // Route::get('/dashboard', [UserController::class, 'dashboard'])->name('userdeshboard');
 
     Route::get('/about-us', [UserController::class, 'aboutUs'])->name('aboutus');
@@ -53,41 +54,55 @@ Route::prefix('user')->group(function () {
     Route::get('/resest-forgot-password/{token?}', [SettingController::class, 'resestForgetPassword'])->name('user.resestForgetPassword');
     Route::post('/resest-forgot-password-email', [SettingController::class, 'processForgotPasswordEmail'])->name('user.processForgotPasswordEmail');
 
+    //Shopping
+    Route::get('/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop'])->name('usershop');
+    Route::get('/view-product/{slug}', [ShopController::class, 'view_product'])->name('viewproduct');
 
+    //Cart Process
+    Route::get('/cart', [CartController::class, 'index'])->name('user.index');
+    Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
+    Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
+    Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
+    Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
+
+    //Guest Cart Process
+    Route::post('/guest/cart/qty-decrease', [CartController::class, 'decreaseQtyGuest'])->name('guest.cart.qty.decrease');
+    Route::post('/guest/cart/qty-increase', [CartController::class, 'increaseQtyGuest'])->name('guest.cart.qty.increase');
+    Route::post('/guest/cart/remove', [CartController::class, 'removeItemGuest'])->name('guest.cart.remove');
 
     Route::get('/register', [UserController::class, 'register'])->name('register');
     Route::post('/register', [UserController::class, 'storeRegister'])->name('userstore');
 
-    Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
+    Route::get('/logout', [AuthenticationController::class, 'userLogout'])->name('user.logout');
 });
 
 
 //=======//==============//====================
+
 //  ==>  Payment Integration
 
 //Stripe
 
-Route::post('stripe',[StripePaymentController::class,'stripe'])->name('stripe');
-Route::get('successs',[StripePaymentController::class,'success'])->name('successs');
-Route::get('cancell',[StripePaymentController::class,'cancel'])->name('cancell');
+Route::post('stripe', [StripePaymentController::class, 'stripe'])->name('stripe');
+Route::get('successs', [StripePaymentController::class, 'success'])->name('successs');
+Route::get('cancell', [StripePaymentController::class, 'cancel'])->name('cancell');
 
 
 //Paypal
 
-Route::post('paypal',[PaypalController::class,'paypal'])->name('paypal');
-Route::get('success',[PaypalController::class,'success'])->name('success');
-Route::get('cancel',[PaypalController::class,'cancel'])->name('cancel');
+Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
+Route::get('success', [PaypalController::class, 'success'])->name('success');
+Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
 
 
-Route::middleware([ValidUser::class])->group(function () {
+Route::middleware([ValidUser::class])->group(function (): void {
     Route::prefix('user')->group(function () {
 
 
         Route::get('/change-password', [SettingController::class, 'changePassword'])->name('user.changePassword');
         Route::post('/change-password', [SettingController::class, 'showchangePassword'])->name('user.showchangePassword');
 
-        Route::get('/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop'])->name('usershop');
-        Route::get('/view-product/{slug}', [ShopController::class, 'view_product'])->name('viewproduct');
+      
 
 
         Route::get('/profile', [SettingController::class, 'account'])->name('useraccount');
@@ -100,12 +115,6 @@ Route::middleware([ValidUser::class])->group(function () {
 
         Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
 
-        //Cart Process
-        Route::get('/cart', [CartController::class, 'index'])->name('user.index');
-        Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
-        Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty'])->name('qty.increase');
-        Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty'])->name('qty.decrease');
-        Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item'])->name('qty.remove_item');
 
 
         //Wishlist Process
@@ -134,11 +143,11 @@ Route::middleware([ValidUser::class])->group(function () {
 
 //ADMIN
 
-Route::get('/admin/login', [AdminloginController::class, 'index'])->name('admin.login');
-Route::post('/admin-login', [AdminloginController::class, 'loginchk'])->name('adminckeck');
+Route::get('/admin/login', [AuthenticationController::class, 'adminLogin'])->name('admin.login');
+Route::post('/admin-login', [AuthenticationController::class, 'adminLogincheck'])->name('adminckeck');
 
 
-Route::get('/admin/logout', [AdminloginController::class, 'logout'])->name('admin.logout');
+Route::get('/admin/logout', [AuthenticationController::class, 'adminLogout'])->name('admin.logout');
 
 
 // Admin-Products

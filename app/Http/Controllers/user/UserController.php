@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\user;
 
+use App\Models\Cart;
 use App\Models\User;
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -29,10 +30,7 @@ class UserController extends Controller
         return view('user.index');
     }
 
-    public function login()
-    {
-        return view('user.login');
-    }
+   
 
     public function dashboard()
     {
@@ -72,35 +70,14 @@ class UserController extends Controller
     }
 
 
-    public function loginCheck(Request $request)
-    {
-        $validate = $request->validate([
-            'email' => 'required|email|max:100',
-            'password' => 'required|min:5|max:50'
-        ]);
+    
 
-        if (Auth::attempt($validate)) {
-            if (Auth::guard('web')->user()->role == 1) {
-                return redirect()->route('userindex');
-            } else { //else if (Auth::guard('web')->user()->role != 1) {
-                return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
-            }
-        } else {
-            return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
-        }
-    }
 
     public function account()
     {
         return view('user.account');
     }
-    public function logout(Request $request)
-    {
-        Auth::guard('web')->logout();
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
-        return view('user.login');
-    }
+    
 
 
 

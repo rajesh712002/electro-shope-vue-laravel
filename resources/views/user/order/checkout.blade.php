@@ -214,7 +214,7 @@
                             <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
                         @endforeach
 
-                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                        <button type="submit" class="btn-dark btn btn-block w-100" data-value="stripePayment">{{ $totalSum }}
                             Pay Now </button>
                     </form>
                 </div>
@@ -226,7 +226,7 @@
                     <form action="{{ route('paypal') }}" method="post">
                         @csrf
                         @foreach ($product as $products)
-                            <input type="hidden" name="price[]" value="{{ $products->price }}">
+                            <input type="hidden" name="price[]" value="{{ $products->price }}">0
                             <input type="hidden" name="prod_name[]" value="{{ $products->prod_name }}">
                             <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
                         @endforeach

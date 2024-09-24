@@ -173,9 +173,9 @@ class CheckoutController extends Controller
 
         if ($request->payment_method == 'stripecard') {
 
-            // $stripe = new StripePaymentController();
+            $stripe = new StripePaymentController();
 
-            // $result = $stripe->stripe($request);
+            $result = $stripe->stripe($request);
 
             // dd($result);
 

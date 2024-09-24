@@ -5,11 +5,8 @@
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    @if (Auth::check())
                         <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a></li>
-                    @else
-                        <li class="breadcrumb-item"><a class="white-text" href="{{ route('userdeshboard') }}">Home</a></li>
-                    @endif
+                  
                     <li class="breadcrumb-item">Contact Us</li>
                 </ol>
             </div>

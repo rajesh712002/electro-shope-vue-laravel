@@ -20,10 +20,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminloginController extends Controller
 {
-    public function index()
-    {
-        return view('admin.login');
-    }
+  
 
    
 
@@ -58,33 +55,8 @@ class AdminloginController extends Controller
         return view('admin.deshboard', compact('totaluser', 'totalcategory', 'statusCounts', 'totalsubcategory', 'totalbrand', 'totalproduct', 'totalorder',  'totalearning'));
     }
 
-    public function loginchk(Request $request)
-    {
-        $validate = $request->validate([
-            'email' => 'required|email|max:100',
-            'password' => 'required|min:8|max:50'
-        ]);
-
-        if (Auth::guard('admin')->attempt($validate)) {
-            if (Auth::guard('admin')->user()->role == 2) {
-                return redirect()->route('admin.deshboard')->with('success', 'Welcome admin');
-            } else { //else if (Auth::guard('admin')->user()->role != 2) 
-                return redirect()->route('admin.login')->with('success', 'Either Email or Password Incorrect');
-            }
-        } else {
-            return redirect()->route('admin.login')->with('success', 'Either Email or Password Incorrect');
-        }
-    }
-
-    public function logout(Request $request)
-    {
-
-        Auth::guard('admin')->logout();
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
-
-        return view('admin.login');
-    }
+  
+   
 
 
     public function users(Request $request)

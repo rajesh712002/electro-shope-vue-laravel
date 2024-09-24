@@ -7,7 +7,7 @@
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{route('userindex')}}">Home</a></li>
                     <li class="breadcrumb-item"><a class="white-text" href="{{ route('usershop') }}">Shop</a></li>
                     <li class="breadcrumb-item">Cart</li>
                 </ol>
@@ -25,139 +25,268 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    @if ($product->count() > 0)
+                    @if (Auth::check())
 
-                        <div class="table-responsive">
-                            <table class="table" id="cart">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>Item</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
-                                        <th>Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- @foreach ($carts as $cart) --}}
-                                    @foreach ($product as $item)
+                        @if ($product->count() > 0)
+
+                            <div class="table-responsive">
+                                <table class="table" id="cart">
+                                    <thead>
                                         <tr>
-                                            {{-- @dd($product) --}}
-                                            <td>
-                                                <a href="{{ route('viewproduct', $item->slug) }}">
-                                                    <div class="d-flex align-items-center justify-content-center">
-                                                        <img src="{{ asset('admin_assets/images/' . $item->image) }}"
-                                                            width="120" height="120">
+                                            <th>Image</th>
+                                            <th>Item</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- @foreach ($carts as $cart) --}}
+                                        @foreach ($product as $item)
+                                            <tr>
+                                                {{-- @dd($product) --}}
+                                                <td>
+                                                    <a href="{{ route('viewproduct', $item->slug) }}">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            <img src="{{ asset('admin_assets/images/' . $item->image) }}"
+                                                                width="120" height="120">
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a class="text-dark" href="{{ route('viewproduct', $item->slug) }}">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            {{-- <h2>{{$product->prod_name}}</h2> --}}
+                                                            {{ $item->prod_name }}
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td>{{ $item->price }}</td>
+                                                <td>
+                                                    <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                        <div class="input-group-btn">
+                                                            <form method="POST"
+                                                                action="{{ route('qty.decrease', $item->cid) }}"
+                                                                id="DecreaseCartForm">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
+                                                                    <i class="fa fa-minus"></i>
+                                                                </button>
+                                                            </form>
+
+                                                        </div>
+                                                        <input type="text" name="quantity"
+                                                            class="form-control form-control-sm  border-0 text-center"
+                                                            value="{{ $item->cqty }}" min="1"
+                                                            max="{{ $item->qty }}">
+
+                                                        <div class="input-group-btn">
+                                                            <form method="POST"
+                                                                action="{{ route('qty.increase', $item->cid) }}">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                            </form>
+
+                                                        </div>
                                                     </div>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-dark" href="{{ route('viewproduct', $item->slug) }}">
-                                                    <div class="d-flex align-items-center justify-content-center">
-                                                        {{-- <h2>{{$product->prod_name}}</h2> --}}
-                                                        {{ $item->prod_name }}
-                                                    </div>
-                                                </a>
-                                            </td>
-                                            <td>{{ $item->price }}</td>
-                                            <td>
-                                                <div class="input-group quantity mx-auto" style="width: 100px;">
-                                                    <div class="input-group-btn">
-                                                        <form method="POST"
-                                                            action="{{ route('qty.decrease', $item->cid) }}"
-                                                            id="DecreaseCartForm">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button type="submit"
+                                                </td>
+                                                <td>
+                                                    {{ $item->price * $item->cqty }}
+                                                </td>
+                                                <td>
+
+                                                    <form id="delete-product-form-{{ $item->cid }}"
+                                                        class="delete_cat" method="post"
+                                                        action="{{ route('qty.remove_item', $item->cid) }}">
+                                                        @csrf
+                                                        @method('delete')
+                                                    </form>
+
+                                                    <button onclick="deleteProduct({{ $item->cid }});"
+                                                        type="submit" class="btn btn-sm btn-danger"><i
+                                                            class="fa fa-times"></i></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        {{-- @endforeach --}}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="row">
+                                <div class="col-md-12 text-center pt-5 bp-5">
+                                    <p>No items found in your cart </p>
+                                    <a href="{{ route('usershop') }}" class="btn btn-info">Shop Now</a>
+                                </div>
+                            </div>
+                        @endif
+                    @else
+                        @php
+                            // Get guest cart data from session
+                            $guestCart = session()->get('cart', []);
+                        @endphp
+
+                        @if (count($guestCart) > 0)
+                            <div class="table-responsive">
+                                <table class="table" id="cart">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Item</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($guestCart as $key => $item)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{-- route('viewproduct', $item['slug']) --}}">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            <img src="{{ asset('admin_assets/images/' . $item['image']) }}"
+                                                                width="120" height="120">
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a class="text-dark"
+                                                        href="{{-- route('viewproduct', $item['slug']) --}}">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            {{ $item['name'] }}
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td>{{ $item['price'] }}</td>
+                                                <td>
+                                                    <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                        <div class="input-group-btn">
+                                                            <button type="button"
+                                                                onclick="decreaseGuestQty('{{ $key }}')"
                                                                 class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
                                                                 <i class="fa fa-minus"></i>
                                                             </button>
-                                                        </form>
-
-                                                    </div>
-                                                    <input type="text" name="quantity"
-                                                        class="form-control form-control-sm  border-0 text-center"
-                                                        value="{{ $item->cqty }}" min="1"
-                                                        max="{{ $item->qty }}">
-
-                                                    <div class="input-group-btn">
-                                                        <form method="POST"
-                                                            action="{{ route('qty.increase', $item->cid) }}">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button type="submit"
+                                                        </div>
+                                                        <input type="text" name="quantity"
+                                                            class="form-control form-control-sm border-0 text-center"
+                                                            value="{{ $item['qty'] }}" min="1"
+                                                            max="{{ $item['max_qty'] }}">
+                                                        <div class="input-group-btn">
+                                                            <button type="button"
+                                                                onclick="increaseGuestQty('{{ $key }}')"
                                                                 class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
-                                                        </form>
-
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                {{ $item->price * $item->cqty }}
-                                            </td>
-                                            <td>
-
-                                                <form id="delete-product-form-{{ $item->cid }}" class="delete_cat"
-                                                    method="post" action="{{ route('qty.remove_item', $item->cid) }}">
-                                                    @csrf
-                                                    @method('delete')
-                                                </form>
-
-                                                <button onclick="deleteProduct({{ $item->cid }});" type="submit"
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-
-                                    {{-- @endforeach --}}
-
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
+                                                </td>
+                                                <td>{{ $item['price'] * $item['qty'] }}</td>
+                                                <td>
+                                                    <button onclick="removeGuestItem('{{ $key }}')"
+                                                        type="button" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
                         <div class="row">
                             <div class="col-md-12 text-center pt-5 bp-5">
                                 <p>No items found in your cart </p>
                                 <a href="{{ route('usershop') }}" class="btn btn-info">Shop Now</a>
                             </div>
                         </div>
+                        @endif
                     @endif
 
                 </div>
-                @if (cartCount() > 0)
-                    <div class="col-md-4">
-                        <div class="card cart-summery">
-                            <div class="sub-title">
-                                <h2 class="bg-white">Cart Summery</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between pb-2">
-                                    <div>Subtotal</div>
+                @if (Auth::check())
+
+                    @if (cartCount() > 0)
+                        <div class="col-md-4">
+                            <div class="card cart-summery">
+                                <div class="sub-title">
+                                    <h2 class="bg-white">Cart Summery</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between pb-2">
+                                        <div>Subtotal</div>
+                                        <div><i class="fa fa-inr" aria-hidden="true">
+                                            </i> {{ $totalSum }}</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between pb-2">
+                                        <div>Shipping</div>
+                                        {{-- <div><i class="fa fa-inr" aria-hidden="true"> --}}
+                                        </i> Free
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between summery-end">
+                                    <div>Total</div>
                                     <div><i class="fa fa-inr" aria-hidden="true">
                                         </i> {{ $totalSum }}</div>
                                 </div>
-                                <div class="d-flex justify-content-between pb-2">
-                                    <div>Shipping</div>
-                                    {{-- <div><i class="fa fa-inr" aria-hidden="true"> --}}
-                                    </i> Free
+                                <div class="pt-5">
+                                    <a href="{{ route('user.checkout') }}"
+                                        class="btn-dark btn btn-block w-100">Proceed
+                                        to
+                                        Checkout</a>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between summery-end">
-                                <div>Total</div>
-                                <div><i class="fa fa-inr" aria-hidden="true">
-                                    </i> {{ $totalSum }}</div>
-                            </div>
-                            <div class="pt-5">
-                                <a href="{{ route('user.checkout') }}" class="btn-dark btn btn-block w-100">Proceed to
-                                    Checkout</a>
+                        </div>
+                    @endif
+                @else
+                    @php
+                        // Get the cart data from the session
+                        $cart = session()->get('cart', []);
+                        $guestTotalSum = 0;
+
+                        // Calculate the total sum for guest cart
+                        foreach ($cart as $item) {
+                            $guestTotalSum += $item['qty'] * $item['price'];
+                        }
+                    @endphp
+
+                    @if (count($cart) > 0)
+                        <div class="col-md-4">
+                            <div class="card cart-summery">
+                                <div class="sub-title">
+                                    <h2 class="bg-white">Cart Summary</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between pb-2">
+                                        <div>Subtotal</div>
+                                        <div><i class="fa fa-inr" aria-hidden="true"></i> {{ $guestTotalSum }}</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between pb-2">
+                                        <div>Shipping</div>
+                                        <div>Free</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between summery-end">
+                                    <div>Total</div>
+                                    <div><i class="fa fa-inr" aria-hidden="true"></i> {{ $guestTotalSum }}</div>
+                                </div>
+                                <div class="pt-5">
+                                    <a href="{{route('user.checkout')}}" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                  
+                    @endif
                 @endif
-
             </div>
         </div>
         </div>
@@ -168,6 +297,38 @@
         if (confirm("Do you really want to remove this Item ?")) {
             document.getElementById("delete-product-form-" + id).submit();
         }
+    }
+</script>
+
+<script>
+    function decreaseGuestQty(key) {
+        // Decrease guest quantity logic
+        $.post("{{ route('guest.cart.qty.decrease') }}", {
+            _token: '{{ csrf_token() }}',
+            key: key
+        }, function(data) {
+            location.reload();
+        });
+    }
+
+    function increaseGuestQty(key) {
+        // Increase guest quantity logic
+        $.post("{{ route('guest.cart.qty.increase') }}", {
+            _token: '{{ csrf_token() }}',
+            key: key
+        }, function(data) {
+            location.reload();
+        });
+    }
+
+    function removeGuestItem(key) {
+        // Remove guest item logic
+        $.post("{{ route('guest.cart.remove') }}", {
+            _token: '{{ csrf_token() }}',
+            key: key
+        }, function(data) {
+            location.reload();
+        });
     }
 </script>
 

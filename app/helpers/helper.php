@@ -23,6 +23,14 @@ function chechUserLogin()
     }
 }
 
+function checkUserLogin()
+{
+    if (Auth::check()) {
+        return $userId = Auth::user()->id;
+    } else {
+    }
+}
+
 function getcategory()
 {
     return  $category = Category::withCount('product', 'subcategory')->get();

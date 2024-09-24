@@ -18,24 +18,48 @@ class CartController extends Controller
     {
         if (Auth::check()) {
 
-        $userId = Auth::user()->id;
-        $cart_prod_id =  DB::table('carts')
-            ->where('product_id', '=', $request->prod_id)
-            ->where('user_id', '=', $userId)
-            ->exists();
+            $userId = Auth::user()->id;
+            $cart_prod_id =  DB::table('carts')
+                ->where('product_id', '=', $request->prod_id)
+                ->where('user_id', '=', $userId)
+                ->exists();
 
-        if ($cart_prod_id) {
+            if ($cart_prod_id) {
+            } else {
+                $cart = new  Cart();
+                $cart->product_id = $request->prod_id;
+                $cart->user_id = $request->user_id;
+                $cart->qty = $request->qty;
+                $cart->save();
+            }
+
+            return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
         } else {
-            $cart = new  Cart();
-            $cart->product_id = $request->prod_id;
-            $cart->user_id = $request->user_id;
-            $cart->qty = $request->qty;
-            $cart->save();
-        }
+            // session()->forget('cart');
 
-        return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
-    }
-        // alert('Product Add Successfully');
+            // Guest User Save to Session
+            $cart = session()->get('cart', []);
+
+            // Check if product is already in cart
+            if (isset($cart[$request->prod_id])) {
+                $cart[$request->prod_id]['qty'] += $request->qty;
+            } else {
+                // Add new product to cart
+                $cart[$request->prod_id] = [
+                    'product_id' => $request->prod_id,
+                    'qty' => $request->qty,
+                    'price' => $request->price,
+                    'name' => $request->name,
+                    'image' => $request->image,
+                    'max_qty' => $request->max_qty
+                    
+                ];
+            }
+
+            session()->put('cart', $cart);
+            // dd(vars: $cart);
+            return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
+        }
     }
 
 
@@ -44,64 +68,52 @@ class CartController extends Controller
 
         if (Auth::check()) {
 
-        $userId = Auth::user()->id;
+            $userId = Auth::user()->id;
 
-        // dd($cart_prod_id);
+            // dd($cart_prod_id);
 
-        //show item in cart
-        $product = DB::table('carts')
-            ->join('users', 'carts.user_id', '=', 'users.id')
-            ->join('products', 'carts.product_id', '=', 'products.id')
-            ->where('users.id', $userId)
-            ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
-            ->get();
+            //show item in cart
+            $product = DB::table('carts')
+                ->join('users', 'carts.user_id', '=', 'users.id')
+                ->join('products', 'carts.product_id', '=', 'products.id')
+                ->where('users.id', $userId)
+                ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
+                ->get();
 
-        //in cart raw
-        $totalSum = DB::table('carts')
-            ->join('products', 'carts.product_id', '=', 'products.id')
-            ->where('carts.user_id', $userId)
-            ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
-            ->pluck('totalSum')
-            ->first();
-        // dd($product);
-        return view('user.order.cart', compact('product', 'totalSum'));
-        }   else{
-            return view('user.order.cart');
+            //in cart raw
+            $totalSum = DB::table('carts')
+                ->join('products', 'carts.product_id', '=', 'products.id')
+                ->where('carts.user_id', $userId)
+                ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
+                ->pluck('totalSum')
+                ->first();
+            // dd($product);
+            return view('user.order.cart', compact('product', 'totalSum'));
+        } else {
+            // Guest User  Show items from session
+            $cart = session()->get('cart', []);
+            $product = [];
+
+            // Calculate total sum for guest user
+            $totalSum = 0;
+            foreach ($cart as $item) {
+                $totalSum += $item['qty'] * $item['price'];
+                $product[] = (object)[
+                    'id' => $item['product_id'],
+                    'name' => $item['name'],
+                    'price' => $item['price'],
+                    'qty' => $item['qty'],
+                    'image' => $item['image'],
+                    'max_qty' => $item['max_qty']
+                ];
+            }
+
+            return view('user.order.cart', compact('product', 'totalSum'));
         }
     }
 
 
-    // {
 
-    //     $cart = Cart::findOrFail($id);
-
-    //     $userId = Auth::user()->id;
-    //     // Check Cart Id Exists or Not
-    //     $cart_prod_id =  DB::table('carts')
-    //         ->where('product_id', '=', $request->prod_id)
-    //         ->where('user_id', '=', $userId)
-    //         ->exists();
-
-    //     $product = DB::table('carts')
-    //         ->join('users', 'carts.user_id', '=', 'users.id')
-    //         ->join('products', 'carts.product_id', '=', 'products.id')
-    //         ->where('users.id', $userId)
-    //         ->select('products.qty as pqty', 'carts.qty as cqty', 'carts.id as cart_id')
-    //         ->get();
-
-    //     if ($cart_prod_id) {
-    //     } else {
-
-    //         foreach ($product as $products) {
-    //             $cartItem = Cart::find($products->cart_id);
-    //             if ($cartItem && $products->cqty < $products->pqty) {
-    //                 $cartItem->qty += 1;
-    //                 $cartItem->save();
-    //             }
-    //         }
-    //     }
-    //     return redirect()->back();
-    // }
 
 
     public function increaseCartQty(Request $request, $id)
@@ -144,7 +156,10 @@ class CartController extends Controller
         } else {
             if ($cart->qty > 1) {
                 $cart->qty += $request->qty - 1;
+                // dd($cart->qty);
                 $cart->save();
+            return redirect()->back();
+
             }
         }
         return redirect()->back();
@@ -156,6 +171,43 @@ class CartController extends Controller
         $product->delete();
         return redirect()->back();
     }
+
+
+//=======//==============//
+//For Guest Cart
+    public function decreaseQtyGuest(Request $request)
+{
+    $cart = session()->get('cart', []);
+    if (isset($cart[$request->key])) {
+        if ($cart[$request->key]['qty'] > 1) {
+            $cart[$request->key]['qty']--;
+        }
+    }
+    session()->put('cart', $cart);
+    return response()->json(['status' => 'Quantity decreased']);
+}
+
+public function increaseQtyGuest(Request $request)
+{
+     $cart = session()->get('cart', []);
+    if (isset($cart[$request->key])) {
+        if ($cart[$request->key]['qty'] < $cart[$request->key]['max_qty']) {
+            $cart[$request->key]['qty']++;
+        }
+    }
+    session()->put('cart', $cart);
+    return response()->json(['status' => 'Quantity increased']);
+}
+
+public function removeItemGuest(Request $request)
+{
+    $cart = session()->get('cart', []);
+    if (isset($cart[$request->key])) {
+        unset($cart[$request->key]);
+    }
+    session()->put('cart', $cart);
+    return response()->json(['status' => 'Item removed']);
+}
 
 
 
@@ -196,9 +248,7 @@ class CartController extends Controller
                 $cart->save();
             }
             return redirect()->route('usershop')->with('status', 'Product added to Wishlist successfully.');
-        }
-        else{
-            
+        } else {
         }
     }
 
