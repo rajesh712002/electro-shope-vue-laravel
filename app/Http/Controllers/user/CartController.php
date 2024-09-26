@@ -52,7 +52,7 @@ class CartController extends Controller
                     'name' => $request->name,
                     'image' => $request->image,
                     'max_qty' => $request->max_qty
-                    
+
                 ];
             }
 
@@ -158,8 +158,7 @@ class CartController extends Controller
                 $cart->qty += $request->qty - 1;
                 // dd($cart->qty);
                 $cart->save();
-            return redirect()->back();
-
+                return redirect()->back();
             }
         }
         return redirect()->back();
@@ -173,41 +172,41 @@ class CartController extends Controller
     }
 
 
-//=======//==============//
-//For Guest Cart
+    //=======//==============//
+    //For Guest Cart
     public function decreaseQtyGuest(Request $request)
-{
-    $cart = session()->get('cart', []);
-    if (isset($cart[$request->key])) {
-        if ($cart[$request->key]['qty'] > 1) {
-            $cart[$request->key]['qty']--;
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$request->key])) {
+            if ($cart[$request->key]['qty'] > 1) {
+                $cart[$request->key]['qty']--;
+            }
         }
+        session()->put('cart', $cart);
+        return response()->json(['status' => 'Quantity decreased']);
     }
-    session()->put('cart', $cart);
-    return response()->json(['status' => 'Quantity decreased']);
-}
 
-public function increaseQtyGuest(Request $request)
-{
-     $cart = session()->get('cart', []);
-    if (isset($cart[$request->key])) {
-        if ($cart[$request->key]['qty'] < $cart[$request->key]['max_qty']) {
-            $cart[$request->key]['qty']++;
+    public function increaseQtyGuest(Request $request)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$request->key])) {
+            if ($cart[$request->key]['qty'] < $cart[$request->key]['max_qty']) {
+                $cart[$request->key]['qty']++;
+            }
         }
+        session()->put('cart', $cart);
+        return response()->json(['status' => 'Quantity increased']);
     }
-    session()->put('cart', $cart);
-    return response()->json(['status' => 'Quantity increased']);
-}
 
-public function removeItemGuest(Request $request)
-{
-    $cart = session()->get('cart', []);
-    if (isset($cart[$request->key])) {
-        unset($cart[$request->key]);
+    public function removeItemGuest(Request $request)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$request->key])) {
+            unset($cart[$request->key]);
+        }
+        session()->put('cart', $cart);
+        return response()->json(['status' => 'Item removed']);
     }
-    session()->put('cart', $cart);
-    return response()->json(['status' => 'Item removed']);
-}
 
 
 
@@ -281,8 +280,7 @@ public function removeItemGuest(Request $request)
             $product = Wishlist::findOrFail($id);
             $product->delete();
         }
-
-        return redirect()->back();
+        return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
     }
 
     public function checkout()

@@ -26,6 +26,26 @@ class StripePaymentController extends Controller
 
    {
       // dd($request->all());
+      // Define validation rules
+      $rules = [
+         'first_name' => 'required|string|max:50',
+         'last_name' => 'required|string|max:50',
+         'email' => 'required|email|max:50',
+         'country' => 'required',
+         'address' => 'required|max:50',
+         'city' => 'required|string|max:50',
+         'state' => 'required|string|max:50',
+         'zip' => 'required|digits_between:3,10',
+         'mobile' => 'required|digits:10',
+      ];
+
+      // Perform validation
+      $validator = Validator::make($request->all(), $rules);
+
+      // Return an error if validation fails
+      if ($validator->fails()) {
+         return redirect()->route('user.checkout')->with('status', 'Please Check Detail Correctly And Fill Up Them.');
+      }
       // Set your secret key. Remember to switch to your live secret key in production.
       // See your keys here: https://dashboard.stripe.com/apikeys
       $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
@@ -36,7 +56,7 @@ class StripePaymentController extends Controller
       foreach ($request->prod_name as $index => $prodName) {
          $lineItems[] = [
             'price_data' => [
-               'currency' => 'usd',
+               'currency' => 'inr',
                'product_data' => [
                   'name' => $prodName
                ],
@@ -45,6 +65,23 @@ class StripePaymentController extends Controller
             'quantity' => $request->quantity[$index],
          ];
       }
+
+      //store Request in session
+      session()->put('order_data', [
+         'first_name' => $request->first_name,
+         'last_name' => $request->last_name,
+         'email' => $request->email,
+         'country' => $request->country,
+         'address' => $request->address,
+         'apartment' =>  $request->apartment,
+         'city' => $request->city,
+         'state' => $request->state,
+         'zip' => $request->zip,
+         'mobile' => $request->mobile,
+         'order_notes' => $request->order_notes,
+      ]);
+
+
 
 
       $response = $stripe->checkout->sessions->create([
@@ -62,9 +99,6 @@ class StripePaymentController extends Controller
          session()->put('quantity', $request->quantity);
          session()->put('price', $request->price);
 
-
-
-
          return redirect($response->url);
       } else {
          return redirect()->route('cancell');
@@ -81,111 +115,113 @@ class StripePaymentController extends Controller
 
 
 
+
    public function success(Request $request)
    {
-      // if (isset($request->session_id)) {
+      if (isset($request->session_id)) {
+         $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
 
-      //    $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
-      //    // dd($stripe);
-      //    $response = $stripe->checkout->sessions->retrieve($request->session_id);
-      //    dd($response);
-      $orderData = $request->session()->get('order_data');
+         $session = $stripe->checkout->sessions->retrieve($request->session_id);
 
-      // dd( $orderData);
-      $userId = Auth::user()->id;
-      $user = Auth::user();
+         if ($session->payment_status === 'paid') {
+            $user = Auth::user();
+            $userId = $user->id;
 
-      $product = DB::table('carts')
-          ->join('users', 'carts.user_id', '=', 'users.id')
-          ->join('products', 'carts.product_id', '=', 'products.id')
-          ->where('users.id', $userId)
-          ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
-          ->get();
+            // Get product data 
+            $product = DB::table('carts')
+               ->join('products', 'carts.product_id', '=', 'products.id')
+               ->where('carts.user_id', $userId)
+               ->select('products.*', 'carts.qty as cqty')
+               ->get();
 
-      $totalSum = DB::table('carts')
-          ->join('products', 'carts.product_id', '=', 'products.id')
-          ->where('carts.user_id', $userId)
-          ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
-          ->pluck('totalSum')
-          ->first();
+            // Calculate total sum from the cart
+            $totalSum = DB::table('carts')
+               ->join('products', 'carts.product_id', '=', 'products.id')
+               ->where('carts.user_id', $userId)
+               ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
+               ->pluck('totalSum')
+               ->first();
 
-      $shipping = 0;
-      $discount = 0;
-      $subtotal = $totalSum;
+            // Create a new order session
+            $orderData = session()->get('order_data');
 
-      $order = new Order();
-      $order->subtotal = $totalSum;
-      $order->shipping = $shipping;
-      $order->grand_total = $totalSum;
-      $order->subtotal = $totalSum;
+            // dd($orderData);
 
-      $order->payment_status = 'paid with Stripe Card';
-      $order->user_id = $user->id;
-      $order->first_name = $orderData['first_name'];
-      $order->last_name = $orderData['last_name'];
-      $order->email = $orderData['email'];
-      $order->country = $orderData['country'];
-      $order->address = $orderData['address'];
-      $order->apartment = $orderData['apartment'];
-      $order->city = $orderData['city'];
-      $order->state = $orderData['state'];
-      $order->pincode = $orderData['pincode'];
-      $order->mobile = $orderData['mobile'];
-      $order->notes = $orderData['notes'];
-      $order->save();
+            // Store Customer Address
+
+            CustomerAddress::updateOrCreate(
+               ['user_id' => $userId],
+               [
+                  'user_id' => $userId,
+                  'first_name' => $orderData['first_name'],
+                  'last_name' => $orderData['last_name'],
+                  'email' => $orderData['email'],
+                  'country' => $orderData['country'],
+                  'address' => $orderData['address'],
+                  'apartment' => $orderData['apartment'] ?? null,
+                  'city' => $orderData['city'],
+                  'state' => $orderData['state'],
+                  'pincode' => $orderData['zip'],
+                  'mobile' => $orderData['mobile'],
+                  'notes' => $orderData['order_notes'] ?? null,
+               ]
+            );
+
+            // Create a new order
+            $order = new Order();
+            $order->subtotal = $totalSum;
+            $order->shipping = 0; // Set your shipping cost
+            $order->grand_total = $totalSum;
+            $order->payment_status = 'paid with Stripe Card';
+            $order->user_id = $userId;
+            $order->first_name = $orderData['first_name'];
+            $order->last_name = $orderData['last_name'];
+            $order->email = $orderData['email'];
+            $order->country = $orderData['country'];
+            $order->address = $orderData['address'];
+            $order->city = $orderData['city'];
+            $order->state = $orderData['state'];
+            $order->pincode = $orderData['zip'];
+            $order->mobile = $orderData['mobile'];
+            $order->notes = $orderData['order_notes'];
+            $order->save();
 
 
-       // Store Data In Order Items
+            // Retrieve the order ID for order items
+            $orderId = $order->id;
 
-       $order = DB::table('orders')
-       ->select('orders.id')
-       ->orderBy('id', 'desc')
-       ->first();
+            // Store order items
+            foreach ($product as $products) {
+               DB::table('order_items')->insert([
+                  'order_id' => $orderId,
+                  'product_id' => $products->id,
+                  'name' => $products->prod_name,
+                  'qty' => $products->cqty,
+                  'price' => $products->price,
+                  'total' => $products->cqty * $products->price,
+                  'created_at' => now(),
+                  'updated_at' => now(),
+               ]);
+            }
 
-   $order_id = $order->id;
+            //   sendEmail($orderId);
 
-   $orderItemsData = [];
 
-   foreach ($product as $products) {
-       $orderItemsData[] = [
-           'order_id' => $order_id,
-           'product_id' => $products->id,
-           'name' => $products->prod_name,
-           'qty' => $products->cqty,
-           'price' => $products->price,
-           'total' => $products->cqty * $products->price,
-           'created_at' => now(),
-           'updated_at' => now(),
+            // Clear the cart after successful payment
+            Cart::where('user_id', $userId)->delete();
 
-       ];
+            $request->session()->forget('order_data');
+
+            // Redirect with success message
+            return redirect()->route('user.index')->with('status', 'Payment is successful and your order is placed.');
+         } else {
+            return redirect()->route('cancell')->with('error', 'Payment was not successful.');
+         }
+      }
+
+      return redirect()->route('cancell')->with('error', 'Invalid session ID.');
    }
 
-   OrderItem::insert($orderItemsData);
-
-   //Send Email Invoice
-
-   sendEmail($order_id);
-
-
-   //=======//============//==============//======================//==============================//
-   //Make Cart Empty 
-
-   $user_id = Auth::user()->id;
-   $user_cart_id = Cart::where('user_id', '=', $user_id)->select('user_id as cUid');
-   if ($user_cart_id) {
-       $cart = Cart::where('user_id', Auth::user()->id);
-       $cart->delete();
-   }
-
-      // Optionally clear session data if no longer needed
-      $request->session()->forget('order_data');
-
-
-      return redirect()->route('user.index')->with('status', 'Payment Is Successful and Your Order Is Placed');
-
-      // return "Payment Is Successful";
-      // }
-   }
 
    public function cancel()
    {

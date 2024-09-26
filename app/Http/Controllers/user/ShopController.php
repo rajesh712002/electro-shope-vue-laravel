@@ -58,13 +58,13 @@ class ShopController extends Controller
 
 
 
-    
+
 
     public function view_product(Request $request, $slug)
     {
         if (Auth::check()) {
             $user_id = Auth::user()->id;
-    
+
             // Get order details 
             $order = DB::table('order_items')
                 ->join('orders', 'orders.id', '=', 'order_items.order_id')
@@ -72,28 +72,28 @@ class ShopController extends Controller
                 ->select('orders.user_id as orUid', 'order_items.product_id as prod_id')
                 ->first();
         } else {
-            
+
             $order = null;
         }
-    
+
         // get product details 
         $product = Product::with('brand')->where('slug', $slug)->first();
-    
+
         $productrat = ProductRating::get();
-    
+
         // Calculate the count of ratings for the product
         $ratingcount = DB::table('product_ratings')
             ->join('products', 'products.id', '=', 'product_ratings.product_id')
             ->where('products.slug', '=', $slug)
             ->count();
-    
+
         // Calculate the sum of ratings for the product
         $ratingsum = DB::table('product_ratings')
             ->join('products', 'products.id', '=', 'product_ratings.product_id')
             ->where('products.slug', '=', $slug)
             ->sum('product_ratings.rating');
-    
-        return view("user.order.product", compact( 'product', 'order', 'productrat', 'ratingcount', 'ratingsum'));
+
+        return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum'));
     }
 
 
@@ -126,8 +126,16 @@ class ShopController extends Controller
             ->exists();
         // dd($userchk);
         if ($userchk) {
-
-            return redirect()->back();
+            $ratings = ProductRating::updateOrCreate(
+                [
+                    'product_id' => $id,
+                    'username' => $request->name,
+                    'email' => $request->email,
+                    'comment' => $request->comment,
+                    'rating' => $request->rating
+                ]
+            );
+            return back();
         } else {
             $rating = new ProductRating();
             // $user_id = Auth::user()->id;
@@ -138,7 +146,8 @@ class ShopController extends Controller
             $rating->comment = $request->comment;
             $rating->rating = $request->rating;
             $rating->save();
-            return redirect()->back();
+            
+            return back();
         }
     }
 }

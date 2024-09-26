@@ -226,7 +226,7 @@
                                                 <span><i class="fa fa-inr f-s-40" aria-hidden="true"></i></span>
                                             </div>
                                             <div class="media-body media-text-right">
-                                                {{-- <b>{{ $totalearning }}</b> --}}
+                                                <b>{{ $totalearning }}</b>
                                                 <p class="m-b-0">Total Earnings</p>
                                             </div>
                                         </div>

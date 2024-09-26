@@ -47,11 +47,11 @@ class SettingController extends Controller
         // dd($request->old_password);
 
         if (!$user->password) {
-            return response()->json(['errors' => 'Password does not exist for this user.'],422);
+            return response()->json(['errors' => 'Password does not exist for this user.'], 422);
         }
 
         if (!Hash::check($request->old_password, $user->password)) {
-            return response()->json(['errors' => 'Your Password is Incorrected'],422);
+            return response()->json(['errors' => 'Your Password is Incorrected'], 422);
         } else {
             User::where('id', $user->id)->update([
                 'password' => Hash::make($request->new_password)
@@ -157,12 +157,29 @@ class SettingController extends Controller
 
         if ($tokenExist == null) {
             return redirect()->back();
+        } else {
+            
+            $rules = [
+
+                'new_password' => 'required|different:old_password|min:3|max:30',
+                'confirm_password' => 'required|same:new_password'
+    
+            ];
+    
+            $validator = Validator::make($request->all(), $rules);
+    
+            if ($validator->fails()) {
+                // return response()->json(['errors' => $validator->errors()], 422);
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+
+            $user = User::where('email', $tokenExist->email)->first();
+            User::where('id', $user->id)->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+            return redirect()->back()->with('success', 'Password Reset Successfully');
         }
-        $user = User::where('email', $tokenExist->email)->first();
-        User::where('id', $user->id)->update([
-            'password' => Hash::make($request->new_password)
-        ]);
-        return redirect()->back();
+          
     }
 
 

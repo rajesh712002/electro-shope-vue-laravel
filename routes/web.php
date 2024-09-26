@@ -58,6 +58,9 @@ Route::prefix('user')->group(function () {
     Route::get('/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop'])->name('usershop');
     Route::get('/view-product/{slug}', [ShopController::class, 'view_product'])->name('viewproduct');
 
+    Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
+
+
     //Cart Process
     Route::get('/cart', [CartController::class, 'index'])->name('user.index');
     Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
@@ -102,7 +105,7 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::get('/change-password', [SettingController::class, 'changePassword'])->name('user.changePassword');
         Route::post('/change-password', [SettingController::class, 'showchangePassword'])->name('user.showchangePassword');
 
-      
+
 
 
         Route::get('/profile', [SettingController::class, 'account'])->name('useraccount');
@@ -113,7 +116,6 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::get('/order-detail/{orderId?}', [SettingController::class, 'orderDetail'])->name('user.order_detail');
         Route::delete('/order/remove_order/{Id}', [SettingController::class, 'remove_order'])->name('user.remove_order');
 
-        Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
 
 
 
@@ -152,7 +154,7 @@ Route::get('/admin/logout', [AuthenticationController::class, 'adminLogout'])->n
 
 // Admin-Products
 Route::middleware([ValidAdmin::class])->group(function () {
-    Route::prefix(prefix: 'admin')->group(callback: function (): void {
+    Route::prefix('admin')->group(function (): void {
 
         Route::get(uri: '/dashboard', action: [AdminloginController::class, 'deshboard'])->name(name: 'admin.deshboard');
 

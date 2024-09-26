@@ -16,6 +16,11 @@
 
     <section class="section-9 pt-4">
         <div class="container">
+            @if (session('status'))
+                <div class="alert alert-danger">
+                    {{ session('status') }}
+                </div>
+            @endif
             <form id="CheckoutForm" method="post" action="{{ route('user.storecheckout') }}"
                 enctype="multipart/form-data">
                 @csrf
@@ -201,12 +206,12 @@
                                 </div>
                             </div>
             </form>
-            
+
             <div class="">
                 <input type="radio" name="payment_method" value="stripecard" id="payment_method_two">
                 <label for="payment_method_two" class="form-check-label">Pay With Stripe</label>
                 <div class="pt-4" id="CardPaymentFormTwo">
-                    <form action="{{ route('stripe') }}" method="post">
+                    <form id="StripeForm" action="{{ route('stripe') }}" method="post">
                         @csrf
                         @foreach ($product as $products)
                             <input type="hidden" name="price[]" value="{{ $products->price }}">
@@ -214,23 +219,48 @@
                             <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
                         @endforeach
 
-                        <button type="submit" class="btn-dark btn btn-block w-100" data-value="stripePayment">{{ $totalSum }}
+                        <input type="hidden" name="first_name" id="stripe_first_name" >
+                        <input type="hidden" name="last_name" id="stripe_last_name">
+                        <input type="hidden" name="email" id="stripe_email">
+                        <input type="hidden" name="country" id="stripe_country">
+                        <input type="hidden" name="address" id="stripe_address">
+                        <input type="hidden" name="apartment" id="stripe_apartment">
+                        <input type="hidden" name="city" id="stripe_city">
+                        <input type="hidden" name="state" id="stripe_state">
+                        <input type="hidden" name="zip" id="stripe_zip">
+                        <input type="hidden" name="mobile" id="stripe_mobile">
+                        <input type="hidden" name="order_notes" id="order_note">
+
+
+                        <button type="submit" class="btn-dark btn btn-block w-100"
+                            data-value="stripePayment">{{ $totalSum }}
                             Pay Now </button>
                     </form>
                 </div>
             </div>
             <div class="">
                 <input type="radio" name="payment_method" value="paypal" id="payment_method_three">
-                <label for="payment_method_two" class="form-check-label">Pay With PayPal</label>
+                <label for="payment_method_three" class="form-check-label">Pay With PayPal</label>
                 <div class="pt-4" id="CardPaymentFormThree">
                     <form action="{{ route('paypal') }}" method="post">
                         @csrf
                         @foreach ($product as $products)
-                            <input type="hidden" name="price[]" value="{{ $products->price }}">0
+                            <input type="hidden" name="price[]" value="{{ $products->price }}">
                             <input type="hidden" name="prod_name[]" value="{{ $products->prod_name }}">
                             <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
                         @endforeach
 
+                        <input type="hidden" name="first_name" id="paypal_first_name">
+                        <input type="hidden" name="last_name" id="paypal_last_name">
+                        <input type="hidden" name="email" id="paypal_email">
+                        <input type="hidden" name="country" id="paypal_country">
+                        <input type="hidden" name="address" id="paypal_address">
+                        <input type="hidden" name="apartment" id="paypal_apartment">
+                        <input type="hidden" name="city" id="paypal_city">
+                        <input type="hidden" name="state" id="paypal_state">
+                        <input type="hidden" name="zip" id="paypal_zip">
+                        <input type="hidden" name="mobile" id="paypal_mobile">
+                        <input type="hidden" name="order_notes" id="order_note">
                         <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
                             Pay Now </button>
                     </form>
@@ -250,6 +280,93 @@
 <script src="{{ asset('user_assets/js/ajx.js') }}"></script>
 
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+{{-- 
+<script>
+    function populateStripeForm() {
+        // Populate Stripe form with Checkout form data
+        document.getElementById('stripe_first_name').value = document.getElementById('first_name').value;
+        document.getElementById('stripe_last_name').value = document.getElementById('last_name').value;
+        document.getElementById('stripe_email').value = document.getElementById('email').value;
+        document.getElementById('stripe_country').value = document.getElementById('country').value;
+        document.getElementById('stripe_address').value = document.getElementById('address').value;
+        document.getElementById('stripe_apartment').value = document.getElementById('appartment').value;
+        document.getElementById('stripe_city').value = document.getElementById('city').value;
+        document.getElementById('stripe_state').value = document.getElementById('state').value;
+        document.getElementById('stripe_zip').value = document.getElementById('zip').value;
+        document.getElementById('stripe_mobile').value = document.getElementById('mobile').value;
+        document.getElementById('order_notes').value = document.getElementById('order_note').value;
+    }
+
+
+    // Get User Request For Stripe
+    document.getElementById('payment_method_two').addEventListener('change', function() {
+        if (this.checked) {
+            populateStripeForm();
+        }
+    });
+
+    // Get User Request For PayPal
+    document.getElementById('payment_method_three').addEventListener('change', function() {
+        if (this.checked) {
+            populateStripeForm();
+        }
+    });
+
+</script> --}}
+
+<script>
+    function populateStripeForm() {
+        // Populate Stripe form with Checkout form data
+        document.getElementById('stripe_first_name').value = document.getElementById('first_name').value;
+        document.getElementById('stripe_last_name').value = document.getElementById('last_name').value;
+        document.getElementById('stripe_email').value = document.getElementById('email').value;
+        document.getElementById('stripe_country').value = document.getElementById('country').value;
+        document.getElementById('stripe_address').value = document.getElementById('address').value;
+        document.getElementById('stripe_apartment').value = document.getElementById('appartment').value;
+        document.getElementById('stripe_city').value = document.getElementById('city').value;
+        document.getElementById('stripe_state').value = document.getElementById('state').value;
+        document.getElementById('stripe_zip').value = document.getElementById('zip').value;
+        document.getElementById('stripe_mobile').value = document.getElementById('mobile').value;
+        document.getElementById('order_notes').value = document.getElementById('order_note').value;
+    }
+
+    function populatePaypalForm() {
+        // Populate PayPal form with Checkout form data
+        document.getElementById('paypal_first_name').value = document.getElementById('first_name').value;
+        document.getElementById('paypal_last_name').value = document.getElementById('last_name').value;
+        document.getElementById('paypal_email').value = document.getElementById('email').value;
+        document.getElementById('paypal_country').value = document.getElementById('country').value;
+        document.getElementById('paypal_address').value = document.getElementById('address').value;
+        document.getElementById('paypal_apartment').value = document.getElementById('appartment').value;
+        document.getElementById('paypal_city').value = document.getElementById('city').value;
+        document.getElementById('paypal_state').value = document.getElementById('state').value;
+        document.getElementById('paypal_zip').value = document.getElementById('zip').value;
+        document.getElementById('paypal_mobile').value = document.getElementById('mobile').value;
+        document.getElementById('order_notes').value = document.getElementById('order_note').value;
+    }
+
+
+        document.getElementById('payment_method_two').addEventListener('change', function() {
+            if (this.checked) {
+                populateStripeForm();
+            }
+        });
+
+        document.getElementById('payment_method_three').addEventListener('change', function() {
+            if (this.checked) {
+                populatePaypalForm();
+            }
+        });
+    
+
+
+</script>
+
+
+
+
+
 
 
 

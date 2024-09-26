@@ -35,6 +35,13 @@
                         action="{{ route('user.processForgotPasswordEmail') }}" method="post">
                         @csrf
                         <div class="card">
+                            @if (Session::has('success'))
+                            <div class="col-md-10">
+                                <div class="alert alert-success">
+                                    {{ Session::get('success') }}
+                                </div>
+                            </div>
+                        @endif
                             <div class="card-header">
                                 <h2 class="h5 mb-0 pt-2 pb-2">Change Password</h2>
                             </div>
@@ -49,7 +56,7 @@
                                             class="@error('new_password') is-invalid
                                     @enderror form-control">
                                         @error('new_password')
-                                            {{-- <p class="invalid-feedback">{{ $message }}</p> --}}
+                                            <p class="invalid-feedback">{{ $message }}</p>
                                         @enderror
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
@@ -61,7 +68,7 @@
                                             class="@error('confirm_password') is-invalid
                                     @enderror form-control">
                                         @error('confirm_password')
-                                            {{-- <p class="invalid-feedback">{{ $message }}</p> --}}
+                                            <p class="invalid-feedback">{{ $message }}</p>
                                         @enderror
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>

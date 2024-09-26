@@ -80,9 +80,7 @@ class CheckoutController extends Controller
             'state' => 'required|string|max:50',
             'zip' => 'required|digits_between:3,10',
             'mobile' => 'required|digits:10',
-            // 'card_number' => 'required|max:10',
-            // 'expiry_date' => 'required|max:10',
-            // 'cvv' => 'required|max:10',
+            
 
         ];
 
@@ -124,19 +122,6 @@ class CheckoutController extends Controller
                 
         );
 
-        $request->session()->put('order_data', [
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'country' => $request->country,
-            'address' => $request->address,
-            'apartment' => $request->apartment,
-            'city' => $request->city,
-            'state' => $request->state,
-            'pincode' => $request->zip,
-            'mobile' => $request->mobile,
-            'notes' => $request->order_notes,
-        ]);
 
 
         //=======//============//==============//======================//==============================//
@@ -171,45 +156,47 @@ class CheckoutController extends Controller
             $order->save();
         }
 
-        if ($request->payment_method == 'stripecard') {
+        // if ($request->payment_method == 'stripecard') {
 
-            $stripe = new StripePaymentController();
+        //     $stripe = new StripePaymentController();
 
-            $result = $stripe->stripe($request);
+        //     $result = $stripe->stripe($request);
 
-            // dd($result);
+        //     // dd($result);
 
-            // $shipping = 0;
-            // $discount = 0;
-            // $subtotal = $totalSum;
+        //     // $shipping = 0;
+        //     // $discount = 0;
+        //     // $subtotal = $totalSum;
 
-            // $order = new Order();
-            // $order->subtotal = $totalSum;
-            // $order->shipping = $shipping;
-            // $order->grand_total = $totalSum;
-            // $order->subtotal = $totalSum;
+        //     // $order = new Order();
+        //     // $order->subtotal = $totalSum;
+        //     // $order->shipping = $shipping;
+        //     // $order->grand_total = $totalSum;
+        //     // $order->subtotal = $totalSum;
 
-            // $order->payment_status = 'paid with Stripe Card';
-            // $order->user_id = $user->id;
-            // $order->first_name = $request->first_name;
-            // $order->last_name = $request->last_name;
-            // $order->email = $request->email;
-            // $order->country = $request->country;
-            // $order->address = $request->address;
-            // $order->apartment =  $request->appartment;
-            // $order->city = $request->city;
-            // $order->state = $request->state;
-            // $order->pincode =  $request->zip;
-            // $order->mobile = $request->mobile;
-            // $order->notes = $request->order_notes;
-            // $order->save();
-        }
+        //     // $order->payment_status = 'paid with Stripe Card';
+        //     // $order->user_id = $user->id;
+        //     // $order->first_name = $request->first_name;
+        //     // $order->last_name = $request->last_name;
+        //     // $order->email = $request->email;
+        //     // $order->country = $request->country;
+        //     // $order->address = $request->address;
+        //     // $order->apartment =  $request->appartment;
+        //     // $order->city = $request->city;
+        //     // $order->state = $request->state;
+        //     // $order->pincode =  $request->zip;
+        //     // $order->mobile = $request->mobile;
+        //     // $order->notes = $request->order_notes;
+        //     // $order->save();
+        // }
+
 
 
 
         //=======//============//==============//======================//==============================//
 
         // Store Data In Order Items
+
 
         $order = DB::table('orders')
             ->select('orders.id')
@@ -238,7 +225,7 @@ class CheckoutController extends Controller
 
         //Send Email Invoice
 
-        sendEmail($order_id);
+        // sendEmail($order_id);
 
 
         //=======//============//==============//======================//==============================//
@@ -265,5 +252,7 @@ class CheckoutController extends Controller
 
         // dd($order);
         Mail::to($order->email)->send(new OrderEmail($mailData));
+
+        
     }
 }

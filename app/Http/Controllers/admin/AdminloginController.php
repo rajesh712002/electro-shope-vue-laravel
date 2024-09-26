@@ -230,6 +230,7 @@ class AdminloginController extends Controller
     {
         // echo "hello";
         sendInvoiceEmail($orderId);
-        return redirect()->back();
+
+        return redirect()->back()->with('status', 'Order Detail Mail Successfully');
     }
 }

@@ -15,7 +15,14 @@
     <link rel="stylesheet" href="css/custom.css">
 </head>
 @extends('admin.layouts.app')
+
+
 @section('content')
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
 
     <body class="hold-transition sidebar-mini">
         <!-- Site wrapper -->

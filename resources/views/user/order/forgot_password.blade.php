@@ -32,7 +32,7 @@
             <div class="container">
                 <div class="light-font">
                     <ol class="breadcrumb primary-color mb-0">
-                        <li class="breadcrumb-item"><a class="white-text" href="{{ route('userdeshboard') }}">Home</a>
+                        <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a>
                         </li>
                         <li class="breadcrumb-item"><a class="white-text" href="{{ route('userlogin') }}">Login</a></li>
                     </ol>
