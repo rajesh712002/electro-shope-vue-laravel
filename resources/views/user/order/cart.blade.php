@@ -1,13 +1,24 @@
 @include('user.includes.header')
+
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+</script>
+
 
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="{{route('userindex')}}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a></li>
                     <li class="breadcrumb-item"><a class="white-text" href="{{ route('usershop') }}">Shop</a></li>
                     <li class="breadcrumb-item">Cart</li>
                 </ol>
@@ -41,11 +52,11 @@
                                             <th>Remove</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {{-- @foreach ($carts as $cart) --}}
+                                    {{-- <tbody>
+                                        {{- @foreach ($carts as $cart) -}}
                                         @foreach ($product as $item)
                                             <tr>
-                                                {{-- @dd($product) --}}
+                                                {{- @dd($product) -}}
                                                 <td>
                                                     <a href="{{ route('viewproduct', $item->slug) }}">
                                                         <div class="d-flex align-items-center justify-content-center">
@@ -57,7 +68,7 @@
                                                 <td>
                                                     <a class="text-dark" href="{{ route('viewproduct', $item->slug) }}">
                                                         <div class="d-flex align-items-center justify-content-center">
-                                                            {{-- <h2>{{$product->prod_name}}</h2> --}}
+                                                            {{- <h2>{{$product->prod_name}}</h2> -}}
                                                             {{ $item->prod_name }}
                                                         </div>
                                                     </a>
@@ -81,7 +92,7 @@
                                                         <input type="text" name="quantity"
                                                             class="form-control form-control-sm  border-0 text-center"
                                                             value="{{ $item->cqty }}" min="1"
-                                                            max="{{ $item->qty }}">
+                                                            max="{{ $item->qty }}" readonly>
 
                                                         <div class="input-group-btn">
                                                             <form method="POST"
@@ -116,9 +127,57 @@
                                             </tr>
                                         @endforeach
 
-                                        {{-- @endforeach --}}
+                                         @endforeach 
 
+                                    </tbody> --}}
+
+                                    <tbody>
+                                        @foreach ($product as $item)
+                                            <tr id="cart-item-{{ $item->cid }}">
+                                                <td>
+                                                    <a href="{{ route('viewproduct', $item->slug) }}">
+                                                        <img src="{{ asset('admin_assets/images/' . $item->image) }}"
+                                                            width="120" height="120">
+                                                    </a>
+                                                </td>
+                                                <td>{{ $item->prod_name }}</td>
+                                                <td>{{ $item->price }}</td>
+                                                <td>
+                                                    <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                        <div class="input-group-btn">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1"
+                                                                onclick="updateQuantity({{ $item->cid }}, 'decrease')">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <input type="text"
+                                                            class="form-control form-control-sm border-0 text-center"
+                                                            id="cart-quantity-{{ $item->cid }}"
+                                                            value="{{ $item->cqty }}" readonly>
+                                                        <div class="input-group-btn">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1"
+                                                                onclick="updateQuantity({{ $item->cid }}, 'increase')">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td id="cart-total-{{ $item->cid }}">
+                                                    {{ $item->price * $item->cqty }}
+                                                </td>
+                                                <td>
+                                                    <button onclick="removeItem({{ $item->cid }});"
+                                                        class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
+
+
                                 </table>
                             </div>
                         @else
@@ -160,8 +219,7 @@
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a class="text-dark"
-                                                        href="{{-- route('viewproduct', $item['slug']) --}}">
+                                                    <a class="text-dark" href="{{-- route('viewproduct', $item['slug']) --}}">
                                                         <div class="d-flex align-items-center justify-content-center">
                                                             {{ $item['name'] }}
                                                         </div>
@@ -180,7 +238,7 @@
                                                         <input type="text" name="quantity"
                                                             class="form-control form-control-sm border-0 text-center"
                                                             value="{{ $item['qty'] }}" min="1"
-                                                            max="{{ $item['max_qty'] }}">
+                                                            max="{{ $item['max_qty'] }}" readonly>
                                                         <div class="input-group-btn">
                                                             <button type="button"
                                                                 onclick="increaseGuestQty('{{ $key }}')"
@@ -203,12 +261,12 @@
                                 </table>
                             </div>
                         @else
-                        <div class="row">
-                            <div class="col-md-12 text-center pt-5 bp-5">
-                                <p>No items found in your cart </p>
-                                <a href="{{ route('usershop') }}" class="btn btn-info">Shop Now</a>
+                            <div class="row">
+                                <div class="col-md-12 text-center pt-5 bp-5">
+                                    <p>No items found in your cart </p>
+                                    <a href="{{ route('usershop') }}" class="btn btn-info">Shop Now</a>
+                                </div>
                             </div>
-                        </div>
                         @endif
                     @endif
 
@@ -216,7 +274,7 @@
                 @if (Auth::check())
 
                     @if (cartCount() > 0)
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="card cart-summery">
                                 <div class="sub-title">
                                     <h2 class="bg-white">Cart Summery</h3>
@@ -229,7 +287,7 @@
                                     </div>
                                     <div class="d-flex justify-content-between pb-2">
                                         <div>Shipping</div>
-                                        {{-- <div><i class="fa fa-inr" aria-hidden="true"> --}}
+                                        {{-- <div><i class="fa fa-inr" aria-hidden="true"> -}}
                                         </i> Free
                                     </div>
                                 </div>
@@ -243,6 +301,34 @@
                                         class="btn-dark btn btn-block w-100">Proceed
                                         to
                                         Checkout</a>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <div class="col-md-4">
+                            <div class="card cart-summery">
+                                <div class="sub-title">
+                                    <h2 class="bg-white">Cart Summary</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between pb-2">
+                                        <div>Subtotal</div>
+                                        <div><i class="fa fa-inr" aria-hidden="true"></i> <span
+                                                id="cart-subtotal">{{ $totalSum }}</span></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between pb-2">
+                                        <div>Shipping</div>
+                                        <div>Free</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between summery-end">
+                                        <div>Total</div>
+                                        <div><i class="fa fa-inr" aria-hidden="true"></i> <span
+                                                id="cart-total">{{ $totalSum }}</span></div>
+                                    </div>
+                                    <div class="pt-5">
+                                        <a href="{{ route('user.checkout') }}"
+                                            class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -280,11 +366,11 @@
                                     <div><i class="fa fa-inr" aria-hidden="true"></i> {{ $guestTotalSum }}</div>
                                 </div>
                                 <div class="pt-5">
-                                    <a href="{{route('user.checkout')}}" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
+                                    <a href="{{ route('user.checkout') }}"
+                                        class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                                 </div>
                             </div>
                         </div>
-                  
                     @endif
                 @endif
             </div>
@@ -292,14 +378,10 @@
         </div>
     </section>
 </main>
-<script>
-    function deleteProduct(id) {
-        if (confirm("Do you really want to remove this Item ?")) {
-            document.getElementById("delete-product-form-" + id).submit();
-        }
-    }
-</script>
 
+
+
+{{-- GUEST CART FUNCTIONALITY --}}
 <script>
     function decreaseGuestQty(key) {
         // Decrease guest quantity logic
@@ -331,6 +413,8 @@
         });
     }
 </script>
+
+
 
 <script src="{{ asset('user_assets/js/ajx.js') }}"></script>
 

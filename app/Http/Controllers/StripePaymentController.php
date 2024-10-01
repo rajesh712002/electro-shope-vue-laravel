@@ -204,7 +204,7 @@ class StripePaymentController extends Controller
                ]);
             }
 
-            //   sendEmail($orderId);
+              sendEmail($orderId);
 
 
             // Clear the cart after successful payment

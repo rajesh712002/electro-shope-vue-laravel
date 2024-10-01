@@ -53,6 +53,7 @@ class CheckoutController extends Controller
     {
         $userId = Auth::user()->id;
 
+        //Fatch Products From Cart
         $product = DB::table('carts')
             ->join('users', 'carts.user_id', '=', 'users.id')
             ->join('products', 'carts.product_id', '=', 'products.id')
@@ -60,15 +61,13 @@ class CheckoutController extends Controller
             ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
             ->get();
 
+            
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->where('carts.user_id', $userId)
             ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
             ->pluck('totalSum')
             ->first();
-
-
-
 
         $rules = [
             'first_name' => 'required|string|max:50',
@@ -225,7 +224,7 @@ class CheckoutController extends Controller
 
         //Send Email Invoice
 
-        // sendEmail($order_id);
+        sendEmail($order_id);
 
 
         //=======//============//==============//======================//==============================//

@@ -126,7 +126,7 @@
                                         <div class="mb-3">
                                             <input type="text" name="zip" id="zip" class="form-control"
                                                 placeholder="Zip"
-                                                value="{{ !empty($CustomerAddress) ? $CustomerAddress->pincode : '' }}">
+                                                value="{{ !empty($CustomerAddress) ? $CustomerAddress->pincode : '' }}" >
                                             <p></p>
                                             <h6 style="color: rgb(255, 0,0)" class="error"></h6>
 
@@ -196,8 +196,16 @@
                         <div class="card payment-form ">
                             <h3 class="card-title h5 mb-3">Payment Details</h3>
                             <div class="">
-                                <input checked type="radio" name="payment_method" value="cod"
-                                    id="payment_method_one">
+                                <input checked type="radio" name="payment_method" value="method"
+                                    id="payment_method">
+                                <label for="payment_method" class="form-check-label">Select Payment Method</label>
+
+                                <div class="pt-4" id="CardPaymentForm">
+
+                                </div>
+                            </div>
+                            <div class="">
+                                <input type="radio" name="payment_method" value="cod" id="payment_method_one">
                                 <label for="payment_method_one" class="form-check-label">COD</label>
 
                                 <div class="pt-4" id="CardPaymentFormOne">
@@ -214,12 +222,13 @@
                     <form id="StripeForm" action="{{ route('stripe') }}" method="post">
                         @csrf
                         @foreach ($product as $products)
-                            <input type="hidden" name="price[]" value="{{ $products->price }}">
-                            <input type="hidden" name="prod_name[]" value="{{ $products->prod_name }}">
-                            <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
+                            <input type="hidden" class="price" name="price[]" value="{{ $products->price }}">
+                            <input type="hidden" class="prod_name" name="prod_name[]"
+                                value="{{ $products->prod_name }}">
+                            <input type="hidden" class="quantity" name="quantity[]" value="{{ $products->cqty }}">
                         @endforeach
 
-                        <input type="hidden" name="first_name" id="stripe_first_name" >
+                        <input type="hidden" name="first_name" id="stripe_first_name">
                         <input type="hidden" name="last_name" id="stripe_last_name">
                         <input type="hidden" name="email" id="stripe_email">
                         <input type="hidden" name="country" id="stripe_country">
@@ -242,12 +251,13 @@
                 <input type="radio" name="payment_method" value="paypal" id="payment_method_three">
                 <label for="payment_method_three" class="form-check-label">Pay With PayPal</label>
                 <div class="pt-4" id="CardPaymentFormThree">
-                    <form action="{{ route('paypal') }}" method="post">
+                    <form id="PaypalForm" action="{{ route('paypal') }}" method="post">
                         @csrf
                         @foreach ($product as $products)
-                            <input type="hidden" name="price[]" value="{{ $products->price }}">
-                            <input type="hidden" name="prod_name[]" value="{{ $products->prod_name }}">
-                            <input type="hidden" name="quantity[]" value="{{ $products->cqty }}">
+                            <input type="hidden" class="price" name="price[]" value="{{ $products->price }}">
+                            <input type="hidden" class="prod_name" name="prod_name[]"
+                                value="{{ $products->prod_name }}">
+                            <input type="hidden" class="quantity" name="quantity[]" value="{{ $products->cqty }}">
                         @endforeach
 
                         <input type="hidden" name="first_name" id="paypal_first_name">
@@ -281,39 +291,7 @@
 
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
-{{-- 
-<script>
-    function populateStripeForm() {
-        // Populate Stripe form with Checkout form data
-        document.getElementById('stripe_first_name').value = document.getElementById('first_name').value;
-        document.getElementById('stripe_last_name').value = document.getElementById('last_name').value;
-        document.getElementById('stripe_email').value = document.getElementById('email').value;
-        document.getElementById('stripe_country').value = document.getElementById('country').value;
-        document.getElementById('stripe_address').value = document.getElementById('address').value;
-        document.getElementById('stripe_apartment').value = document.getElementById('appartment').value;
-        document.getElementById('stripe_city').value = document.getElementById('city').value;
-        document.getElementById('stripe_state').value = document.getElementById('state').value;
-        document.getElementById('stripe_zip').value = document.getElementById('zip').value;
-        document.getElementById('stripe_mobile').value = document.getElementById('mobile').value;
-        document.getElementById('order_notes').value = document.getElementById('order_note').value;
-    }
 
-
-    // Get User Request For Stripe
-    document.getElementById('payment_method_two').addEventListener('change', function() {
-        if (this.checked) {
-            populateStripeForm();
-        }
-    });
-
-    // Get User Request For PayPal
-    document.getElementById('payment_method_three').addEventListener('change', function() {
-        if (this.checked) {
-            populateStripeForm();
-        }
-    });
-
-</script> --}}
 
 <script>
     function populateStripeForm() {
@@ -347,22 +325,86 @@
     }
 
 
-        document.getElementById('payment_method_two').addEventListener('change', function() {
-            if (this.checked) {
-                populateStripeForm();
-            }
-        });
+    document.getElementById('payment_method_two').addEventListener('change', function() {
+        if (this.checked) {
+            populateStripeForm();
+        }
+    });
 
-        document.getElementById('payment_method_three').addEventListener('change', function() {
-            if (this.checked) {
-                populatePaypalForm();
-            }
-        });
-    
-
-
+    document.getElementById('payment_method_three').addEventListener('change', function() {
+        if (this.checked) {
+            populatePaypalForm();
+        }
+    });
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let priceInputs = document.querySelectorAll('.price');
+        let prodNameInputs = document.querySelectorAll('.prod_name');
+        let quantityInputs = document.querySelectorAll('.quantity');
+
+        let originalPrices = [];
+        let originalProdNames = [];
+        let originalQuantities = [];
+
+        priceInputs.forEach((input, index) => {
+            originalPrices[index] = input.value;
+        });
+
+        prodNameInputs.forEach((input, index) => {
+            originalProdNames[index] = input.value;
+        });
+
+        quantityInputs.forEach((input, index) => {
+            originalQuantities[index] = input.value;
+        });
+
+        // Stripe
+        document.querySelector("#StripeForm").addEventListener("submit", function(e) {
+            // Reset values if they have been modified
+            priceInputs.forEach((input, index) => {
+                if (input.value !== originalPrices[index]) {
+                    input.value = originalPrices[index];
+                }
+            });
+
+            prodNameInputs.forEach((input, index) => {
+                if (input.value !== originalProdNames[index]) {
+                    input.value = originalProdNames[index];
+                }
+            });
+
+            quantityInputs.forEach((input, index) => {
+                if (input.value !== originalQuantities[index]) {
+                    input.value = originalQuantities[index];
+                }
+            });
+        });
+
+        //PayPal
+        document.querySelector("#PaypalForm").addEventListener("submit", function(e) {
+            // Reset values if they have been modified
+            priceInputs.forEach((input, index) => {
+                if (input.value !== originalPrices[index]) {
+                    input.value = originalPrices[index];
+                }
+            });
+
+            prodNameInputs.forEach((input, index) => {
+                if (input.value !== originalProdNames[index]) {
+                    input.value = originalProdNames[index];
+                }
+            });
+
+            quantityInputs.forEach((input, index) => {
+                if (input.value !== originalQuantities[index]) {
+                    input.value = originalQuantities[index];
+                }
+            });
+        });
+    });
+</script>
 
 
 

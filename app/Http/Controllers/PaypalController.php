@@ -15,75 +15,6 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PaypalController extends Controller
 {
-    // public function paypal(Request $request)
-    // {
-    //     $provider = new PayPalClient;
-    //     $provider->setApiCredentials(config('paypal'));
-    //     $provider->getAccessToken();
-    //     $response = $provider->createOrder([
-    //         "intent" => "CAPTURE",
-    //         "application_context" => [
-    //             "return_url" => route('success'),
-    //             "cancel_url" => route('cancel')
-    //         ],
-    //         "purchase_units" => [
-    //             [
-    //                 "amount" => [
-    //                     "currency_code" => "USD",
-    //                     "value" => $request->price
-    //                 ]
-    //             ]
-    //         ]
-    //     ]);
-
-    //     // $totalPrice = 0;
-
-    //     // foreach ($request->price as $index => $price) {
-    //     //     $quantity = $request->quantity[$index]; // Get the quantity for the current index
-    //     //     $totalPrice += $price * $quantity;
-    //     // }
-
-    //     // $response = $provider->createOrder([
-    //     //     "intent" => "CAPTURE",
-    //     //     "application_context" => [
-    //     //         "return_url" => route('success'),
-    //     //         "cancel_url" => route('cancel')
-    //     //     ],
-    //     //     "purchase_units" => [
-    //     //         [
-    //     //             "amount" => [
-    //     //                 "currency_code" => "USD",
-    //     //                 "value" => number_format($totalPrice, 2, '.', '')
-    //     //             ],
-    //     //             "items" => array_map(function ($price, $name, $quantity) {
-    //     //                 return [
-    //     //                     "name" => $name,
-    //     //                     "unit_amount" => [
-    //     //                         "currency_code" => "USD",
-    //     //                         "value" => number_format($price, 2, '.', '')
-    //     //                     ],
-    //     //                     "quantity" => $quantity
-    //     //                 ];
-    //     //             }, $request->price, $request->prod_name, $request->quantity)
-    //     //         ]
-    //     //     ]
-    //     // ]);
-
-
-    //     // dd($response);
-    //     if (isset($response['id']) && $response['id'] != null) {
-    //         foreach ($response['links'] as $link) {
-    //             if ($link['rel'] == 'approve') {
-    //                 session()->put('prod_name', $request->prod_name);
-    //                 session()->put('quantity', $request->quantity);
-    //                 return redirect()->away($link['href']);
-    //             }
-    //         }
-    //     } else {
-    //         return redirect()->route('cancel');
-    //     }
-    // }
-
 
 
     public function paypal(Request $request)
@@ -114,13 +45,14 @@ class PaypalController extends Controller
         $provider->setApiCredentials(config('paypal'));
         $provider->getAccessToken();
 
+        
         $totalPrice = 0;
 
         foreach ($request->price as $index => $price) {
             $quantity = $request->quantity[$index];
             $totalPrice += $price * $quantity;
         }
-
+// dd($totalPrice);
         $items = array_map(function ($price, $name, $quantity) {
             return [
                 "name" => $name,
@@ -280,7 +212,7 @@ class PaypalController extends Controller
                ]);
             }
 
-        // sendEmail($orderId);
+        sendEmail($orderId);
 
             // Clear the cart after successful payment
             Cart::where('user_id', $userId)->delete();
@@ -294,7 +226,7 @@ class PaypalController extends Controller
          }
       
 
-      return redirect()->route('cancell')->with('error', 'Invalid session ID.');
+    //   return redirect()->route('cancell')->with('error', 'Invalid session ID.');
     }
 
     public function cancel()

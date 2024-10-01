@@ -30,7 +30,7 @@ class UserController extends Controller
         return view('user.index');
     }
 
-   
+
 
     public function dashboard()
     {
@@ -48,7 +48,8 @@ class UserController extends Controller
             'name' => 'required|string|min:3|max:30',
             'email' => 'required|email|unique:users|email|max:100',
             'password' => 'required|min:8|max:50',
-            'phone' => 'required|integer|min:10|max:10',
+            'phone' => 'required|digits:10',
+
 
         ];
 
@@ -70,14 +71,14 @@ class UserController extends Controller
     }
 
 
-    
+
 
 
     public function account()
     {
         return view('user.account');
     }
-    
+
 
 
 

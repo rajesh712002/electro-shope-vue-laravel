@@ -45,7 +45,9 @@ class SettingController extends Controller
 
         $user = User::select('id', 'password')->where('id', Auth::user()->id)->first();
         // dd($request->old_password);
+        // dd($request->old_password, $user->password, Hash::check($request->old_password, $user->password));
 
+        // dd(!Hash::check($request->old_password, $user->password));
         if (!$user->password) {
             return response()->json(['errors' => 'Password does not exist for this user.'], 422);
         }

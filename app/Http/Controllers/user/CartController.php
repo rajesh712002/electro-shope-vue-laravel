@@ -112,65 +112,58 @@ class CartController extends Controller
         }
     }
 
-
-
-
-
     public function increaseCartQty(Request $request, $id)
     {
         $userId = Auth::user()->id;
 
-        //  cart item by its ID
         $cart = Cart::where('id', $id)
             ->where('user_id', $userId)
             ->firstOrFail();
 
-        //  product details for the specific cart item
         $product = DB::table('products')
             ->where('id', $cart->product_id)
             ->select('qty as pqty')
             ->first();
 
-        if ($product) {
-            // Check if the cart quantity is less than the product quantity
-            if ($cart->qty < $product->pqty) {
-                $cart->qty += 1;
-                $cart->save();
-            }
+        if ($product && $cart->qty < $product->pqty) {
+            $cart->qty += 1;
+            $cart->save();
         }
 
-        return redirect()->back();
+        // Return updated cart information
+        return response()->json([
+            'success' => true,
+            'newQty' => $cart->qty,
+            'newTotal' => $cart->qty * $cart->product->price
+        ]);
     }
 
     public function decreaseCartQty(Request $request, $id)
     {
         $cart = Cart::findOrFail($id);
 
-        $userId = Auth::user()->id;
-        $cart_prod_id =  DB::table('carts')
-            ->where('product_id', '=', $request->prod_id)
-            ->where('user_id', '=', $userId)
-            ->exists();
-
-        if ($cart_prod_id) {
-        } else {
-            if ($cart->qty > 1) {
-                $cart->qty += $request->qty - 1;
-                // dd($cart->qty);
-                $cart->save();
-                return redirect()->back();
-            }
+        if ($cart->qty > 1) {
+            $cart->qty -= 1;
+            $cart->save();
         }
-        return redirect()->back();
+
+        return response()->json([
+            'success' => true,
+            'newQty' => $cart->qty,
+            'newTotal' => $cart->qty * $cart->product->price
+        ]);
     }
 
     public function remove_item($id)
     {
         $product = Cart::findOrFail($id);
         $product->delete();
-        return redirect()->back();
-    }
 
+        return response()->json([
+            'success' => true,
+            'message' => 'Item removed from cart'
+        ]);
+    }
 
     //=======//==============//
     //For Guest Cart
@@ -209,10 +202,8 @@ class CartController extends Controller
     }
 
 
-
     //========//
     //Wishlist//
-
 
     public function wishlist()
     {

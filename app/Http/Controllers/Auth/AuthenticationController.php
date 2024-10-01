@@ -21,13 +21,12 @@ class AuthenticationController extends Controller
             'password' => 'required|min:5|max:50'
         ]);
 
+        //check user
         if (Auth::attempt($validate)) {
             if (Auth::guard('web')->user()->role == 1) {
 
-
+                //call below function after login
                 $this->svaeGuestCart();
-
-
 
                 return redirect()->route('userindex');
             } else { //else if (Auth::guard('web')->user()->role != 1) {
@@ -39,38 +38,38 @@ class AuthenticationController extends Controller
     }
 
     //Insert Guest session Item in cart after login
-public function svaeGuestCart(){
-    if (Auth::check()) {
-        $userId = Auth::id();
-        $guestCart = session()->get('cart', []);
+    public function svaeGuestCart()
+    {
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $guestCart = session()->get('cart', []);
 
-        foreach ($guestCart as $key => $item) {
-            // Check if the item already exists in the user cart.
-            $existingCartItem = Cart::where('user_id', $userId)
-                                    ->where('product_id', $key)
-                                    ->first();
+            foreach ($guestCart as $key => $item) {
+                // Check if the item already exists in the user cart.
+                $existingCartItem = Cart::where('user_id', $userId)
+                    ->where('product_id', $key)
+                    ->first();
 
-            if ($existingCartItem) {
-                // If the item exists, update the quantity.
-                $newQty = $existingCartItem->qty + $item['qty'];
-                $existingCartItem->qty = min($newQty, $item['max_qty']);
-                $existingCartItem->save();
-            } else {
-                // If the item does not exist than  create a new cart item.
-                Cart::create([
-                    'user_id'    => $userId,
-                    'product_id' => $key,
-                    'qty'   => $item['qty'],
-                ]);
+                if ($existingCartItem) {
+                    // If the item exists, update the quantity.
+                    $newQty = $existingCartItem->qty + $item['qty'];
+                    $existingCartItem->qty = min($newQty, $item['max_qty']);
+                    $existingCartItem->save();
+                } else {
+                    // If the item does not exist than  create a new cart item.
+                    Cart::create([
+                        'user_id'    => $userId,
+                        'product_id' => $key,
+                        'qty'   => $item['qty'],
+                    ]);
+                }
             }
-        }
 
-        session()->forget('cart');
+            session()->forget('cart');
+        } else {
+            return "Not Saved";
+        }
     }
-    else{
-        return "Not Saved";
-    }
-}
 
     //User Logout
     public function userLogout(Request $request)
@@ -78,7 +77,7 @@ public function svaeGuestCart(){
         Auth::guard('web')->logout();
         // $request->session()->invalidate();
         // $request->session()->regenerateToken();
-        return view('user.login');
+        return redirect()->route('userindex');
     }
 
 

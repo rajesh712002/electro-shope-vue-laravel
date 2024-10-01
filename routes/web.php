@@ -60,7 +60,6 @@ Route::prefix('user')->group(function () {
 
     Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating'])->name('usersaveRating');
 
-
     //Cart Process
     Route::get('/cart', [CartController::class, 'index'])->name('user.index');
     Route::post('/addcart', [CartController::class, 'addToCart'])->name('user.addToCart');
@@ -79,7 +78,6 @@ Route::prefix('user')->group(function () {
     Route::get('/logout', [AuthenticationController::class, 'userLogout'])->name('user.logout');
 });
 
-
 //=======//==============//====================
 
 //  ==>  Payment Integration
@@ -90,23 +88,17 @@ Route::post('stripe', [StripePaymentController::class, 'stripe'])->name('stripe'
 Route::get('successs', [StripePaymentController::class, 'success'])->name('successs');
 Route::get('cancell', [StripePaymentController::class, 'cancel'])->name('cancell');
 
-
 //Paypal
 
 Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PaypalController::class, 'success'])->name('success');
 Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
 
-
 Route::middleware([ValidUser::class])->group(function (): void {
     Route::prefix('user')->group(function () {
 
-
         Route::get('/change-password', [SettingController::class, 'changePassword'])->name('user.changePassword');
         Route::post('/change-password', [SettingController::class, 'showchangePassword'])->name('user.showchangePassword');
-
-
-
 
         Route::get('/profile', [SettingController::class, 'account'])->name('useraccount');
         Route::post('/change-profile', [SettingController::class, 'changeProfile'])->name('userchangeProfile');
@@ -116,9 +108,6 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::get('/order-detail/{orderId?}', [SettingController::class, 'orderDetail'])->name('user.order_detail');
         Route::delete('/order/remove_order/{Id}', [SettingController::class, 'remove_order'])->name('user.remove_order');
 
-
-
-
         //Wishlist Process
         Route::get('/wishlist', [CartController::class, 'wishlist'])->name('user.wishlist');
         Route::post('/addwishlist', [CartController::class, 'addToWishlist'])->name('user.addToWishlist');
@@ -126,10 +115,7 @@ Route::middleware([ValidUser::class])->group(function (): void {
 
         Route::delete('/moveToCart/{id}', [CartController::class, 'moveToCart'])->name('user.moveToCart');
 
-
-
         //Checkout
-
         Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
         Route::post('/checkout', [CheckoutController::class, 'storeCheckout'])->name('user.storecheckout');
 
@@ -137,20 +123,15 @@ Route::middleware([ValidUser::class])->group(function (): void {
     });
 });
 
-
-
 //=======//==============//=====================//============================//===================================//==========================================//
 //=======//==============//=====================//============================//===================================//==========================================//
-
 
 //ADMIN
 
 Route::get('/admin/login', [AuthenticationController::class, 'adminLogin'])->name('admin.login');
 Route::post('/admin-login', [AuthenticationController::class, 'adminLogincheck'])->name('adminckeck');
 
-
 Route::get('/admin/logout', [AuthenticationController::class, 'adminLogout'])->name('admin.logout');
-
 
 // Admin-Products
 Route::middleware([ValidAdmin::class])->group(function () {
@@ -188,7 +169,6 @@ Route::middleware([ValidAdmin::class])->group(function () {
         //Delete SubCategory
         Route::delete('/delete-subcategory/{subcategory}', [CategoryController::class, 'destroySubcategory'])->name('admin.destroy_subcat');
 
-
         Route::get('admin/get-categories', [CategoryController::class, 'getCategories']);
         Route::get('admin/get-subcategories/{id}', [CategoryController::class, 'getSubcategories']);
 
@@ -225,13 +205,10 @@ Route::middleware([ValidAdmin::class])->group(function () {
 
         Route::post('/send-Invoice-Email/{id?}', [AdminloginController::class, 'sendIvoiceToCustomer'])->name('admin.sendInvoiceEmail');
 
-
         Route::get('/pendingd-order', [AdminloginController::class, 'viewPendingOrders'])->name('admin.pendingdorder');
         Route::get('/processing-order', [AdminloginController::class, 'viewProcessingOrders'])->name('admin.processingorder');
         Route::get('/cancle-order', [AdminloginController::class, 'viewCancleOrders'])->name('admin.cancleorder');
         Route::get('/delivered-order', [AdminloginController::class, 'viewDeliveredOrders'])->name('admin.deliveredorder');
-
-
 
         Route::get('/users', [AdminloginController::class, 'users'])->name('admin.users');
     });

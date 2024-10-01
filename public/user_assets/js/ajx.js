@@ -346,68 +346,166 @@ $(document).ready(function () {
 
 //=======//==============//=====================//============================//
 
-$(document).ready(function () {
-    $("#DecreaseCartForm").on("click", function (e) {
-        e.preventDefault();
-        var data = new FormData($(this)[0]);
-        let csrfToken = $('meta[name="csrf-token"]').attr("content");
-        console.log(data);
-        var url = $(this).attr("action");
+// $(document).ready(function () {
+//     $("#DecreaseCartForm").on("click", function (e) {
+//         e.preventDefault();
+//         var data = new FormData($(this)[0]);
+//         let csrfToken = $('meta[name="csrf-token"]').attr("content");
+//         console.log(data);
+//         var url = $(this).attr("action");
 
-        $.ajax({
-            url: url,
-            type: "POST",
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
-            contentType: false,
-            processData: false,
-            data: data,
+//         $.ajax({
+//             url: url,
+//             type: "POST",
+//             headers: {
+//                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+//             },
+//             contentType: false,
+//             processData: false,
+//             data: data,
 
-            success: function (response) {
-                // $("#DecreaseCartForm")[0].reset();
-                // alert(response.success);
-                window.location.href = "/user/cart";
-            },
-            error: function (xhr) {
-                if (xhr.status === 422) {
-                    var errors = xhr.responseJSON.errors;
-                    // $.each(errors, function (key, value) {
-                    //     $('[name="' + key + '"]')
-                    //         .parent()
-                    //         .find(".error, .error_no_margin")
-                    //         .text("** " + value[0] + "!");
-                    // });
-                }
-            },
-        });
+//             success: function (response) {
+//                 // $("#DecreaseCartForm")[0].reset();
+//                 // alert(response.success);
+//                 window.location.href = "/user/cart";
+//             },
+//             error: function (xhr) {
+//                 if (xhr.status === 422) {
+//                     var errors = xhr.responseJSON.errors;
+//                     // $.each(errors, function (key, value) {
+//                     //     $('[name="' + key + '"]')
+//                     //         .parent()
+//                     //         .find(".error, .error_no_margin")
+//                     //         .text("** " + value[0] + "!");
+//                     // });
+//                 }
+//             },
+//         });
+//     });
+// });
+
+//User Cart Functionality
+
+function updateQuantity(cartId, action) {
+    let url =
+        action === "increase"
+            ? "/user/cart/increase/" + cartId
+            : "/user/cart/decrease/" + cartId;
+
+    $.ajax({
+        url: url,
+        method: "PUT",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            if (response.success) {
+                $("#cart-quantity-" + cartId).val(response.newQty);
+                $("#cart-total-" + cartId).text(response.newTotal);
+                updateCartSummary();
+            } else {
+                alert(response.message);
+            }
+        },
     });
-});
+}
+
+function removeItem(cartId) {
+    let url = "/user/cart/remove_item/" + cartId;
+
+    $.ajax({
+        url: url,
+        method: "DELETE",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            if (response.success) {
+                $("#cart-item-" + cartId).remove();
+                updateCartSummary();
+            }
+        },
+    });
+}
+
+function updateCartSummary() {
+    let total = 0;
+
+    // Iterate through each cart item row
+    $('tr[id^="cart-item-"]').each(function () {
+        let cartId = $(this).attr("id").split("-")[2]; // Extract cart ID from row ID
+        let quantity = parseInt($("#cart-quantity-" + cartId).val());
+        let price = parseFloat(
+            $("#cart-total-" + cartId)
+                .text()
+                .replace(/[^0-9.-]+/g, "")
+        );
+
+        if (!isNaN(quantity) && !isNaN(price)) {
+            total += price;
+        }
+    });
+
+    // Update the subtotal and total in the cart summary
+    $("#cart-subtotal").text(total.toFixed(2));
+    $("#cart-total").text(total.toFixed(2));
+}
 
 //=======//==============//=====================//============================//
 
-$("#payment_method_one").on("click", function () {
-    if ($(this).is(":checked") == true) {
+$(document).ready(function () {
+    // Hide all forms on page load
+    $("#CardPaymentForm").addClass("d-none");
+    $("#CardPaymentFormOne").addClass("d-none");
+    $("#CardPaymentFormTwo").addClass("d-none");
+    $("#CardPaymentFormThree").addClass("d-none");
+
+    // Check which payment method is selected on page load and show the correct form
+    if ($("#payment_method").is(":checked")) {
+        $("#CardPaymentForm").removeClass("d-none");
+    } else if ($("#payment_method_one").is(":checked")) {
         $("#CardPaymentFormOne").removeClass("d-none");
-        $("#CardPaymentFormTwo").addClass("d-none");
-        $("#CardPaymentFormThree").addClass("d-none");
-    }
-});
-
-$("#payment_method_two").on("click", function () {
-    if ($(this).is(":checked") == true) {
+    } else if ($("#payment_method_two").is(":checked")) {
         $("#CardPaymentFormTwo").removeClass("d-none");
-        $("#CardPaymentFormOne").addClass("d-none");
-        $("#CardPaymentFormThree").addClass("d-none");
-    }
-});
-
-$("#payment_method_three").on("click", function () {
-    if ($(this).is(":checked") == true) {
+    } else if ($("#payment_method_three").is(":checked")) {
         $("#CardPaymentFormThree").removeClass("d-none");
-        $("#CardPaymentFormOne").addClass("d-none");
-        $("#CardPaymentFormTwo").addClass("d-none");
     }
+
+    // Event listener for COD
+    $("#payment_method_one").on("click", function () {
+        if ($(this).is(":checked") == true) {
+            $("#CardPaymentFormOne").removeClass("d-none");
+            $("#CardPaymentFormTwo").addClass("d-none");
+            $("#CardPaymentFormThree").addClass("d-none");
+        }
+    });
+
+    // Event listener for Stripe
+    $("#payment_method_two").on("click", function () {
+        if ($(this).is(":checked") == true) {
+            $("#CardPaymentFormTwo").removeClass("d-none");
+            $("#CardPaymentFormOne").addClass("d-none");
+            $("#CardPaymentFormThree").addClass("d-none");
+        }
+    });
+
+    // Event listener for PayPal
+    $("#payment_method_three").on("click", function () {
+        if ($(this).is(":checked") == true) {
+            $("#CardPaymentFormThree").removeClass("d-none");
+            $("#CardPaymentFormOne").addClass("d-none");
+            $("#CardPaymentFormTwo").addClass("d-none");
+        }
+    });
+
+    // None
+    $("#payment_method").on("click", function () {
+        if ($(this).is(":checked") == true) {
+            $("#CardPaymentFormOne").addClass("d-none");
+            $("#CardPaymentFormTwo").addClass("d-none");
+            $("#CardPaymentFormThree").addClass("d-none");
+        }
+    });
 });
 
 //=======//==============//=====================//============================//

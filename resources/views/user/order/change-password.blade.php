@@ -38,10 +38,10 @@
                                             value="{{ old('old_password') }}" placeholder="Old Password"
                                             class="@error('old_password') is-invalid
                                             @enderror form-control">
-                                        @error('new_password')
-                                            {{-- <p class="invalid-feedback">{{ $message }}</p> --}}
-                                        @enderror
-                                        <p></p>
+                                            @error('new_password')
+                                            <p class="invalid-feedback">{{ $message }}</p>
+                                            @enderror
+                                        {{-- <p></p> --}}
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                     <div class="mb-3">
