@@ -129,7 +129,7 @@ class CategoryController extends Controller
 
         $category->delete();
         //return response()->json(['message' => 'Item Deleted successfully']);
-        return redirect()->route('admin.category')->with('success', 'SubCatagory Deleted Successfully');
+        return redirect()->route('admin.category')->with('success', 'Catagory Deleted Successfully');
     }
 
 

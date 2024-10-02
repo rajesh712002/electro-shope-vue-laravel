@@ -529,9 +529,13 @@ $(document).ready(function () {
             data: data,
 
             success: function (response) {
-                // $("#ProductRatingForm")[0].reset();
-                // alert(response.success);
-                window.location.href = "/user/viewproduct";
+                if (response.redirect_url) {
+                    window.location.href = response.redirect_url;
+                } else {
+                    // Default redirect or action if no redirect URL is provided
+                    window.location.href = "{{route('viewproduct')}}";
+                }
+                
             },
             error: function (xhr) {
                 if (xhr.status === 422) {

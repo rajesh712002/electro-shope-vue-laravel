@@ -183,6 +183,8 @@
                             {{-- @if ($order && $order->prod_id == $product->id) --}}
 
                             <div class="col-md-8">
+                                @if (checkUserLogin())
+                                    
                                 <form method="POST" action="{{ route('usersaveRating', $product->id) }}"
                                     id="ProductRatingForm" name="ProductRatingForm">
                                     @csrf
@@ -240,6 +242,7 @@
 
                                     </div>
                                 </form>
+                                @endif
                             </div>
 
                             <div class="col-md-12 mt-5">

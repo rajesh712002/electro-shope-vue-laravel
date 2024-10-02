@@ -38,20 +38,22 @@ class SettingController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
+        $user = User::select('id', 'password')->where('id', Auth::user()->id)->first();
+
+        $validator->after(function ($validator) use ($request, $user) {
+            if (!Hash::check($request->old_password, $user->password)) {
+                $validator->errors()->add('old_password', 'Your old password is incorrect.');
+            }
+        });
+        
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
             // return redirect()->route('user.changePassword')->withInput()->withErrors($validator);
         }
 
-        $user = User::select('id', 'password')->where('id', Auth::user()->id)->first();
-        // dd($request->old_password);
         // dd($request->old_password, $user->password, Hash::check($request->old_password, $user->password));
-
-        // dd(!Hash::check($request->old_password, $user->password));
-        if (!$user->password) {
-            return response()->json(['errors' => 'Password does not exist for this user.'], 422);
-        }
-
+       
         if (!Hash::check($request->old_password, $user->password)) {
             return response()->json(['errors' => 'Your Password is Incorrected'], 422);
         } else {

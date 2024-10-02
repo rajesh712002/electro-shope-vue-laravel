@@ -119,6 +119,10 @@ class ShopController extends Controller
 
         $productsum = Product::where('slug');
 
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['errors' => 'Product not found'], 404);
+        }
 
         $userchk = DB::table('product_ratings')
             ->where('email', $request->email)
@@ -129,13 +133,16 @@ class ShopController extends Controller
             $ratings = ProductRating::updateOrCreate(
                 [
                     'product_id' => $id,
-                    'username' => $request->name,
                     'email' => $request->email,
+                ],
+                [
+                    'username' => $request->name,
                     'comment' => $request->comment,
                     'rating' => $request->rating
                 ]
             );
-            return back();
+            return response()->json(['redirect_url' => route('viewproduct', ['slug' => $product->slug])]);
+            
         } else {
             $rating = new ProductRating();
             // $user_id = Auth::user()->id;
@@ -147,7 +154,8 @@ class ShopController extends Controller
             $rating->rating = $request->rating;
             $rating->save();
             
-            return back();
+            return response()->json(['redirect_url' => route('viewproduct', ['slug' => $product->slug])]);
+
         }
     }
 }
