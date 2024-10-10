@@ -23,6 +23,14 @@
                 </div>
                 <div class="col-md-9">
                     <div class="card">
+                        @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger">{{ session('error') }}</div>
+                    @endif
                         <div class="card-header">
                             <h2 class="h5 mb-0 pt-2 pb-2">My Orders</h2>
                         </div>

@@ -459,6 +459,8 @@ $(document).ready(function () {
     $("#CardPaymentFormOne").addClass("d-none");
     $("#CardPaymentFormTwo").addClass("d-none");
     $("#CardPaymentFormThree").addClass("d-none");
+    $("#CardPaymentFormFour").addClass("d-none");
+
 
     // Check which payment method is selected on page load and show the correct form
     if ($("#payment_method").is(":checked")) {
@@ -469,6 +471,8 @@ $(document).ready(function () {
         $("#CardPaymentFormTwo").removeClass("d-none");
     } else if ($("#payment_method_three").is(":checked")) {
         $("#CardPaymentFormThree").removeClass("d-none");
+    }else if ($("#payment_method_four").is(":checked")) {
+        $("#CardPaymentFormFour").removeClass("d-none");
     }
 
     // Event listener for COD
@@ -477,6 +481,8 @@ $(document).ready(function () {
             $("#CardPaymentFormOne").removeClass("d-none");
             $("#CardPaymentFormTwo").addClass("d-none");
             $("#CardPaymentFormThree").addClass("d-none");
+            $("#CardPaymentFormFour").addClass("d-none");
+
         }
     });
 
@@ -486,6 +492,8 @@ $(document).ready(function () {
             $("#CardPaymentFormTwo").removeClass("d-none");
             $("#CardPaymentFormOne").addClass("d-none");
             $("#CardPaymentFormThree").addClass("d-none");
+            $("#CardPaymentFormFour").addClass("d-none");
+
         }
     });
 
@@ -493,6 +501,18 @@ $(document).ready(function () {
     $("#payment_method_three").on("click", function () {
         if ($(this).is(":checked") == true) {
             $("#CardPaymentFormThree").removeClass("d-none");
+            $("#CardPaymentFormOne").addClass("d-none");
+            $("#CardPaymentFormTwo").addClass("d-none");
+            $("#CardPaymentFormFour").addClass("d-none");
+
+        }
+    });
+
+    // Event listener for Braintree
+    $("#payment_method_four").on("click", function () {
+        if ($(this).is(":checked") == true) {
+            $("#CardPaymentFormFour").removeClass("d-none");
+            $("#CardPaymentFormThree").addClass("d-none");
             $("#CardPaymentFormOne").addClass("d-none");
             $("#CardPaymentFormTwo").addClass("d-none");
         }
@@ -504,6 +524,7 @@ $(document).ready(function () {
             $("#CardPaymentFormOne").addClass("d-none");
             $("#CardPaymentFormTwo").addClass("d-none");
             $("#CardPaymentFormThree").addClass("d-none");
+            $("#CardPaymentFormFour").addClass("d-none");
         }
     });
 });

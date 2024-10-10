@@ -126,7 +126,7 @@
                                         <div class="mb-3">
                                             <input type="text" name="zip" id="zip" class="form-control"
                                                 placeholder="Zip"
-                                                value="{{ !empty($CustomerAddress) ? $CustomerAddress->pincode : '' }}" >
+                                                value="{{ !empty($CustomerAddress) ? $CustomerAddress->pincode : '' }}">
                                             <p></p>
                                             <h6 style="color: rgb(255, 0,0)" class="error"></h6>
 
@@ -277,6 +277,27 @@
                 </div>
             </div>
 
+            <div class="">
+                <input type="radio" name="payment_method" value="braintreecard" id="payment_method_four">
+                <label for="payment_method_four" class="form-check-label">Pay With Braintree</label>
+                <div class="pt-4" id="CardPaymentFormFour">
+                    <form id="BraintreeForm" action="{{ route('braintreeCard') }}" method="">
+                        <input type="hidden" name="first_name" id="braintree_first_name">
+                        <input type="hidden" name="last_name" id="braintree_last_name">
+                        <input type="hidden" name="email" id="braintree_email">
+                        <input type="hidden" name="country" id="braintree_country">
+                        <input type="hidden" name="address" id="braintree_address">
+                        <input type="hidden" name="apartment" id="braintree_apartment">
+                        <input type="hidden" name="city" id="braintree_city">
+                        <input type="hidden" name="state" id="braintree_state">
+                        <input type="hidden" name="zip" id="braintree_zip">
+                        <input type="hidden" name="mobile" id="braintree_mobile">
+                        <input type="hidden" name="order_notes" id="order_note">
+                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                            Pay Now </button>
+                    </form>
+                </div>
+            </div>
 
         </div>
 
@@ -324,6 +345,21 @@
         document.getElementById('order_notes').value = document.getElementById('order_note').value;
     }
 
+    function populateBraintreeForm() {
+        // Populate Braintree form with Checkout form data
+        document.getElementById('braintree_first_name').value = document.getElementById('first_name').value;
+        document.getElementById('braintree_last_name').value = document.getElementById('last_name').value;
+        document.getElementById('braintree_email').value = document.getElementById('email').value;
+        document.getElementById('braintree_country').value = document.getElementById('country').value;
+        document.getElementById('braintree_address').value = document.getElementById('address').value;
+        document.getElementById('braintree_apartment').value = document.getElementById('appartment').value;
+        document.getElementById('braintree_city').value = document.getElementById('city').value;
+        document.getElementById('braintree_state').value = document.getElementById('state').value;
+        document.getElementById('braintree_zip').value = document.getElementById('zip').value;
+        document.getElementById('braintree_mobile').value = document.getElementById('mobile').value;
+        document.getElementById('order_notes').value = document.getElementById('order_note').value;
+    }
+
 
     document.getElementById('payment_method_two').addEventListener('change', function() {
         if (this.checked) {
@@ -334,6 +370,12 @@
     document.getElementById('payment_method_three').addEventListener('change', function() {
         if (this.checked) {
             populatePaypalForm();
+        }
+    });
+
+    document.getElementById('payment_method_four').addEventListener('change', function() {
+        if (this.checked) {
+            populateBraintreeForm();
         }
     });
 </script>
@@ -403,6 +445,28 @@
                 }
             });
         });
+
+        //Braintree
+        // document.querySelector("#BraintreeForm").addEventListener("submit", function(e) {
+        //     // Reset values if they have been modified
+        //     priceInputs.forEach((input, index) => {
+        //         if (input.value !== originalPrices[index]) {
+        //             input.value = originalPrices[index];
+        //         }
+        //     });
+
+        //     prodNameInputs.forEach((input, index) => {
+        //         if (input.value !== originalProdNames[index]) {
+        //             input.value = originalProdNames[index];
+        //         }
+        //     });
+
+        //     quantityInputs.forEach((input, index) => {
+        //         if (input.value !== originalQuantities[index]) {
+        //             input.value = originalQuantities[index];
+        //         }
+        //     });
+        // });
     });
 </script>
 

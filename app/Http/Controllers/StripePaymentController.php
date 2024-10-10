@@ -213,7 +213,7 @@ class StripePaymentController extends Controller
             $request->session()->forget('order_data');
 
             // Redirect with success message
-            return redirect()->route('user.index')->with('status', 'Payment is successful and your order is placed.');
+            return redirect()->route('user.view_order')->with('status', 'Payment is successful and your order is placed.');
          } else {
             return redirect()->route('cancell')->with('error', 'Payment was not successful.');
          }
@@ -225,7 +225,7 @@ class StripePaymentController extends Controller
 
    public function cancel()
    {
-      return redirect()->route('user.index')->with('status', 'Payment Is Unsuccessful.');
+      return redirect()->route('user.index')->with('error', 'Payment Is Unsuccessful.');
 
       // return "Payment Is Unsuccessful";
    }

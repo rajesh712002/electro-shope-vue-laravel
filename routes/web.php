@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\BraintreeController;
 use App\Http\Controllers\user\CartController;
 use App\Http\Controllers\user\ShopController;
 use App\Http\Controllers\user\UserController;
@@ -83,16 +84,18 @@ Route::prefix('user')->group(function () {
 //  ==>  Payment Integration
 
 //Stripe
-
 Route::post('stripe', [StripePaymentController::class, 'stripe'])->name('stripe');
 Route::get('successs', [StripePaymentController::class, 'success'])->name('successs');
 Route::get('cancell', [StripePaymentController::class, 'cancel'])->name('cancell');
 
 //Paypal
-
 Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PaypalController::class, 'success'])->name('success');
 Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
+
+//Braintree
+Route::get('/braintree',[BraintreeController::class,'braintreeCard'])->name('braintreeCard');
+Route::post('braintree/store',[BraintreeController::class,'braintree'])->name('braintree');
 
 Route::middleware([ValidUser::class])->group(function (): void {
     Route::prefix('user')->group(function () {

@@ -131,11 +131,11 @@ class ShopController extends Controller
         // dd($userchk);
         if ($userchk) {
             $ratings = ProductRating::updateOrCreate(
-                [
+                attributes: [
                     'product_id' => $id,
                     'email' => $request->email,
                 ],
-                [
+                values: [
                     'username' => $request->name,
                     'comment' => $request->comment,
                     'rating' => $request->rating
