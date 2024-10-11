@@ -320,9 +320,20 @@
                                                 id="cart-subtotal">{{ $totalSum }}</span></div>
                                     </div>
                                     <div class="d-flex justify-content-between pb-2">
+                                        <div>Discount</div>
+                                        <div id="cart-discount">00.00</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between pb-2">
                                         <div>Shipping</div>
                                         <div>Free</div>
                                     </div>
+                                    <br>
+                                    <div class="input-group apply-coupan mt-4">
+                                        <input type="text" placeholder="Coupon Code" class="form-control" name="discount_code" id="discount_code">
+                                        <button class="btn btn-dark" type="button" id="apply_discount">Apply Coupon</button>
+                                    </div>
+                                    <br><br>
+
                                     <div class="d-flex justify-content-between summery-end">
                                         <div>Total</div>
                                         <div><i class="fa fa-inr" aria-hidden="true"></i> <span

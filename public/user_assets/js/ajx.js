@@ -428,6 +428,40 @@ function removeItem(cartId) {
     });
 }
 
+
+$('#apply_discount').click(function () {
+    let couponCode = $('#discount_code').val();
+    let url = "/user/apply_coupon"; // Adjust this URL based on your route
+    
+    if (!couponCode) {
+        alert("Please enter a coupon code.");
+        return;
+    }
+
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr("content"),
+            coupon_code: couponCode
+        },
+        success: function (response) {
+            if (response.success) {
+                // Update the total price and show discount
+                $("#cart-total").text(response.newTotal);
+                alert("Coupon applied successfully!");
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert("An error occurred while applying the coupon. Please try again.");
+        }
+    });
+});
+
+
+
 function updateCartSummary() {
     let total = 0;
 

@@ -18,6 +18,7 @@ use App\Http\Controllers\user\CheckoutController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
 use App\Http\Controllers\Auth\AuthenticationController;
+use App\Http\Controllers\admin\DiscountCouponController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -94,8 +95,8 @@ Route::get('success', [PaypalController::class, 'success'])->name('success');
 Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
 
 //Braintree
-Route::get('/braintree',[BraintreeController::class,'braintreeCard'])->name('braintreeCard');
-Route::post('braintree/store',[BraintreeController::class,'braintree'])->name('braintree');
+Route::get('/braintree', [BraintreeController::class, 'braintreeCard'])->name('braintreeCard');
+Route::post('braintree/store', [BraintreeController::class, 'braintree'])->name('braintree');
 
 Route::middleware([ValidUser::class])->group(function (): void {
     Route::prefix('user')->group(function () {
@@ -121,6 +122,8 @@ Route::middleware([ValidUser::class])->group(function (): void {
         //Checkout
         Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
         Route::post('/checkout', [CheckoutController::class, 'storeCheckout'])->name('user.storecheckout');
+
+        Route::post('/apply_coupon', [DiscountCouponController::class, 'applyCoupon'])->name('apply_coupon');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
     });
@@ -198,6 +201,18 @@ Route::middleware([ValidAdmin::class])->group(function () {
         Route::put('/update-product/{product}', [ProductController::class, 'updateProduct'])->name('admin.update_prod');
         //Delete Product
         Route::delete('/delete-product/{product}', [ProductController::class, 'destroyProduct'])->name('admin.destroy_product');
+
+        //================================================================================================================================================================
+        //Coupon Code
+        Route::get('coupon', [DiscountCouponController::class, 'coupons'])->name('admin.coupons');
+        //Insert Coupon Code
+        Route::get('coupon-create', [DiscountCouponController::class, 'createCoupon'])->name('admin.couponCreate');
+        Route::post('coupon-store', [DiscountCouponController::class, 'storeCoupon'])->name('admin.couponStore');
+        //Update Coupon Code
+        Route::get('coupon-edit/{id}', [DiscountCouponController::class, 'editCoupon'])->name('admin.couponEdit');
+        Route::put('coupon-update/{id}', [DiscountCouponController::class, 'updateCoupon'])->name('admin.couponUpdate');
+        //Delete Coupon Code
+        Route::delete('coupon-delete/{id}', [DiscountCouponController::class, 'deleteCoupon'])->name('admin.couponDelete');
 
         //================================================================================================================================================================
 

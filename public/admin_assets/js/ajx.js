@@ -1103,7 +1103,8 @@ $(document).ready(function () {
     });
 });
 
-//=================================================================================
+//=======//==============//=====================//=========================//=================================================//
+//=======//==============//=====================//=========================//=================================================//
 //Email Send
 
 $(document).ready(function () {
@@ -1143,3 +1144,386 @@ $(document).ready(function () {
         });
     });
 });
+
+//=======//==============//=====================//=========================//=================================================//
+//=======//==============//=====================//=========================//=================================================//
+// For Coupon Code Create
+$(document).ready(function () {
+    $("#CouponCodeForm").on("submit", function (e) {
+        e.preventDefault();
+
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                alert(response.success);
+                window.location.href = "/admin/coupon";
+                // $("#CouponCodeForm")[0].reset();
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    // $.each(errors, function (key, value) {
+                    //     $('[name="' + key + '"]')
+                    //         .parent()
+                    //         .find(".error, .error_no_margin")
+                    //         .text("** " + value[0] + "!");
+                    // });
+                    if (errors.code) {
+                        $("#code")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.code);
+                    } else {
+                        $("#code")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.code);
+                    }
+
+                    if (errors.name) {
+                        $("#name")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.name);
+                    } else {
+                        $("#name")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.name);
+                    }
+
+                    if (errors.max_uses) {
+                        $("#max_uses")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.max_uses);
+                    } else {
+                        $("#max_uses")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.max_uses);
+                    }
+
+                    if (errors.max_uses_user) {
+                        $("#max_uses_user")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.max_uses_user);
+                    } else {
+                        $("#max_uses_user")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.max_uses_user);
+                    }
+
+                    if (errors.type) {
+                        $("#type")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.type);
+                    } else {
+                        $("#type")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.type);
+                    }
+
+                    if (errors.discount_amount) {
+                        $("#discount_amount")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.discount_amount);
+                    } else {
+                        $("#discount_amount")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.discount_amount);
+                    }
+
+                    if (errors.min_amount) {
+                        $("#min_amount")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.min_amount);
+                    } else {
+                        $("#min_amount")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.min_amount);
+                    }
+
+                    if (errors.status) {
+                        $("#status")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.status);
+                    } else {
+                        $("#status")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.status);
+                    }
+
+                    if (errors.starts_at) {
+                        $("#starts_at")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.starts_at);
+                    } else {
+                        $("#starts_at")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.starts_at);
+                    }
+
+                    if (errors.expires_at) {
+                        $("#expires_at")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.expires_at);
+                    } else {
+                        $("#expires_at")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.expires_at);
+                    }
+
+                    if (errors.description) {
+                        $("#description")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.description);
+                    } else {
+                        $("#description")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.description);
+                    }
+                }
+            },
+        });
+    });
+});
+
+//For Coupon Code Update
+$(document).ready(function () {
+    $("#UpdateCouponForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                alert(response.success);
+                window.location.href = "/admin/coupon";
+
+                //  $('#UpdateCouponForm')[0].reset();
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    if (errors.code) {
+                        $("#code")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.code);
+                    } else {
+                        $("#code")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.code);
+                    }
+
+                    if (errors.name) {
+                        $("#name")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.name);
+                    } else {
+                        $("#name")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.name);
+                    }
+
+                    if (errors.max_uses) {
+                        $("#max_uses")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.max_uses);
+                    } else {
+                        $("#max_uses")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.max_uses);
+                    }
+
+                    if (errors.max_uses_user) {
+                        $("#max_uses_user")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.max_uses_user);
+                    } else {
+                        $("#max_uses_user")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.max_uses_user);
+                    }
+
+                    if (errors.type) {
+                        $("#type")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.type);
+                    } else {
+                        $("#type")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.type);
+                    }
+
+                    if (errors.discount_amount) {
+                        $("#discount_amount")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.discount_amount);
+                    } else {
+                        $("#discount_amount")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.discount_amount);
+                    }
+
+                    if (errors.min_amount) {
+                        $("#min_amount")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.min_amount);
+                    } else {
+                        $("#min_amount")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.min_amount);
+                    }
+
+                    if (errors.status) {
+                        $("#status")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.status);
+                    } else {
+                        $("#status")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.status);
+                    }
+
+                    if (errors.starts_at) {
+                        $("#starts_at")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.starts_at);
+                    } else {
+                        $("#starts_at")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.starts_at);
+                    }
+
+                    if (errors.expires_at) {
+                        $("#expires_at")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.expires_at);
+                    } else {
+                        $("#expires_at")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.expires_at);
+                    }
+
+                    if (errors.description) {
+                        $("#description")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.description);
+                    } else {
+                        $("#description")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.description);
+                    }
+                }
+            },
+        });
+    });
+});
+
