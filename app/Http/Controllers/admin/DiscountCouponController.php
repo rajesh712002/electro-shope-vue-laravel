@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\DiscountCoupon;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -134,38 +135,6 @@ class DiscountCouponController extends Controller
         return redirect()->route('admin.coupons')->with('success', 'Coupon Deleted Successfully');
     }
 
-    public function applyCoupon(Request $request)
-    {
-        $user = Auth::user();
-        $couponCode = $request->input('coupon_code');
-
-        // dd($couponCode);
-        // Fetch the coupon
-        $timezone = 'Asia/Kolkata';
-        $currentTime = Carbon::now($timezone);
-
-        $coupon = DiscountCoupon::where('code', $couponCode)
-            ->where('status', '1')
-            ->where('starts_at', '<=', $currentTime)
-            ->where('expires_at', '>=', $currentTime)
-            ->count();
-
-            dd($coupon);
-        if ($coupon) {
-            // Check User Usage limit
-            $totalUses = Order::where('coupon_code', $coupon->code)->count();
-            if ($totalUses < $coupon->max_uses) {
-                
-                // Check specific user usage limit
-                $userUses = Order::where('user_id', $user->id)
-                ->where('coupon_code', $coupon->code)
-                ->count();
-                dd($userUses);
-                // if(!$userUses){
-                //     dd('Zero Record');
-                // }
-            }
-        }
-      
-    }
+   
+    
 }

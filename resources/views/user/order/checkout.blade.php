@@ -180,13 +180,18 @@
                                                 aria-hidden="true">{{ $totalSum }}</i></strong></div>
                                 </div>
                                 <div class="d-flex justify-content-between mt-2">
+                                    <div class="h6"><strong>Discount</strong></div>
+                                    <strong><i class="fa fa-inr"
+                                        aria-hidden="true">{{ $discount }}</i></strong>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2">
                                     <div class="h6"><strong>Shipping</strong></div>
                                     <div class="h6"><strong>Free</strong></div>
                                 </div>
                                 <div class="d-flex justify-content-between mt-2 summery-end">
                                     <div class="h5"><strong>Total</strong></div>
                                     <div class="h5"><strong><i class="fa fa-inr"
-                                                aria-hidden="true">{{ $totalSum }} </i></strong></div>
+                                                aria-hidden="true">{{ $newTotal }} </i></strong></div>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +217,7 @@
                                 <label for="payment_method_one" class="form-check-label">COD</label>
 
                                 <div class="pt-4" id="CardPaymentFormOne">
-                                    <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                                    <button type="submit" class="btn-dark btn btn-block w-100">{{ $newTotal }}
                                         Pay On COD </button>
                                 </div>
                             </div>
@@ -245,7 +250,7 @@
 
 
                         <button type="submit" class="btn-dark btn btn-block w-100"
-                            data-value="stripePayment">{{ $totalSum }}
+                            data-value="stripePayment">{{ $newTotal }}
                             Pay Now </button>
                     </form>
                 </div>
@@ -274,7 +279,7 @@
                         <input type="hidden" name="zip" id="paypal_zip">
                         <input type="hidden" name="mobile" id="paypal_mobile">
                         <input type="hidden" name="order_notes" id="order_note">
-                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $newTotal }}
                             Pay Now </button>
                     </form>
                 </div>
@@ -296,7 +301,7 @@
                         <input type="hidden" name="zip" id="braintree_zip">
                         <input type="hidden" name="mobile" id="braintree_mobile">
                         <input type="hidden" name="order_notes" id="order_note">
-                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $totalSum }}
+                        <button type="submit" class="btn-dark btn btn-block w-100">{{ $newTotal }}
                             Pay Now </button>
                     </form>
                 </div>

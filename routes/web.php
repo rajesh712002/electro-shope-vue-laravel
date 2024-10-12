@@ -123,7 +123,7 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
         Route::post('/checkout', [CheckoutController::class, 'storeCheckout'])->name('user.storecheckout');
 
-        Route::post('/apply_coupon', [DiscountCouponController::class, 'applyCoupon'])->name('apply_coupon');
+        Route::post('/apply_coupon', [CheckoutController::class, 'applyCoupon'])->name('apply_coupon');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
     });

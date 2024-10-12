@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers\user;
 
+use Stripe;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Mail\OrderEmail;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use App\Models\DiscountCoupon;
+use Illuminate\Support\Carbon;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\StripePaymentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Stripe;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\StripePaymentController;
 
 class CheckoutController extends Controller
 {
+
+
     public function checkout()
     {
         $userId = Auth::user()->id;
@@ -40,14 +44,106 @@ class CheckoutController extends Controller
             ->pluck('totalSum')
             ->first();
         // dd($user);
+        $couponCode = session('coupon_code', null);
+        $discount = session('discount_amount', 0);
+        $newTotal = session('new_total', $totalSum);
 
         $CustomerAddress = CustomerAddress::where('user_id', '=', $userId)->first();
 
         // dd($CustomerAddress->user_id);
-        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress', 'userId'));
+        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress', 'userId','couponCode','discount','newTotal'));
     }
 
 
+    public function applyCoupon(Request $request)
+    {
+
+        $user = Auth::user();
+        $couponCode = $request->input('coupon_code');
+
+        // Timezone and current time
+        $timezone = 'Asia/Kolkata';
+        $currentTime = Carbon::now($timezone);
+
+        // Fetch the coupon
+        $coupon = DiscountCoupon::where('code', $couponCode)
+            ->where('status', '1')
+            ->where('starts_at', '<=', $currentTime)
+            ->where('expires_at', '>=', $currentTime)
+            ->first();
+
+        // Check if coupon exists and is valid
+        if (!$coupon) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid coupon code or coupon has expired.'
+            ]);
+        }
+
+        // Calculate total cart sum
+        $totalSum = DB::table('carts')
+            ->join('products', 'carts.product_id', '=', 'products.id')
+            ->where('carts.user_id', $user->id)
+            ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
+            ->pluck('totalSum')
+            ->first();
+
+        // Check if the total amount qualifies for the coupon
+        if ($totalSum < $coupon->min_amount) {
+            return response()->json([
+                'success' => false,
+                'message' => "The total amount does not meet the minimum required amount of {$coupon->min_amount} for this coupon."
+            ]);
+        }
+
+        // Check if the coupon has reached the maximum number of uses
+        $totalUses = Order::where('coupon_code', '=', $coupon->code)
+            ->distinct('user_id') // only one use per user is counted
+            ->count('user_id');
+
+        if ($totalUses >= $coupon->max_uses_user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This coupon has reached its usage limit for all users.'
+            ]);
+        }
+
+        // Check specific user usage limit
+        $userUses = Order::where('user_id', $user->id)
+            ->where('coupon_code', $coupon->code)
+            ->count();
+
+        if ($userUses >= $coupon->max_uses) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already used this coupon the maximum number of times allowed.'
+            ]);
+        }
+
+        // Apply the coupon based on its type (fixed or percentage)
+        if ($coupon->type == 'fixed') {
+            $discount = $coupon->discount_amount;
+        } else {
+            $discount = ($totalSum * $coupon->discount_amount) / 100;
+        }
+
+        // Calculate the new total
+        $newTotal = $totalSum - $discount;
+        session([
+            'coupon_code' => $coupon->code,
+            'discount_amount' => $discount,
+            'new_total' => $newTotal,
+        ]);
+        // dd($discount, $newTotal, $couponCode);
+
+        // Return success response with discount and new total
+        return response()->json([
+            'success' => true,
+            'discountAmount' => $discount,
+            'newTotal' => $newTotal,
+            'couponCode' => $couponCode
+        ]);
+    }
 
     public function storeCheckout(Request $request)
     {
@@ -61,7 +157,7 @@ class CheckoutController extends Controller
             ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
             ->get();
 
-            
+
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->where('carts.user_id', $userId)
@@ -79,7 +175,7 @@ class CheckoutController extends Controller
             'state' => 'required|string|max:50',
             'zip' => 'required|digits_between:3,10',
             'mobile' => 'required|digits:10',
-            
+
 
         ];
 
@@ -90,7 +186,7 @@ class CheckoutController extends Controller
         }
 
         // Store in session
-        
+
         $user = Auth::user();
 
 
@@ -118,7 +214,7 @@ class CheckoutController extends Controller
                 'notes' => $request->order_notes,
 
             ]
-                
+
         );
 
 
@@ -127,16 +223,38 @@ class CheckoutController extends Controller
 
         // Store Data In  Orders
 
+        // Apply the coupon
+        $couponCode = session('coupon_code', null);
+        $discountAmount = session('discount_amount', 0);
+        $newTotal = session('new_total', $totalSum);
+
+        // Default values in case no coupon is applied
+        $discount = 0;
+        $newTotal = 0;
+
+        
+        
+        // dd($discount, $newTotal, $couponCode);
         if ($request->payment_method == 'cod') {
             $shipping = 0;
+            $discountCode = '';
             $discount = 0;
             $subtotal = $totalSum;
-
+            
+            $couponCode = session('coupon_code', null);
+            $discount = session('discount_amount', 0);
+            $newTotal = session('new_total', $totalSum);
             $order = new Order();
+            // $order->subtotal = $totalSum;
+            // $order->shipping = $shipping;
+            // $order->grand_total = $totalSum;
+            // $order->subtotal = $totalSum;
+
             $order->subtotal = $totalSum;
             $order->shipping = $shipping;
-            $order->grand_total = $totalSum;
-            $order->subtotal = $totalSum;
+            $order->grand_total = $newTotal;
+            $order->discount = $discount;
+            $order->coupon_code = $couponCode;
 
             $order->payment_status = 'paid on cod';
             // $order->status = $request->status;
@@ -226,7 +344,7 @@ class CheckoutController extends Controller
 
         sendEmail($order_id);
 
-
+        session()->forget(['coupon_code', 'discount_amount', 'new_total']);
         //=======//============//==============//======================//==============================//
         //Make Cart Empty 
 
@@ -251,7 +369,5 @@ class CheckoutController extends Controller
 
         // dd($order);
         Mail::to($order->email)->send(new OrderEmail($mailData));
-
-        
     }
 }

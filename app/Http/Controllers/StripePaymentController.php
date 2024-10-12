@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Stripe;
+use Stripe\Stripe;
+
+// use Stripe;
 // use Session;
 use App\Models\Cart;
 use App\Models\Order;
@@ -46,6 +48,19 @@ class StripePaymentController extends Controller
       if ($validator->fails()) {
          return redirect()->route('user.checkout')->with('status', 'Please Check Detail Correctly And Fill Up Them.');
       }
+      $user = Auth::user();
+      $userId = $user->id;
+      $totalSum = DB::table('carts')
+         ->join('products', 'carts.product_id', '=', 'products.id')
+         ->where('carts.user_id', $userId)
+         ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
+         ->pluck('totalSum')
+         ->first();
+
+
+      $discount = session('discount_amount', 0);
+      $newTotal = session('new_total', $totalSum);
+
       // Set your secret key. Remember to switch to your live secret key in production.
       // See your keys here: https://dashboard.stripe.com/apikeys
       $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
@@ -104,6 +119,9 @@ class StripePaymentController extends Controller
          return redirect()->route('cancell');
       }
    }
+
+
+
 
 
 
@@ -204,7 +222,7 @@ class StripePaymentController extends Controller
                ]);
             }
 
-              sendEmail($orderId);
+            sendEmail($orderId);
 
 
             // Clear the cart after successful payment

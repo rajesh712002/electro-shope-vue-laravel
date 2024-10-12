@@ -144,11 +144,11 @@
                                 <li class="list-group-item d-flex">
                                     <span>Subtotal</span>
                                     <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i>
-                                        {{ $order->grand_total }} </span>
+                                        {{ $order->subtotal }} </span>
                                 </li>
                                 <li class="list-group-item d-flex">
-                                    <span>Tax</span>
-                                    <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i> 0.00</span>
+                                    <span>Discount</span>
+                                    <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i> {{ $order_items->order->discount ?? '0.00' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Shipping</span>

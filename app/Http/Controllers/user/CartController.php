@@ -32,7 +32,7 @@ class CartController extends Controller
                 $cart->qty = $request->qty;
                 $cart->save();
             }
-
+            session()->forget(['coupon_code', 'discount_amount', 'new_total']);
             return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
         } else {
             // session()->forget('cart');
@@ -88,7 +88,10 @@ class CartController extends Controller
                 ->pluck('totalSum')
                 ->first();
             // dd($product);
-            return view('user.order.cart', compact('product', 'totalSum'));
+            $couponCode = session('coupon_code', null);
+            $discount = session('discount_amount', 0);
+            $newTotal = session('new_total', $totalSum);
+            return view('user.order.cart', compact('product', 'totalSum','couponCode','discount','newTotal'));
         } else {
             // Guest User  Show items from session
             $cart = session()->get('cart', []);
@@ -128,6 +131,7 @@ class CartController extends Controller
         if ($product && $cart->qty < $product->pqty) {
             $cart->qty += 1;
             $cart->save();
+            session()->forget(['coupon_code', 'discount_amount', 'new_total']);
         }
 
         // Return updated cart information
@@ -145,6 +149,7 @@ class CartController extends Controller
         if ($cart->qty > 1) {
             $cart->qty -= 1;
             $cart->save();
+            session()->forget(['coupon_code', 'discount_amount', 'new_total']);
         }
 
         return response()->json([
@@ -158,6 +163,7 @@ class CartController extends Controller
     {
         $product = Cart::findOrFail($id);
         $product->delete();
+        session()->forget(['coupon_code', 'discount_amount', 'new_total']);
 
         return response()->json([
             'success' => true,

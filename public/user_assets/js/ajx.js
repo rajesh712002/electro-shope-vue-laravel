@@ -402,6 +402,9 @@ function updateQuantity(cartId, action) {
             if (response.success) {
                 $("#cart-quantity-" + cartId).val(response.newQty);
                 $("#cart-total-" + cartId).text(response.newTotal);
+                $("#cart-discount-" + cartId).val("00.00");
+                $("#discount_code-" + cartId).val("");
+
                 updateCartSummary();
             } else {
                 alert(response.message);
@@ -422,17 +425,18 @@ function removeItem(cartId) {
         success: function (response) {
             if (response.success) {
                 $("#cart-item-" + cartId).remove();
+                $("#cart-discount-" + cartId).val("00.00");
+                $("#discount_code-" + cartId).val("");
                 updateCartSummary();
             }
         },
     });
 }
 
-
-$('#apply_discount').click(function () {
-    let couponCode = $('#discount_code').val();
+$("#apply_discount").click(function () {
+    let couponCode = $("#discount_code").val();
     let url = "/user/apply_coupon"; // Adjust this URL based on your route
-    
+
     if (!couponCode) {
         alert("Please enter a coupon code.");
         return;
@@ -443,24 +447,25 @@ $('#apply_discount').click(function () {
         method: "POST",
         data: {
             _token: $('meta[name="csrf-token"]').attr("content"),
-            coupon_code: couponCode
+            coupon_code: couponCode,
         },
         success: function (response) {
             if (response.success) {
                 // Update the total price and show discount
                 $("#cart-total").text(response.newTotal);
+                $("#cart-discount").text(response.discountAmount);
                 alert("Coupon applied successfully!");
             } else {
                 alert(response.message);
             }
         },
         error: function () {
-            alert("An error occurred while applying the coupon. Please try again.");
-        }
+            alert(
+                "An error occurred while applying the coupon. Please try again."
+            );
+        },
     });
 });
-
-
 
 function updateCartSummary() {
     let total = 0;
@@ -483,6 +488,8 @@ function updateCartSummary() {
     // Update the subtotal and total in the cart summary
     $("#cart-subtotal").text(total.toFixed(2));
     $("#cart-total").text(total.toFixed(2));
+    $("#cart-discount").text(discountTotal.toFixed(2));
+    
 }
 
 //=======//==============//=====================//============================//
@@ -495,7 +502,6 @@ $(document).ready(function () {
     $("#CardPaymentFormThree").addClass("d-none");
     $("#CardPaymentFormFour").addClass("d-none");
 
-
     // Check which payment method is selected on page load and show the correct form
     if ($("#payment_method").is(":checked")) {
         $("#CardPaymentForm").removeClass("d-none");
@@ -505,7 +511,7 @@ $(document).ready(function () {
         $("#CardPaymentFormTwo").removeClass("d-none");
     } else if ($("#payment_method_three").is(":checked")) {
         $("#CardPaymentFormThree").removeClass("d-none");
-    }else if ($("#payment_method_four").is(":checked")) {
+    } else if ($("#payment_method_four").is(":checked")) {
         $("#CardPaymentFormFour").removeClass("d-none");
     }
 
@@ -516,7 +522,6 @@ $(document).ready(function () {
             $("#CardPaymentFormTwo").addClass("d-none");
             $("#CardPaymentFormThree").addClass("d-none");
             $("#CardPaymentFormFour").addClass("d-none");
-
         }
     });
 
@@ -527,7 +532,6 @@ $(document).ready(function () {
             $("#CardPaymentFormOne").addClass("d-none");
             $("#CardPaymentFormThree").addClass("d-none");
             $("#CardPaymentFormFour").addClass("d-none");
-
         }
     });
 
@@ -538,7 +542,6 @@ $(document).ready(function () {
             $("#CardPaymentFormOne").addClass("d-none");
             $("#CardPaymentFormTwo").addClass("d-none");
             $("#CardPaymentFormFour").addClass("d-none");
-
         }
     });
 
@@ -590,7 +593,6 @@ $(document).ready(function () {
                     // Default redirect or action if no redirect URL is provided
                     window.location.href = "{{route('viewproduct')}}";
                 }
-                
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
