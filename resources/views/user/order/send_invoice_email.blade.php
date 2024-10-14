@@ -44,6 +44,10 @@
                     <td>{{ $mailData['order']->subtotal }}</td>
                 </tr>
                 <tr>
+                    <th colspan="3" align="right">Discount</th>
+                    <td>{{ $mailData['order']->discount }}</td>
+                </tr>
+                <tr>
                     <th colspan="3" align="right">Shipping</th>
                     <td>Free</td>
                 </tr>

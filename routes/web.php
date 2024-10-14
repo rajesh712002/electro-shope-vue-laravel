@@ -124,6 +124,8 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::post('/checkout', [CheckoutController::class, 'storeCheckout'])->name('user.storecheckout');
 
         Route::post('/apply_coupon', [CheckoutController::class, 'applyCoupon'])->name('apply_coupon');
+        Route::post('/remove_coupon', [DiscountCouponController::class, 'removeCoupon'])->name('removeCoupon');
+        Route::get('/get_coupons',[DiscountCouponController::class,'getCoupons'])->name('get_coupons');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
     });

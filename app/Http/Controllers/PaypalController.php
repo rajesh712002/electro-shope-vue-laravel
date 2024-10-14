@@ -19,40 +19,40 @@ class PaypalController extends Controller
 
     public function paypal(Request $request)
     {
-    //   dd( $request->all());
+        //   dd( $request->all());
 
-    $rules = [
-        'first_name' => 'required|string|max:50',
-        'last_name' => 'required|string|max:50',
-        'email' => 'required|email|max:50',
-        'country' => 'required',
-        'address' => 'required|max:50',
-        'city' => 'required|string|max:50',
-        'state' => 'required|string|max:50',
-        'zip' => 'required|digits_between:3,10',
-        'mobile' => 'required|digits:10',
-     ];
+        $rules = [
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'email' => 'required|email|max:50',
+            'country' => 'required',
+            'address' => 'required|max:50',
+            'city' => 'required|string|max:50',
+            'state' => 'required|string|max:50',
+            'zip' => 'required|digits_between:3,10',
+            'mobile' => 'required|digits:10',
+        ];
 
-     // Perform validation
-     $validator = Validator::make($request->all(), $rules);
+        // Perform validation
+        $validator = Validator::make($request->all(), $rules);
 
-     // Return an error if validation fails
-     if ($validator->fails()) {
-        return redirect()->route('user.checkout')->with('status', 'Please Check Detail Correctly And Fill Up Them.');
-     }
+        // Return an error if validation fails
+        if ($validator->fails()) {
+            return redirect()->route('user.checkout')->with('status', 'Please Check Detail Correctly And Fill Up Them.');
+        }
 
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $provider->getAccessToken();
 
-        
+
         $totalPrice = 0;
 
         foreach ($request->price as $index => $price) {
             $quantity = $request->quantity[$index];
             $totalPrice += $price * $quantity;
         }
-// dd($totalPrice);
+        // dd($totalPrice);
         $items = array_map(function ($price, $name, $quantity) {
             return [
                 "name" => $name,
@@ -66,19 +66,19 @@ class PaypalController extends Controller
 
 
         //store Request in session
-      session()->put('order_data', [
-        'first_name' => $request->first_name,
-        'last_name' => $request->last_name,
-        'email' => $request->email,
-        'country' => $request->country,
-        'address' => $request->address,
-        'apartment' =>  $request->apartment,
-        'city' => $request->city,
-        'state' => $request->state,
-        'zip' => $request->zip,
-        'mobile' => $request->mobile,
-        'order_notes' => $request->order_notes,
-     ]);
+        session()->put('order_data', [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'country' => $request->country,
+            'address' => $request->address,
+            'apartment' =>  $request->apartment,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip,
+            'mobile' => $request->mobile,
+            'order_notes' => $request->order_notes,
+        ]);
 
 
         // Calculate item total
@@ -86,6 +86,13 @@ class PaypalController extends Controller
             return $price * $quantity;
         }, $request->price, $request->quantity)), 2, '.', '');
 
+        $couponCode = session('coupon_code', null);
+        $discountAmount = session('discount_amount', 0);
+        $newTotal = session('new_total', $itemTotal);
+
+        // dd($newTotal);
+    
+        
         $response = $provider->createOrder([
             "intent" => "CAPTURE",
             "application_context" => [
@@ -96,11 +103,15 @@ class PaypalController extends Controller
                 [
                     "amount" => [
                         "currency_code" => "USD",
-                        "value" => $itemTotal,
+                        "value" => number_format($newTotal, 2, '.', ''), // total after discounts
                         "breakdown" => [
                             "item_total" => [
                                 "currency_code" => "USD",
-                                "value" => $itemTotal
+                                "value" => number_format($itemTotal, 2, '.', '') // exact item total before discounts
+                            ],
+                            "discount" => [
+                                "currency_code" => "USD",
+                                "value" => number_format($discountAmount, 2, '.', '') // discount applied
                             ]
                         ]
                     ],
@@ -131,55 +142,61 @@ class PaypalController extends Controller
         $provider->getAccessToken();
         $response = $provider->capturePaymentOrder($request->token);
         // dd($response);
+
         if ($response['status'] == 'COMPLETED') {
             $user = Auth::user();
             $userId = $user->id;
 
             // Get product data 
             $product = DB::table('carts')
-               ->join('products', 'carts.product_id', '=', 'products.id')
-               ->where('carts.user_id', $userId)
-               ->select('products.*', 'carts.qty as cqty')
-               ->get();
+                ->join('products', 'carts.product_id', '=', 'products.id')
+                ->where('carts.user_id', $userId)
+                ->select('products.*', 'carts.qty as cqty')
+                ->get();
 
             // Calculate total sum from the cart
             $totalSum = DB::table('carts')
-               ->join('products', 'carts.product_id', '=', 'products.id')
-               ->where('carts.user_id', $userId)
-               ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
-               ->pluck('totalSum')
-               ->first();
+                ->join('products', 'carts.product_id', '=', 'products.id')
+                ->where('carts.user_id', $userId)
+                ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
+                ->pluck('totalSum')
+                ->first();
 
+            $couponCode = session('coupon_code', null);
+            $discount = session('discount_amount', 0);
+            $newTotal = session('new_total', $totalSum);
             // Create a new order session
             $orderData = session()->get('order_data');
 
             // dd($orderData);
-            
+
             // Store Customer Address
 
             CustomerAddress::updateOrCreate(
-               ['user_id' => $userId],
-               [
-                  'user_id' => $userId,
-                  'first_name' => $orderData['first_name'],
-                  'last_name' => $orderData['last_name'],
-                  'email' => $orderData['email'],
-                  'country' => $orderData['country'],
-                  'address' => $orderData['address'],
-                  'apartment' => $orderData['apartment'] ?? null,
-                  'city' => $orderData['city'],
-                  'state' => $orderData['state'],
-                  'pincode' => $orderData['zip'],
-                  'mobile' => $orderData['mobile'],
-                  'notes' => $orderData['order_notes'] ?? null,
-               ]
+                ['user_id' => $userId],
+                [
+                    'user_id' => $userId,
+                    'first_name' => $orderData['first_name'],
+                    'last_name' => $orderData['last_name'],
+                    'email' => $orderData['email'],
+                    'country' => $orderData['country'],
+                    'address' => $orderData['address'],
+                    'apartment' => $orderData['apartment'] ?? null,
+                    'city' => $orderData['city'],
+                    'state' => $orderData['state'],
+                    'pincode' => $orderData['zip'],
+                    'mobile' => $orderData['mobile'],
+                    'notes' => $orderData['order_notes'] ?? null,
+                ]
             );
 
             // Create a new order
             $order = new Order();
             $order->subtotal = $totalSum;
-            $order->shipping = 0; // Set your shipping cost
-            $order->grand_total = $totalSum;
+            $order->shipping = 0;
+            $order->grand_total = $newTotal;
+            $order->discount = $discount;
+            $order->coupon_code = $couponCode;
             $order->payment_status = 'paid with PayPal';
             $order->user_id = $userId;
             $order->first_name = $orderData['first_name'];
@@ -200,33 +217,34 @@ class PaypalController extends Controller
 
             // Store order items
             foreach ($product as $products) {
-               DB::table('order_items')->insert([
-                  'order_id' => $orderId,
-                  'product_id' => $products->id,
-                  'name' => $products->prod_name,
-                  'qty' => $products->cqty,
-                  'price' => $products->price,
-                  'total' => $products->cqty * $products->price,
-                  'created_at' => now(),
-                  'updated_at' => now(),
-               ]);
+                DB::table('order_items')->insert([
+                    'order_id' => $orderId,
+                    'product_id' => $products->id,
+                    'name' => $products->prod_name,
+                    'qty' => $products->cqty,
+                    'price' => $products->price,
+                    'total' => $products->cqty * $products->price,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
 
-        sendEmail($orderId);
+            sendEmail($orderId);
 
             // Clear the cart after successful payment
             Cart::where('user_id', $userId)->delete();
 
             $request->session()->forget('order_data');
+            session()->forget(['coupon_code', 'discount_amount', 'new_total']);
 
             // Redirect with success message
             return redirect()->route('user.view_order')->with('status', 'Payment is successful and your order is placed.');
-         } else {
+        } else {
             return redirect()->route('cancell')->with('error', 'Payment was not successful.');
-         }
-      
+        }
 
-    //   return redirect()->route('cancell')->with('error', 'Invalid session ID.');
+
+        //   return redirect()->route('cancell')->with('error', 'Invalid session ID.');
     }
 
     public function cancel()

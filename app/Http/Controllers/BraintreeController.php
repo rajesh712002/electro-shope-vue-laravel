@@ -69,13 +69,27 @@ class BraintreeController extends Controller
             ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
             ->pluck('totalSum')
             ->first();
+        $newTotal = session('new_total', $totalSum);
 
         $token = $this->gateway->clientToken()->generate();
-        return view('user.order.braintree', ['token' => $token], compact('totalSum'));
+        return view('user.order.braintree', ['token' => $token], compact('totalSum', 'newTotal'));
     }
 
     public function braintree(Request $request)
     {
+
+        $user = Auth::user();
+        $userId = $user->id;
+        $totalSum = DB::table('carts')
+            ->join('products', 'carts.product_id', '=', 'products.id')
+            ->where('carts.user_id', $userId)
+            ->select(DB::raw('SUM(carts.qty * products.price) as totalSum'))
+            ->pluck('totalSum')
+            ->first();
+
+        $discount = session('discount_amount', 0);
+        $newTotal = session('new_total', $totalSum);
+
         $amount = $request->amount; // Get amount from the form request
         $nonce = $request->payment_method_nonce;
 
@@ -133,12 +147,17 @@ class BraintreeController extends Controller
                     'notes' => $orderData['order_notes'] ?? null,
                 ]
             );
-
+            $couponCode = session('coupon_code', null);
+            $discount = session('discount_amount', 0);
+            $newTotal = session('new_total', $totalSum);
             // Create a new order
             $order = new Order();
             $order->subtotal = $totalSum;
-            $order->shipping = 0; // Set your shipping cost
-            $order->grand_total = $totalSum;
+            $order->shipping = 0;
+            $order->grand_total = $newTotal;
+            $order->discount = $discount;
+            $order->coupon_code = $couponCode;
+
             $order->payment_status = 'paid with BraintreeCard';
             $order->user_id = $userId;
             $order->first_name = $orderData['first_name'];
@@ -178,6 +197,7 @@ class BraintreeController extends Controller
 
             $request->session()->forget('order_data');
 
+            session()->forget(['coupon_code', 'discount_amount', 'new_total']);
 
             return redirect()->route('user.view_order')->with('status', 'Payment is successful and your order is placed.');
         } else {

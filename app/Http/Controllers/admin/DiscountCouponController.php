@@ -102,7 +102,7 @@ class DiscountCouponController extends Controller
             'discount_amount' => 'required|numeric|min:0',
             'min_amount' => 'nullable|numeric|min:0',
             'status' => 'required',
-            'starts_at' => 'required|date|date_format:Y-m-d H:i:s|after_or_equal:now',
+            // 'starts_at' => 'required|date|date_format:Y-m-d H:i:s|after_or_equal:now',
             'expires_at' => 'required|date|after_or_equal:starts_at|date_format:Y-m-d H:i:s',
             'description' => 'nullable|string|max:500',
         ];
@@ -135,6 +135,30 @@ class DiscountCouponController extends Controller
         return redirect()->route('admin.coupons')->with('success', 'Coupon Deleted Successfully');
     }
 
-   
-    
+
+    public function removeCoupon(Request $request)
+    {
+        // Forget the coupon and discount session values
+        session()->forget(['coupon_code', 'discount_amount', 'new_total']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon removed successfully',
+            'discount_amount' => 0, // Set discount back to 0
+            'coupon_code' => '' // Clear the coupon code
+        ]);
+    }
+
+    public function getCoupons()
+    {
+        $timezone = 'Asia/Kolkata';
+        $currentTime = Carbon::now($timezone);
+
+        $coupons = DB::table('discount_coupons')
+        ->where('status',1)
+        ->where('expires_at', '>=', $currentTime)
+        ->get(); // Adjust the query as needed
+        return response()->json($coupons);
+        // dd($coupons);
+    }
 }

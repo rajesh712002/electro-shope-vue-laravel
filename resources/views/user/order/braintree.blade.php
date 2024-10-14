@@ -77,7 +77,7 @@
         <form id="payment-form" method="post" action="{{ route('braintree') }}">
             @csrf
             <label for="amount">Amount</label>
-            <input type="text" id="amount" name="amount" value="{{ $totalSum }}" readonly>
+            <input type="text" id="amount" name="amount" value="{{ $newTotal }}" readonly>
 
             <label for="dropin-container">Payment Details</label>
             <div id="dropin-container"></div>

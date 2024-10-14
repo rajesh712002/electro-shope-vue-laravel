@@ -402,9 +402,10 @@ function updateQuantity(cartId, action) {
             if (response.success) {
                 $("#cart-quantity-" + cartId).val(response.newQty);
                 $("#cart-total-" + cartId).text(response.newTotal);
-                $("#cart-discount-" + cartId).val("00.00");
-                $("#discount_code-" + cartId).val("");
-
+                $("#cart-discount").text(response.discount_amount);
+                $("#discount_code").val(response.coupon_code);
+                $("#remove_coupon").hide();
+                console.log(response);
                 updateCartSummary();
             } else {
                 alert(response.message);
@@ -425,8 +426,9 @@ function removeItem(cartId) {
         success: function (response) {
             if (response.success) {
                 $("#cart-item-" + cartId).remove();
-                $("#cart-discount-" + cartId).val("00.00");
-                $("#discount_code-" + cartId).val("");
+                $("#cart-discount").text(response.discount_amount);
+                $("#discount_code").val(response.coupon_code);
+                $("#remove_coupon").hide();
                 updateCartSummary();
             }
         },
@@ -455,6 +457,7 @@ $("#apply_discount").click(function () {
                 $("#cart-total").text(response.newTotal);
                 $("#cart-discount").text(response.discountAmount);
                 alert("Coupon applied successfully!");
+                $("#remove_coupon").show();
             } else {
                 alert(response.message);
             }
@@ -466,6 +469,97 @@ $("#apply_discount").click(function () {
         },
     });
 });
+
+$(document).ready(function () {
+    // Apply Coupon logic (already existing)
+
+    // Remove Coupon logic
+    $("#remove_coupon").on("click", function () {
+        $.ajax({
+            url: "/user/remove_coupon",
+            method: "POST",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Reset the discount and coupon code fields
+                    $("#cart-discount").text(response.discount_amount);
+                    $("#discount_code").val("");
+
+                    $("#remove_coupon").hide();
+                    updateCartSummary();
+
+                    console.log(response.message); // You can display this as a notification if needed
+                } else {
+                    alert("Error removing coupon");
+                }
+            },
+            error: function (error) {
+                alert("Error processing request");
+            },
+        });
+    });
+});
+
+$(document).ready(function () {
+    // Fetch coupons when the modal is triggered
+    $("#couponModal").on("show.bs.modal", function () {
+        $.ajax({
+            url: "/user/get_coupons", // Define the route in web.php
+            method: "GET",
+            success: function (response) {
+                let couponList = $("#couponList");
+                couponList.empty(); // Clear existing list
+                if (response.length > 0) {
+                    $.each(response, function (index, coupon) {
+                        couponList.append(`
+                               <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Code:</strong> ${coupon.code} <br>
+                        <strong>Max Uses:</strong> ${coupon.max_uses} <br>
+                      
+                        <strong>Expires on:</strong> ${coupon.expires_at}
+                    </div>
+                    <div>
+                    <strong>Discount:</strong> 
+                    ${
+                        coupon.discount_type === "fixed"
+                            ? `$${coupon.discount_amount} ${coupon.type}`
+                            : `${coupon.discount_amount} ${coupon.type}`
+                    } <br>
+                    <strong>Name:</strong> ${coupon.name} <br>
+                    <strong>Minimum Amount:</strong> ${coupon.min_amount} <br>
+                    </div>
+                   
+                </li>
+                        `);
+                    });
+                } else {
+                    couponList.append(
+                        '<li class="list-group-item">No coupons available at this time.</li>'
+                    );
+                }
+            },
+            error: function () {
+                $("#couponList").html(
+                    '<li class="list-group-item">Failed to load coupons.</li>'
+                );
+            },
+        });
+    });
+});
+
+// Function to copy the coupon code to the clipboard
+function copyCoupon(code) {
+    let tempInput = document.createElement("input");
+    tempInput.value = code;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    alert("Coupon code copied: " + code);
+}
 
 function updateCartSummary() {
     let total = 0;
@@ -488,8 +582,7 @@ function updateCartSummary() {
     // Update the subtotal and total in the cart summary
     $("#cart-subtotal").text(total.toFixed(2));
     $("#cart-total").text(total.toFixed(2));
-    $("#cart-discount").text(discountTotal.toFixed(2));
-    
+    // $("#cart-discount").text(discountTotal.toFixed(2));
 }
 
 //=======//==============//=====================//============================//

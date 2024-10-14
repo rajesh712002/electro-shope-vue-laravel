@@ -126,9 +126,13 @@
                                                         {{ $order_items->order->subtotal }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="3" class="text-right">Discount</th>
+                                                    <th colspan="3" class="text-right">Discount:</th>
                                                     <td><i class="fa fa-inr" aria-hidden="true"></i>
                                                         {{ $order_items->order->discount ?? '0.00' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="3" class="text-right">Coupon Code:     </th>
+                                                    <td><i class="fa" aria-hidden="true"></i>{{ $order_items->order->coupon_code ?? 'null' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3" class="text-right">Shipping:</th>

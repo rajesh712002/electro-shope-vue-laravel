@@ -138,7 +138,9 @@ class CartController extends Controller
         return response()->json([
             'success' => true,
             'newQty' => $cart->qty,
-            'newTotal' => $cart->qty * $cart->product->price
+            'newTotal' => $cart->qty * $cart->product->price,
+            'coupon_code' => '',
+            'discount_amount' => 0,
         ]);
     }
 
@@ -155,7 +157,9 @@ class CartController extends Controller
         return response()->json([
             'success' => true,
             'newQty' => $cart->qty,
-            'newTotal' => $cart->qty * $cart->product->price
+            'newTotal' => $cart->qty * $cart->product->price,
+            'coupon_code' => '',
+            'discount_amount' => 0,
         ]);
     }
 
@@ -167,7 +171,9 @@ class CartController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Item removed from cart'
+            'message' => 'Item removed from cart',
+            'coupon_code' => '',
+            'discount_amount' => 0,
         ]);
     }
 

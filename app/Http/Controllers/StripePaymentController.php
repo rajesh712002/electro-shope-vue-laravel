@@ -60,27 +60,64 @@ class StripePaymentController extends Controller
 
       $discount = session('discount_amount', 0);
       $newTotal = session('new_total', $totalSum);
+      $couponCode = session('coupon_code', null);
 
       // Set your secret key. Remember to switch to your live secret key in production.
       // See your keys here: https://dashboard.stripe.com/apikeys
       $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
       // dd($stripe);
 
-      $lineItems = [];
 
+      $totalSum = array_reduce($request->price, function ($carry, $item) use ($request) {
+         return $carry + ($item * $request->quantity[array_search($item, $request->price)]);
+      }, 0);
+
+      $discount = session('discount_amount', 0);
+      $newTotal = $totalSum - $discount; // Calculate the new total
+
+      // Ensure newTotal is not negative
+      if ($newTotal < 0) {
+         $newTotal = 0;
+      }
+
+      $lineItems = [];
       foreach ($request->prod_name as $index => $prodName) {
+         $originalPrice = $request->price[$index];
+         $quantity = $request->quantity[$index];
+
+         // Calculate discounted price for each item
+         $discountedPrice = $originalPrice;
+
+         if ($discount > 0) {
+            $itemDiscount = ($originalPrice / $totalSum) * $discount;
+            $discountedPrice = $originalPrice - $itemDiscount; // Apply discount to original price
+         }
+
+         $discountedPrice = max(0, $discountedPrice);
+
          $lineItems[] = [
             'price_data' => [
                'currency' => 'inr',
                'product_data' => [
-                  'name' => $prodName
+                  'name' => $prodName,
                ],
-               'unit_amount' => $request->price[$index] * 100,
+               'unit_amount' => round($discountedPrice * 100), // Use discounted price
             ],
-            'quantity' => $request->quantity[$index],
+            'quantity' => $quantity,
          ];
       }
 
+      $response = $stripe->checkout->sessions->create([
+         'line_items' => $lineItems,
+         'mode' => 'payment',
+         'success_url' => route('successs') . '?session_id={CHECKOUT_SESSION_ID}',
+         'cancel_url' => route('cancell'),
+      ]);
+
+      // dd($response); 
+
+
+      // dd($lineItems);
       //store Request in session
       session()->put('order_data', [
          'first_name' => $request->first_name,
@@ -96,15 +133,7 @@ class StripePaymentController extends Controller
          'order_notes' => $request->order_notes,
       ]);
 
-
-
-
-      $response = $stripe->checkout->sessions->create([
-         'line_items' => $lineItems,
-         'mode' => 'payment',
-         'success_url' => route('successs') . '?session_id={CHECKOUT_SESSION_ID}',
-         'cancel_url' => route('cancell'),
-      ]);
+      
 
       // dd($response);
 
@@ -185,11 +214,17 @@ class StripePaymentController extends Controller
                ]
             );
 
+            $couponCode = session('coupon_code', null);
+            $discountAmount = session('discount_amount', 0);
+            $newTotal = session('new_total', $totalSum);
+
             // Create a new order
             $order = new Order();
             $order->subtotal = $totalSum;
-            $order->shipping = 0; // Set your shipping cost
-            $order->grand_total = $totalSum;
+            $order->shipping = 0;
+            $order->grand_total = $newTotal;
+            $order->discount = $discountAmount;
+            $order->coupon_code = $couponCode;
             $order->payment_status = 'paid with Stripe Card';
             $order->user_id = $userId;
             $order->first_name = $orderData['first_name'];

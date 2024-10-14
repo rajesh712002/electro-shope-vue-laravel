@@ -81,7 +81,7 @@
                                                     <td><i class="fa fa-inr" aria-hidden="true"></i>
                                                         {{ $orders->grand_total }}</td>
 
-                                                    @if ($orders->status == 'pending')
+                                                    @if ($orders->status == 'pending' && $orders->payment_status == 'paid on cod')
                                                         <td>
                                                             <form id="delete-order-form-{{ $orders->id }}"
                                                                 class="delete_cat" method="post"

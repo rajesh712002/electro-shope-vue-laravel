@@ -151,6 +151,10 @@
                                     <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i> {{ $order_items->order->discount ?? '0.00' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex">
+                                    <span>Coupon Code</span>
+                                    <span class="ms-auto"><i class="fa" aria-hidden="true"></i> {{ $order_items->order->coupon_code ?? 'null' }}</span>
+                                </li>
+                                <li class="list-group-item d-flex">
                                     <span>Shipping</span>
                                     <span class="ms-auto">Free</span>
                                 </li>

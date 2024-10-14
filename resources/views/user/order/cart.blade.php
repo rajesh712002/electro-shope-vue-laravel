@@ -308,8 +308,33 @@
                             </div>
                         </div> --}}
 
+                        <!-- Coupon Codes Modal -->
+                        <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="couponModalLabel">Available Coupons</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-group" id="couponList">
+                                            <!-- Coupon codes will be populated here -->
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="col-md-4">
                             <div class="card cart-summery">
+
                                 <div class="sub-title">
                                     <h2 class="bg-white">Cart Summary</h2>
                                 </div>
@@ -329,9 +354,21 @@
                                     </div>
                                     <br>
                                     <div class="input-group apply-coupan mt-4">
-                                        <input type="text" placeholder="Coupon Code" class="form-control" name="discount_code" id="discount_code" value="{{$couponCode}}">
-                                        <button class="btn btn-dark" type="button" id="apply_discount">Apply Coupon</button>
-                                    </div>
+
+                                        <input type="text" placeholder="Coupon Code" class="form-control"
+                                            name="discount_code" id="discount_code" value="{{ $couponCode }}">
+                                        <button class="btn btn-dark" type="button" id="apply_discount">Apply
+                                            Coupon</button>
+
+                                        </div>
+                                        <button class="btn btn-danger btn-sm" type="button" id="remove_coupon"
+                                        style="display: {{ $couponCode ? 'inline-block' : 'none' }};">Remove
+                                        Coupon</button>
+                                        <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal"
+                                            data-bs-target="#couponModal">
+                                            View Available Coupons
+                                        </button>
+
                                     <br><br>
 
                                     <div class="d-flex justify-content-between summery-end">

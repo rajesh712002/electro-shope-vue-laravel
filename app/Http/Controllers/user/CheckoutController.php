@@ -72,6 +72,7 @@ class CheckoutController extends Controller
             ->where('expires_at', '>=', $currentTime)
             ->first();
 
+            // dd($coupon);
         // Check if coupon exists and is valid
         if (!$coupon) {
             return response()->json([

@@ -120,9 +120,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="starts_at">Starts At</label>
+                                        {{-- <label for="starts_at">Starts At</label> --}}
                                         <input type="text" name="starts_at" id="starts_at" class=" form-control"
-                                            value="{{ !empty($couponCode) ? $couponCode->starts_at : '' }}" placeholder="Starts At">
+                                            value="{{ !empty($couponCode) ? $couponCode->starts_at : '' }}" placeholder="Starts At" hidden>
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
