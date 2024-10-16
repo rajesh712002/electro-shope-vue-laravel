@@ -7,6 +7,16 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid my-2">
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <h1>Orders</h1>
@@ -52,6 +62,7 @@
                                     <th>Payment Status</th>
                                     <th>Total</th>
                                     <th>Date Purchased</th>
+                                    <th>Refund</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,12 +94,35 @@
                                             @elseif($orders->status == 'cancelled')
                                                 <button type="button" class="btn btn-danger"> <i class="fa fa-close"></i>
                                                     Cancelled</button>
+                                            @elseif($orders->status == 'refunded')
+                                                <button type="button" class="btn btn-secondary"> <i
+                                                        class="fa fa-coins"></i>
+                                                    Refunded</button>
                                             @endif
                                             {{-- <span class="badge bg-success">Delivered</span> --}}
                                         </td>
                                         <td>{{ $orders->payment_status }}</td>
                                         <td><i class="fa fa-inr" aria-hidden="true"></i> {{ $orders->grand_total }}</td>
                                         <td>{{ \Carbon\Carbon::parse($orders->created_at)->format('d M, Y') }}</td>
+                                        @if ($orders->status == 'cancelled' && $orders->payment_id != '')
+                                            @if ($orders->payment_status == 'paid with Stripe Card')
+                                                <td>
+                                                    <form action="{{ route('refund') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="order_id" value="{{ $orders->id }}">
+                                                        <button type="submit" class="btn btn-secondary">Refund</button>
+                                                    </form>
+                                                </td>
+                                            @elseif($orders->payment_status == 'paid with BraintreeCard')
+                                                <td>
+                                                    <form action="{{ route('braintree.refund', $orders->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-secondary">Refund</button>
+                                                    </form>
+                                                </td>
+                                            @endif
+                                        @endif
                                     </tr>
                                 @endforeach
 

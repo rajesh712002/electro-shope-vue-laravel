@@ -1,6 +1,7 @@
 @include('user.includes.header')
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
+    
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
         <div class="container">

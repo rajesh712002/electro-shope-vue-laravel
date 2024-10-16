@@ -88,6 +88,8 @@ Route::prefix('user')->group(function () {
 Route::post('stripe', [StripePaymentController::class, 'stripe'])->name('stripe');
 Route::get('successs', [StripePaymentController::class, 'success'])->name('successs');
 Route::get('cancell', [StripePaymentController::class, 'cancel'])->name('cancell');
+Route::post('refund', [StripePaymentController::class, 'refund'])->name('refund');
+
 
 //Paypal
 Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
@@ -97,6 +99,8 @@ Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
 //Braintree
 Route::get('/braintree', [BraintreeController::class, 'braintreeCard'])->name('braintreeCard');
 Route::post('braintree/store', [BraintreeController::class, 'braintree'])->name('braintree');
+Route::post('braintree/refund/{id}', [BraintreeController::class, 'refund'])->name('braintree.refund');
+
 
 Route::middleware([ValidUser::class])->group(function (): void {
     Route::prefix('user')->group(function () {

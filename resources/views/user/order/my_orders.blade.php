@@ -24,13 +24,13 @@
                 <div class="col-md-9">
                     <div class="card">
                         @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="alert alert-danger">{{ session('error') }}</div>
-                    @endif
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
                         <div class="card-header">
                             <h2 class="h5 mb-0 pt-2 pb-2">My Orders</h2>
                         </div>
@@ -75,13 +75,17 @@
                                                         @elseif($orders->status == 'cancelled')
                                                             <button type="button" class="btn btn-danger"> <i
                                                                     class="fa fa-close"></i> Cancelled</button>
+                                                        @elseif($orders->status == 'refunded')
+                                                            <button type="button" class="btn btn-secondary"> <i
+                                                                    class="fa fa-coins"></i>
+                                                                Refunded</button>
                                                         @endif
 
                                                     </td>
                                                     <td><i class="fa fa-inr" aria-hidden="true"></i>
                                                         {{ $orders->grand_total }}</td>
 
-                                                    @if ($orders->status == 'pending' && $orders->payment_status == 'paid on cod')
+                                                    @if ($orders->status == 'pending')
                                                         <td>
                                                             <form id="delete-order-form-{{ $orders->id }}"
                                                                 class="delete_cat" method="post"

@@ -212,7 +212,10 @@ class SettingController extends Controller
     public function remove_order($id)
     {
         $product = Order::findOrFail($id);
-        $product->delete();
+        $product->status = 'cancelled';
+        $product->save();
+
+
         return redirect()->back();
     }
 }

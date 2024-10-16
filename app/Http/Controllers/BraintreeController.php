@@ -8,7 +8,9 @@ use Braintree\Gateway;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Validator;
 
 class BraintreeController extends Controller
@@ -150,7 +152,10 @@ class BraintreeController extends Controller
             $couponCode = session('coupon_code', null);
             $discount = session('discount_amount', 0);
             $newTotal = session('new_total', $totalSum);
+
             // Create a new order
+            $transactionId = $result->transaction->id;
+            // dd($transactionId);
             $order = new Order();
             $order->subtotal = $totalSum;
             $order->shipping = 0;
@@ -159,6 +164,7 @@ class BraintreeController extends Controller
             $order->coupon_code = $couponCode;
 
             $order->payment_status = 'paid with BraintreeCard';
+            $order->payment_id = $transactionId;
             $order->user_id = $userId;
             $order->first_name = $orderData['first_name'];
             $order->last_name = $orderData['last_name'];
@@ -202,6 +208,47 @@ class BraintreeController extends Controller
             return redirect()->route('user.view_order')->with('status', 'Payment is successful and your order is placed.');
         } else {
             return redirect()->route('user.index')->with('error', 'Payment Is Unsuccessful.');
+        }
+    }
+
+
+    public function refund(Request $request, $orderId)
+    {
+        try {
+            $order = Order::findOrFail($orderId);
+            
+            if (!$order) {
+                return redirect()->back()->with('error', 'Order not found.');
+            }
+
+            $transactionId = $order->payment_id;
+
+            if (!$transactionId) {
+                return redirect()->back()->with('error', 'No transaction ID found for this order.');
+            }
+
+            // Create the refund
+       
+            $transaction = $this->gateway->transaction()->find($transactionId);
+
+            // if ($transaction->status !== 'settled') {
+            //     return redirect()->back()->with('error', 'Cannot refund transaction unless it is settled.');
+            // }
+
+            $result = $this->gateway->transaction()->refund($transactionId);
+            // dd($result);
+
+            if ($result->success) {
+                $order->payment_status = 'refunded';
+                $order->refund_id = $result->transaction->id;
+                $order->save();
+
+                return redirect()->back()->with('status', 'Refund Successful!');
+            } else {
+                return redirect()->back()->with('error', 'Refund failed: ');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error processing refund: ' . $e->getMessage());
         }
     }
 }

@@ -12,6 +12,7 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -133,7 +134,7 @@ class StripePaymentController extends Controller
          'order_notes' => $request->order_notes,
       ]);
 
-      
+
 
       // dd($response);
 
@@ -169,6 +170,9 @@ class StripePaymentController extends Controller
          $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
 
          $session = $stripe->checkout->sessions->retrieve($request->session_id);
+
+         $paymentTypeId = $session->payment_intent;
+         // dd($paymentTypeId);
 
          if ($session->payment_status === 'paid') {
             $user = Auth::user();
@@ -226,6 +230,7 @@ class StripePaymentController extends Controller
             $order->discount = $discountAmount;
             $order->coupon_code = $couponCode;
             $order->payment_status = 'paid with Stripe Card';
+            $order->payment_id = $paymentTypeId;
             $order->user_id = $userId;
             $order->first_name = $orderData['first_name'];
             $order->last_name = $orderData['last_name'];
@@ -281,5 +286,35 @@ class StripePaymentController extends Controller
       return redirect()->route('user.index')->with('error', 'Payment Is Unsuccessful.');
 
       // return "Payment Is Unsuccessful";
+   }
+
+   
+
+   public function refund(Request $request)
+   {
+      $order = Order::find($request->order_id); 
+      $paymentIntentId = $order->payment_id;
+
+      // Set Stripe secret key
+      \Stripe\Stripe::setApiKey(config('stripe.stripe_sk'));
+      // $stripe = new \Stripe\StripeClient(config('stripe.stripe_sk'));
+
+
+      try {
+         $refund = \Stripe\Refund::create([
+            'payment_intent' => $paymentIntentId, 
+         ]);
+         // dd($refund);
+         // dd('hello');
+
+         $order->status = 'refunded';
+         $order->refund_id = $refund->id;
+         // dd($order);
+         $order->save();
+
+         return redirect()->back()->with('status', 'Refund Successful!');
+      } catch (\Stripe\Exception\ApiErrorException $e) {
+         return redirect()->back()->with('error', 'Refund Failed: ' . $e->getMessage());
+      }
    }
 }

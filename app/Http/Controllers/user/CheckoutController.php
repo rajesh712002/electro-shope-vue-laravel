@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\StripePaymentController;
+use App\Models\Product;
 
 class CheckoutController extends Controller
 {
@@ -51,7 +52,7 @@ class CheckoutController extends Controller
         $CustomerAddress = CustomerAddress::where('user_id', '=', $userId)->first();
 
         // dd($CustomerAddress->user_id);
-        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress', 'userId','couponCode','discount','newTotal'));
+        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress', 'userId', 'couponCode', 'discount', 'newTotal'));
     }
 
 
@@ -72,7 +73,7 @@ class CheckoutController extends Controller
             ->where('expires_at', '>=', $currentTime)
             ->first();
 
-            // dd($coupon);
+        // dd($coupon);
         // Check if coupon exists and is valid
         if (!$coupon) {
             return response()->json([
@@ -148,6 +149,7 @@ class CheckoutController extends Controller
 
     public function storeCheckout(Request $request)
     {
+
         $userId = Auth::user()->id;
 
         //Fatch Products From Cart
@@ -158,7 +160,8 @@ class CheckoutController extends Controller
             ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
             ->get();
 
-
+       
+        // dd($product);
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->where('carts.user_id', $userId)
@@ -233,15 +236,15 @@ class CheckoutController extends Controller
         $discount = 0;
         $newTotal = 0;
 
-        
-        
+
+
         // dd($discount, $newTotal, $couponCode);
         if ($request->payment_method == 'cod') {
             $shipping = 0;
             $discountCode = '';
             $discount = 0;
             $subtotal = $totalSum;
-            
+
             $couponCode = session('coupon_code', null);
             $discount = session('discount_amount', 0);
             $newTotal = session('new_total', $totalSum);
@@ -347,6 +350,13 @@ class CheckoutController extends Controller
 
         session()->forget(['coupon_code', 'discount_amount', 'new_total']);
         //=======//============//==============//======================//==============================//
+        //Update Product Qty
+        foreach ($product as $products) {
+            $productUpdate = Product::findOrFail($products->id);
+            $productUpdate->qty -= $products->cqty;
+            $productUpdate->save();
+        }
+        
         //Make Cart Empty 
 
         $user_id = Auth::user()->id;

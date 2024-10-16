@@ -54,7 +54,6 @@ function cartCount()
     }
 }
 
-
 function orderItemCount()
 {
     if (Auth::check()) {
@@ -94,3 +93,6 @@ function sendInvoiceEmail($orderId)
     Mail::to($order->email)->send(new SendInvoiceEmail($mailData));
     // dd($order);
 }
+
+
+

@@ -437,7 +437,7 @@ function removeItem(cartId) {
 
 $("#apply_discount").click(function () {
     let couponCode = $("#discount_code").val();
-    let url = "/user/apply_coupon"; // Adjust this URL based on your route
+    let url = "/user/apply_coupon"; 
 
     if (!couponCode) {
         alert("Please enter a coupon code.");
@@ -470,10 +470,9 @@ $("#apply_discount").click(function () {
     });
 });
 
-$(document).ready(function () {
-    // Apply Coupon logic (already existing)
 
-    // Remove Coupon logic
+// Remove Coupon logic
+$(document).ready(function () {
     $("#remove_coupon").on("click", function () {
         $.ajax({
             url: "/user/remove_coupon",
@@ -490,7 +489,7 @@ $(document).ready(function () {
                     $("#remove_coupon").hide();
                     updateCartSummary();
 
-                    console.log(response.message); // You can display this as a notification if needed
+                    console.log(response.message); 
                 } else {
                     alert("Error removing coupon");
                 }
@@ -502,21 +501,22 @@ $(document).ready(function () {
     });
 });
 
+
+// Fetch coupons when the modal is triggered
 $(document).ready(function () {
-    // Fetch coupons when the modal is triggered
     $("#couponModal").on("show.bs.modal", function () {
         $.ajax({
-            url: "/user/get_coupons", // Define the route in web.php
+            url: "/user/get_coupons",
             method: "GET",
             success: function (response) {
                 let couponList = $("#couponList");
-                couponList.empty(); // Clear existing list
+                couponList.empty(); 
                 if (response.length > 0) {
                     $.each(response, function (index, coupon) {
                         couponList.append(`
                                <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>Code:</strong> ${coupon.code} <br>
+                        <strong>Code:</strong><span style="color: red;"> ${coupon.code}</span> <br>
                         <strong>Max Uses:</strong> ${coupon.max_uses} <br>
                       
                         <strong>Expires on:</strong> ${coupon.expires_at}
@@ -550,16 +550,6 @@ $(document).ready(function () {
     });
 });
 
-// Function to copy the coupon code to the clipboard
-function copyCoupon(code) {
-    let tempInput = document.createElement("input");
-    tempInput.value = code;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
-    alert("Coupon code copied: " + code);
-}
 
 function updateCartSummary() {
     let total = 0;

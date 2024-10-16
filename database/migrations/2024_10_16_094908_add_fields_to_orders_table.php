@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->enum('payment_status',['paid on cod','paid with Stripe Card','not paid','paid with PayPal','paid with BraintreeCard'])->after('grand_total')->default('not paid');
-            $table->enum('status',['pending','shipped','out for delivery','delivered','cancelled','refended'])->after('payment_status')->default('pending');
+            $table->string('payment_id')->nullable()->after('payment_status');  
+            $table->string('refund_id')->nullable()->after('payment_id');       
+           
         });
     }
 
@@ -23,9 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            // $table->dropColumn('payment_status');
-            $table->dropColumn('status');
+            //
         });
     }
-    
 };

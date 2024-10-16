@@ -94,6 +94,7 @@
                             <div class="col-md-4">
                                 <div class="card product-card">
                                     <div class="product-image position-relative">
+                                        <img style="width: 70px; height: 70px;" src="{{ asset('admin_assets/images/' . $prod->brand->image) }}">
                                         <a href="{{ route('viewproduct', $prod->slug) }}">
                                             <img style="width: 200px; height: 200px; object-fit: contain;"
                                                 class="cardimgtop"

@@ -144,8 +144,8 @@ class DiscountCouponController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Coupon removed successfully',
-            'discount_amount' => 0, // Set discount back to 0
-            'coupon_code' => '' // Clear the coupon code
+            'discount_amount' => 0, 
+            'coupon_code' => ''
         ]);
     }
 
@@ -157,7 +157,7 @@ class DiscountCouponController extends Controller
         $coupons = DB::table('discount_coupons')
         ->where('status',1)
         ->where('expires_at', '>=', $currentTime)
-        ->get(); // Adjust the query as needed
+        ->get(); 
         return response()->json($coupons);
         // dd($coupons);
     }
