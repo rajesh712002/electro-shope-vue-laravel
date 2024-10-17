@@ -215,6 +215,7 @@ class SettingController extends Controller
         $product->status = 'cancelled';
         $product->save();
 
+        sendCancleOrderEmail($id);
 
         return redirect()->back();
     }

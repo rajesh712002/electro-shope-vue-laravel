@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
+use Log;
 
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
@@ -91,8 +93,8 @@ class PaypalController extends Controller
         $newTotal = session('new_total', $itemTotal);
 
         // dd($newTotal);
-    
-        
+
+
         $response = $provider->createOrder([
             "intent" => "CAPTURE",
             "application_context" => [
@@ -168,7 +170,7 @@ class PaypalController extends Controller
             // Create a new order session
             $orderData = session()->get('order_data');
 
-            // dd($orderData);
+            // dd($response);
 
             // Store Customer Address
 
@@ -198,6 +200,8 @@ class PaypalController extends Controller
             $order->discount = $discount;
             $order->coupon_code = $couponCode;
             $order->payment_status = 'paid with PayPal';
+            $order->payment_id = $response['purchase_units'][0]['payments']['captures'][0]['id'];
+
             $order->user_id = $userId;
             $order->first_name = $orderData['first_name'];
             $order->last_name = $orderData['last_name'];
@@ -253,5 +257,57 @@ class PaypalController extends Controller
         return redirect()->route('user.index')->with('error', 'Payment Is Unsuccessful.');
 
         // return "Payment Is Unsuccessful";
+    }
+
+
+
+    public function refund(Request $request, $orderId)
+    {
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $accessToken = $provider->getAccessToken();
+
+        $order = Order::findOrFail($orderId);
+
+        $captureId = $order->payment_id;
+
+        $refundData = [
+            'amount' => [
+                'currency_code' => 'USD',
+                'value' => number_format($order->grand_total, 2, '.', '')
+            ]
+        ];
+
+        dd($refundData);
+        try {
+            // dd($captureId, $refundData);
+
+            $response = Http::withToken($accessToken)->post(
+                "https://api.sandbox.paypal.com/v2/payments/captures/{$captureId}/refund",
+                $refundData
+            );
+
+            // if ($response->failed()) {
+            //     dd($response->json()); // Check for specific error messages
+            // }
+            if ($response->successful()) {
+                $refund = $response->json();
+
+                if (isset($refund['id']) && $refund['status'] === 'COMPLETED') {
+                    $order->status = 'refunded';
+                    $order->save();
+
+                    //Mail For Refund
+                    refundOrderAmount($orderId);
+
+                    return redirect()->back()->with('success', 'Refund processed successfully.');
+                }
+            } else {
+                $errorMessage = $response->json()['message'] ?? 'Unknown error occurred.';
+                return redirect()->back()->with('error', 'Refund failed: ' . $errorMessage);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error processing refund: ' . $e->getMessage());
+        }
     }
 }

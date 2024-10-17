@@ -72,7 +72,9 @@
                                         <td><a href="{{ route('admin.orderdetail', $orders->id) }}">{{ $orders->id }}</a>
                                         </td>
                                         <td>{{ $orders->user->name }}</td>
-                                        <td>{{ $orders->first_name }} {{ $orders->last_name }}</td>
+                                        <td>{{ $orders->first_name }} {{ $orders->last_name }} <br> {{ $orders->address }}, {{ $orders->apartment }},{{ $orders->pincode }}<br>
+                                        {{ $orders->state }},{{ $orders->city }}<br>
+                                          
                                         <td>{{ $orders->email }}</td>
                                         <td>{{ $orders->mobile }}</td>
                                         <td>
@@ -117,6 +119,13 @@
                                                 <td>
                                                     <form action="{{ route('braintree.refund', $orders->id) }}"
                                                         method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-secondary">Refund</button>
+                                                    </form>
+                                                </td>
+                                            @elseif($orders->payment_status == 'paid with PayPal')
+                                                <td>
+                                                    <form action="{{ route('paypal.refund', $orders->id) }}" method="POST">
                                                         @csrf
                                                         <button type="submit" class="btn btn-secondary">Refund</button>
                                                     </form>

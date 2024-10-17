@@ -1,14 +1,16 @@
 <?php
 
+use App\Mail\RefundOrderAmount;
 use App\Models\user;
 use App\Models\Order;
 use App\Models\Product;
 use App\Mail\OrderEmail;
 use App\Models\Category;
+use App\Mail\CancleOrder;
 use Illuminate\Http\Request;
+use App\Mail\SendInvoiceEmail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Mail\SendInvoiceEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -95,4 +97,25 @@ function sendInvoiceEmail($orderId)
 }
 
 
+function sendCancleOrderEmail($orderId)
+{
+    $order = Order::with('orderItem')->where('id', $orderId)->first();
+    $mailData = [
+        // 'subject' => 'Thanks for your order',
+        'order' => $order
+    ];
+
+    Mail::to($order->email)->send(new CancleOrder($mailData));
+    // dd($order);
+}
+
+function refundOrderAmount($orderId)
+{
+    $order = Order::with('orderItem')->where('id', $orderId)->first();
+    $mailData = [
+        'order' => $order
+    ];
+
+    Mail::to($order->email)->send(new RefundOrderAmount($mailData));
+}
 

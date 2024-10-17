@@ -306,11 +306,16 @@ class StripePaymentController extends Controller
          ]);
          // dd($refund);
          // dd('hello');
+         $orderId = $order->id;
 
          $order->status = 'refunded';
          $order->refund_id = $refund->id;
          // dd($order);
          $order->save();
+
+         //Mail For Refund
+         refundOrderAmount($orderId);
+
 
          return redirect()->back()->with('status', 'Refund Successful!');
       } catch (\Stripe\Exception\ApiErrorException $e) {

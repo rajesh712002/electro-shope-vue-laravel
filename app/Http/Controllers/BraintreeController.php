@@ -216,7 +216,7 @@ class BraintreeController extends Controller
     {
         try {
             $order = Order::findOrFail($orderId);
-            
+
             if (!$order) {
                 return redirect()->back()->with('error', 'Order not found.');
             }
@@ -228,20 +228,23 @@ class BraintreeController extends Controller
             }
 
             // Create the refund
-       
+
             $transaction = $this->gateway->transaction()->find($transactionId);
 
-            // if ($transaction->status !== 'settled') {
-            //     return redirect()->back()->with('error', 'Cannot refund transaction unless it is settled.');
-            // }
+            if ($transaction->status !== 'settled') {
+                return redirect()->back()->with('error', 'Cannot refund transaction unless it is settled.');
+            }
 
             $result = $this->gateway->transaction()->refund($transactionId);
             // dd($result);
 
             if ($result->success) {
-                $order->payment_status = 'refunded';
+                $order->status = 'refunded';
                 $order->refund_id = $result->transaction->id;
                 $order->save();
+
+                //Mail For Refund
+                refundOrderAmount($orderId);
 
                 return redirect()->back()->with('status', 'Refund Successful!');
             } else {

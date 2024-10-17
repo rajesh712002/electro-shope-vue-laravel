@@ -108,4 +108,6 @@ class UserController extends Controller
     {
         return view('user.order.privacy');
     }
+
+   
 }

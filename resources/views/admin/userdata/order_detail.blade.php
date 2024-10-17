@@ -71,8 +71,7 @@
 
 
                                             <div class="col-sm-4 invoice-col">
-                                                <b>Invoice #007612</b><br>
-                                                <br>
+                                              
                                                 <b>Order ID:</b> {{ $order_item->order_id }}<br>
                                                 <b>Total:</b><i class="fa fa-inr" aria-hidden="true"></i>
                                                 {{ $order_item->order->grand_total }}<br>

@@ -95,6 +95,8 @@ Route::post('refund', [StripePaymentController::class, 'refund'])->name('refund'
 Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PaypalController::class, 'success'])->name('success');
 Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
+Route::post('paypal/refund/{id}', [PayPalController::class, 'refund'])->name('paypal.refund');
+
 
 //Braintree
 Route::get('/braintree', [BraintreeController::class, 'braintreeCard'])->name('braintreeCard');
@@ -132,6 +134,8 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::get('/get_coupons',[DiscountCouponController::class,'getCoupons'])->name('get_coupons');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
+
+        
     });
 });
 
