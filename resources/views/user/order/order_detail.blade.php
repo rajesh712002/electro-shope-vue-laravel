@@ -76,6 +76,10 @@
                                                 @elseif($order->status == 'cancelled')
                                                     <td> <button type="button" class="btn btn-danger"> <i
                                                                 class="fa fa-close"></i> Cancelled</button></td>
+                                                @elseif($order->status == 'refunded')
+                                                    <button type="button" class="btn btn-secondary"> <i
+                                                            class="fa fa-coins"></i>
+                                                        Refunded</button>
                                                 @endif
                                             </p>
                                         </div>
@@ -148,11 +152,13 @@
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Discount</span>
-                                    <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i> {{ $order_items->order->discount ?? '0.00' }}</span>
+                                    <span class="ms-auto"><i class="fa fa-inr" aria-hidden="true"></i>
+                                        {{ $order_items->order->discount ?? '0.00' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Coupon Code</span>
-                                    <span class="ms-auto"><i class="fa" aria-hidden="true"></i> {{ $order_items->order->coupon_code ?? 'null' }}</span>
+                                    <span class="ms-auto"><i class="fa" aria-hidden="true"></i>
+                                        {{ $order_items->order->coupon_code ?? 'null' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Shipping</span>

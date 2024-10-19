@@ -237,6 +237,8 @@ Route::middleware([ValidAdmin::class])->group(function () {
         Route::get('/processing-order', [AdminloginController::class, 'viewProcessingOrders'])->name('admin.processingorder');
         Route::get('/cancle-order', [AdminloginController::class, 'viewCancleOrders'])->name('admin.cancleorder');
         Route::get('/delivered-order', [AdminloginController::class, 'viewDeliveredOrders'])->name('admin.deliveredorder');
+        Route::get('/refunded-order', [AdminloginController::class, 'viewRefundedOrders'])->name('admin.refundedOrder');
+
 
         Route::get('/users', [AdminloginController::class, 'users'])->name('admin.users');
     });

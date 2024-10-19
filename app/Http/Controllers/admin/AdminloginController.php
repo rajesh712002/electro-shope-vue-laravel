@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminloginController extends Controller
 {
-  
 
-   
+
+
 
     public function deshboard()
     {
@@ -55,27 +55,53 @@ class AdminloginController extends Controller
         return view('admin.deshboard', compact('totaluser', 'totalcategory', 'statusCounts', 'totalsubcategory', 'totalbrand', 'totalproduct', 'totalorder',  'totalearning'));
     }
 
-  
-   
+
+
 
 
     public function users(Request $request)
     {
-        $users = User::latest();
+
+        $users = User::where('role', 1)->latest();
+
+
         if (!empty($request->get('keyword'))) {
-            $users = $users->where('name', 'like', '%' . $request->get('keyword') . '%')
-                ->orWhere('id', 'like', '%' . $request->get('keyword') . '%')
-                ->orWhere('email', 'like', '%' . $request->get('keyword') . '%')
-                ->orWhere('phone', 'like', '%' . $request->get('keyword') . '%');
 
+            $keyword = $request->get('keyword');
 
-            $users = $users->paginate(100);
-            return view('admin.userdata.user', ['users' => $users]);
-        } else {
-            $users = $users->paginate(14);
-            return view('admin.userdata.user', ['users' => $users]);
+            $users = $users->where(function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('id', 'like', '%' . $keyword . '%')
+                    ->orWhere('email', 'like', '%' . $keyword . '%')
+                    ->orWhere('phone', 'like', '%' . $keyword . '%');
+            });
         }
-        // return view('admin.userdata.user', ['users' => $users]);
+
+        $users = $users->paginate(3);
+
+        if ($request->ajax()) {
+            $html = '';
+            if ($users->isNotEmpty()) {
+                foreach ($users as $user) {
+                    $html .= '<tr>
+                    <td>' . $user->id . '</td>
+                    <td>' . $user->name . '</td>
+                    <td>' . $user->email . '</td>
+                </tr>';
+                }
+            } else {
+                $html .= '<tr>
+                <td colspan="3" class="text-center">No users found</td>
+            </tr>';
+            }
+
+            return response()->json([
+                'data' => $html,
+                'pagination' => (string) $users->links(),
+            ]);
+        }
+
+        return view('admin.userdata.user', ['users' => $users]);
     }
 
     public function viewOrders(Request $request)
@@ -99,16 +125,83 @@ class AdminloginController extends Controller
                 ->orWhereHas('user', function ($query) use ($request) {
                     $query->where('name', 'like', '%' . $request->get('keyword') . '%');
                 });
-
-
-            $order = $order->paginate(100);
-            return view('admin.userdata.orders', ['order' => $order]);
-        } else {
-            $order = $order->paginate(7);
-            return view('admin.userdata.orders', ['order' => $order]);
         }
-        // return view('admin.userdata.orders',compact('order'));
 
+        $order = $order->paginate(7);
+
+        if ($request->ajax()) {
+            $html = '';
+            if ($order->isNotEmpty()) {
+                foreach ($order as $orders) {
+                    $html .= '<tr>
+                
+                        <td><a href="' . route('admin.orderdetail', $orders->id) . '">' . $orders->id . '</a></td>
+                        <td>' . $orders->user->name . '</td>
+                       <td>' . $orders->first_name . ' ' . $orders->last_name . '<br>' .
+                        $orders->address . ', ' .
+                        ($orders->apartment ? $orders->apartment . ', ' : '') .
+                        $orders->city . ', ' .
+                        $orders->state . ', ' .
+                        $orders->pincode . '</td>
+                        <td>' . $orders->email . '</td>
+                        <td>' . $orders->mobile . '</td>
+                         <td>';
+                    if ($orders->status == 'pending') {
+                        $html .= '<button type="button" class="btn btn-info"><span class="fa fa-bars" aria-hidden="true"></span> Pending</button>';
+                    } elseif ($orders->status == 'shipped') {
+                        $html .= '<button type="button" class="btn btn-primary"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Shipped!</button>';
+                    } elseif ($orders->status == 'out for delivery') {
+                        $html .= '<button type="button" class="btn btn-warning"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Out For Delivery!</button>';
+                    } elseif ($orders->status == 'delivered') {
+                        $html .= '<button type="button" class="btn btn-success"><span class="fa fa-check-circle" aria-hidden="true"></span> Delivered</button>';
+                    } elseif ($orders->status == 'cancelled') {
+                        $html .= '<button type="button" class="btn btn-danger"><i class="fa fa-close"></i> Cancelled</button>';
+                    } elseif ($orders->status == 'refunded') {
+                        $html .= '<button type="button" class="btn btn-secondary"><i class="fa fa-coins"></i> Refunded</button>';
+                    }
+
+                    $html .= '</td>
+                        <td>' . $orders->payment_status . '</td>
+                        <td>' . $orders->grand_total . '</td>
+                        <td>' . \Carbon\Carbon::parse($orders->created_at)->format('d M, Y') . '</td>
+                            <td>';
+
+                    if ($orders->status == 'cancelled' && $orders->payment_id != '') {
+                        if ($orders->payment_status == 'paid with Stripe Card') {
+                            $html .= '<td>
+                                        <form action="' . route('refund') . '" method="POST">
+                                            ' . csrf_field() . '
+                                            <input type="hidden" name="order_id" value="' . $orders->id . '">
+                                            <button type="submit" class="btn btn-secondary">Refund</button>
+                                        </form>
+                                    </td>';
+                        } elseif ($orders->payment_status == 'paid with BraintreeCard') {
+                            $html .= '<td>
+                                        <form action="' . route('braintree.refund', $orders->id) . '" method="POST">
+                                            ' . csrf_field() . '
+                                            <button type="submit" class="btn btn-secondary">Refund</button>
+                                        </form>
+                                    </td>';
+                        } elseif ($orders->payment_status == 'paid with PayPal') {
+                            $html .= '<td>
+                                        <form action="' . route('paypal.refund', $orders->id) . '" method="POST">
+                                            ' . csrf_field() . '
+                                            <button type="submit" class="btn btn-secondary">Refund</button>
+                                        </form>
+                                    </td>';
+                        }
+                    }
+                    $html .= '</td>
+                        </tr>';
+                }
+            }
+
+            return response()->json([
+                'data' => $html,
+                'pagination' => (string) $order,
+            ]);
+        }
+        return view('admin.userdata.orders', ['order' => $order]);
     }
 
     public function viewPendingOrders()
@@ -132,6 +225,12 @@ class AdminloginController extends Controller
     public function viewDeliveredOrders()
     {
         $order = Order::where('status', '=', 'delivered')->with('user')->paginate(7);
+        return view('admin.userdata.orders', compact('order'));
+    }
+
+    public function viewRefundedOrders()
+    {
+        $order = Order::where('status', '=', 'refunded')->with('user')->paginate(7);
         return view('admin.userdata.orders', compact('order'));
     }
 
@@ -214,14 +313,40 @@ class AdminloginController extends Controller
                 ->orWhereHas('product', function ($query) use ($request) {
                     $query->where('prod_name', 'like', '%' . $request->get('keyword') . '%');
                 });
-
-
-            $rating = $rating->paginate(100);
-            return view('admin.userdata.view_rating', ['rating' => $rating]);
-        } else {
-            $rating = $rating->paginate(14);
-            return view('admin.userdata.view_rating', ['rating' => $rating]);
         }
+        $rating = $rating->paginate(7);
+
+        if ($request->ajax()) {
+            $html = '';
+            if ($rating->isNotEmpty()) {
+                foreach ($rating as $ratings) {
+                    $html .='<tr>
+                        <td><img width="100" src="' . asset('admin_assets/images/' .$ratings->product->image) . '" alt=""></td>
+                    <td>'.$ratings->product_id.'</td>
+                    <td>'.$ratings->product->prod_name.'</td>
+                    <td>'.$ratings->rating .'</td>
+                    <td>'.$ratings->username.'</td>
+                    <td>'.$ratings->comment .'</td>
+
+
+                    </tr>';
+                }
+            }
+            else{
+                $html = '<tr>
+                <td>No Data Found</td>
+                </tr>';
+            }
+
+            return response()->json([
+                'data' => $html,
+                'pagination' => (string) $rating
+            ]);
+
+        }
+
+        return view('admin.userdata.view_rating', ['rating' => $rating]);
+
         // dd($rating);
         // return view('admin.userdata.view_rating', compact('rating'));
     }

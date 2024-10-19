@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
+
+//Email Password
+// sb-8zart32953483@personal.example.com
+// sbvMH3*M
+
 class PaypalController extends Controller
 {
 
@@ -261,14 +266,27 @@ class PaypalController extends Controller
 
 
 
+   
+
     public function refund(Request $request, $orderId)
     {
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
-        $accessToken = $provider->getAccessToken();
+
+        $accessTokenResponse = $provider->getAccessToken();
+
+        if (is_array($accessTokenResponse)) {
+            $accessToken = $accessTokenResponse['access_token'] ?? null;
+        } else {
+            $accessToken = $accessTokenResponse;
+        }
+
+        // dd($accessToken);
+        if (!$accessToken) {
+            return redirect()->back()->with('error', 'Failed to retrieve PayPal access token.');
+        }
 
         $order = Order::findOrFail($orderId);
-
         $captureId = $order->payment_id;
 
         $refundData = [
@@ -278,32 +296,28 @@ class PaypalController extends Controller
             ]
         ];
 
-        dd($refundData);
         try {
-            // dd($captureId, $refundData);
-
             $response = Http::withToken($accessToken)->post(
                 "https://api.sandbox.paypal.com/v2/payments/captures/{$captureId}/refund",
                 $refundData
             );
 
-            // if ($response->failed()) {
-            //     dd($response->json()); // Check for specific error messages
-            // }
+            // dd($response);
             if ($response->successful()) {
                 $refund = $response->json();
 
                 if (isset($refund['id']) && $refund['status'] === 'COMPLETED') {
                     $order->status = 'refunded';
+                    $order->refund_id = $refund['id'];
                     $order->save();
 
-                    //Mail For Refund
+                    // Mail For Refund
                     refundOrderAmount($orderId);
 
-                    return redirect()->back()->with('success', 'Refund processed successfully.');
+                    return redirect()->back()->with('status', 'Refund processed successfully.');
                 }
             } else {
-                $errorMessage = $response->json()['message'] ?? 'Unknown error occurred.';
+                $errorMessage = $response->json()['message'] ?? json_encode($response->json());
                 return redirect()->back()->with('error', 'Refund failed: ' . $errorMessage);
             }
         } catch (\Exception $e) {

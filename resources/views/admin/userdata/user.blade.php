@@ -1,36 +1,29 @@
 @extends('admin.layouts.app')
 
-
 @section('content')
-    <!-- Content Wrapper. Contains page content -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid my-2">
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <h1>Users</h1>
                     </div>
-                    <div class="col-sm-6 text-right">
-                        {{-- <a href="create-user.html" class="btn btn-primary">New User</a> --}}
-                    </div>
                 </div>
             </div>
-            <!-- /.container-fluid -->
         </section>
-        <!-- Main content -->
+
         <section class="content">
-            <!-- Default box -->
             <div class="container-fluid">
                 <div class="card">
-                    <form method="get" action="">
+                    <form method="get" action="" id="searchForm">
                         <div class="card-header">
-
                             <div class="card-tools">
-                                <div class="input-group input-group" style="width: 250px;">
+                                <div class="input-group" style="width: 250px;">
                                     <input type="text" name="keyword" value="{{ Request::get('keyword') }}"
                                         class="form-control float-right" placeholder="Search">
-
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
@@ -40,43 +33,71 @@
                             </div>
                         </div>
                     </form>
+
                     <div class="card-body table-responsive p-0">
-
-
-                        <table class="table table-hover text-nowrap" border="2">
-                            <tr>
-                                <th>User ID</th>
-                                {{-- <th>Image</th> --}}
-                                <th>User Name</th>
-                                <th>User Email</th>
-                                {{-- <th>Price</th>
-                            
-                            <th>Action</th> --}}
-                            </tr>
-                            <tr>
+                        <table class="table table-hover text-nowrap" border="2" id="userTable">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>User Name</th>
+                                    <th>User Email</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
                                 @if ($users->isNotEmpty())
                                     @foreach ($users as $user)
-                                        @if ($user->role == 1)
+                                        <tr>
                                             <td>{{ $user->id }}</td>
-
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
-
-                            <tr></tr>
-                            @endif
-                            @endforeach
-                            @endif
-                            </tr>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="3" class="text-center">No users found</td>
+                                    </tr>
+                                @endif
+                            </tbody>
                         </table>
                     </div>
+
                     <div class="card-footer clearfix">
-                        {{ $users->links() }}
+                        <div class="pagination-container">
+                            {{ $users->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- /.card -->
         </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        $('#searchForm').on('submit', function (e) {
+            e.preventDefault();
+            fetchUsers();
+        });
+
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            fetchUsers(page);
+        });
+
+        function fetchUsers(page = 1) {
+            let keyword = $('input[name="keyword"]').val();
+
+            $.ajax({
+                url: "{{ route('admin.users') }}" + "?page=" + page,
+                method: "GET",
+                data: { keyword: keyword }, 
+                success: function (response) {
+                    $('#userTableBody').html(response.data);
+
+                    $('.pagination-container').html(response.pagination);
+                }
+            });
+        }
+    </script>
 @endsection

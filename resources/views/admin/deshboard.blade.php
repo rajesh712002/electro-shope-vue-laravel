@@ -219,6 +219,24 @@
                                     </div>
                                 </div>
 
+                                
+                                <div class="col-md-4">
+                                    <div class="card p-30">
+                                        <div class="media">
+                                            <div class="media-left meida media-middle">
+                                                <span><i class="fa fa-coins f-s-40" aria-hidden="true"></i></span>
+                                            </div>
+                                            <div class="media-body media-text-right">
+                                                <b>{{  $statusCounts['cancelled']?? 0 }}</b>
+                                                <p class="m-b-0">Refunded Orders</p>
+                                            </div>
+                                        </div>
+                                        <a href="{{ route('admin.refundedOrder') }}"
+                                            class="small-box-footer text-dark">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-4">
                                     <div class="card p-30">
                                         <div class="media">

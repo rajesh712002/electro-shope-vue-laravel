@@ -54,24 +54,26 @@
 
                                 {{-- <th>Action</th> --}}
                             </tr>
-                            <tr>
+                            <tbody id="userTableBody">
                                 @if ($rating->isNotEmpty())
                                     @foreach ($rating as $ratings)
-                                        <td><img src="{{ asset('admin_assets/images/' . $ratings->product->image) }}"
-                                                width="120" height="120"></td>
-                                        <td>{{ $ratings->product_id }}</td>
-                                        <td>{{ $ratings->product->prod_name }}</td>
-                                        <td>{{ $ratings->rating }}</td>
-                                        <td>{{ $ratings->username }}</td>
-                                        <td>{{ $ratings->comment }}</td>
+                                        <tr>
+                                            <td><img src="{{ asset('admin_assets/images/' . $ratings->product->image) }}"
+                                                    width="120" height="120"></td>
+                                            <td>{{ $ratings->product_id }}</td>
+                                            <td>{{ $ratings->product->prod_name }}</td>
+                                            <td>{{ $ratings->rating }}</td>
+                                            <td>{{ $ratings->username }}</td>
+                                            <td>{{ $ratings->comment }}</td>
 
-                            <tr></tr>
-                            @endforeach
-                            @endif
-                            </tr>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
                         </table>
                     </div>
                     <div class="card-footer clearfix">
+                        <div class="pagination-container">
                         {{ $rating->links() }}
                     </div>
                 </div>
@@ -80,5 +82,33 @@
         </section>
         <!-- /.content -->
     </div>
+    <script type="text/javascript">
+        $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+            fetchRatings();
+        });
 
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            fetchRatings(page);
+        });
+
+        function fetchRatings(page = 1) {
+            let keyword = $('input[name="keyword"]').val();
+
+            $.ajax({
+                url: "{{ route('admin.viewRating') }}" + "?page=" + page,
+                method: "GET",
+                data: {
+                    keyword: keyword
+                },
+                success: function(response) {
+                    $('#userTableBody').html(response.data);
+
+                    $('.pagination-container').html(response.pagination);
+                }
+            });
+        }
+    </script>
 @endsection

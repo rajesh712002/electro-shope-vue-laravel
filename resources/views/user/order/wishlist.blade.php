@@ -90,9 +90,9 @@
 </main>
 <script>
     function deleteProduct(id) {
-        if (confirm("Do you really want to remove this Item ?")) {
+        // if (confirm("Do you really want to remove this Item ?")) {
             document.getElementById("delete-product-form-" + id).submit();
-        }
+        // }
     }
 </script>
 @include('user.includes.footer')

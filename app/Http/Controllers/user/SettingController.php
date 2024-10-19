@@ -191,7 +191,7 @@ class SettingController extends Controller
     public function view_order()
     {
         $user_id = Auth::user()->id;
-        $order = Order::where('user_id', $user_id)->orderBy('user_id', 'DESC')->get();
+        $order = Order::where('user_id', $user_id)->orderBy('id', 'DESC')->get();
         return view('user.order.my_orders', compact('order'));
     }
 

@@ -32,7 +32,7 @@
             <!-- Default box -->
             <div class="container-fluid">
                 <div class="card">
-                    <form method="get" action="">
+                    <form method="get" action="" id="searchForm">
                         <div class="card-header">
 
                             <div class="card-tools">
@@ -65,16 +65,17 @@
                                     <th>Refund</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="userTableBody">
                                 {{-- @dd($order) --}}
                                 @foreach ($order as $orders)
                                     <tr>
                                         <td><a href="{{ route('admin.orderdetail', $orders->id) }}">{{ $orders->id }}</a>
                                         </td>
                                         <td>{{ $orders->user->name }}</td>
-                                        <td>{{ $orders->first_name }} {{ $orders->last_name }} <br> {{ $orders->address }}, {{ $orders->apartment }},{{ $orders->pincode }}<br>
-                                        {{ $orders->state }},{{ $orders->city }}<br>
-                                          
+                                        <td>{{ $orders->first_name }} {{ $orders->last_name }} <br> {{ $orders->address }},
+                                            {{ $orders->apartment }},{{ $orders->pincode }}<br>
+                                            {{ $orders->state }},{{ $orders->city }}<br>
+
                                         <td>{{ $orders->email }}</td>
                                         <td>{{ $orders->mobile }}</td>
                                         <td>
@@ -101,7 +102,7 @@
                                                         class="fa fa-coins"></i>
                                                     Refunded</button>
                                             @endif
-                                            {{-- <span class="badge bg-success">Delivered</span> --}}
+                                            
                                         </td>
                                         <td>{{ $orders->payment_status }}</td>
                                         <td><i class="fa fa-inr" aria-hidden="true"></i> {{ $orders->grand_total }}</td>
@@ -125,7 +126,8 @@
                                                 </td>
                                             @elseif($orders->payment_status == 'paid with PayPal')
                                                 <td>
-                                                    <form action="{{ route('paypal.refund', $orders->id) }}" method="POST">
+                                                    <form action="{{ route('paypal.refund', $orders->id) }}"
+                                                        method="POST">
                                                         @csrf
                                                         <button type="submit" class="btn btn-secondary">Refund</button>
                                                     </form>
@@ -139,6 +141,7 @@
                         </table>
                     </div>
                     <div class="card-footer clearfix">
+                        <div class="pagination-container">
                         {{ $order->links() }}
                     </div>
                 </div>
@@ -148,4 +151,33 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+    <script type="text/javascript">
+        $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+            fetchOrders();
+        });
+
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            fetchOrders(page);
+        });
+
+        function fetchOrders(page = 1) {
+            let keyword = $('input[name="keyword"]').val();
+
+            $.ajax({
+                url: "{{ route('admin.orders') }}" + "?page=" + page,
+                method: "GET",
+                data: {
+                    keyword: keyword
+                },
+                success: function(response) {
+                    $('#userTableBody').html(response.data);
+
+                    $('.pagination-container').html(response.pagination);
+                }
+            });
+        }
+    </script>
 @endsection

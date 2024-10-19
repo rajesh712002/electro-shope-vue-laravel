@@ -71,7 +71,7 @@
 
 
                                             <div class="col-sm-4 invoice-col">
-                                              
+
                                                 <b>Order ID:</b> {{ $order_item->order_id }}<br>
                                                 <b>Total:</b><i class="fa fa-inr" aria-hidden="true"></i>
                                                 {{ $order_item->order->grand_total }}<br>
@@ -93,6 +93,10 @@
                                                     @elseif($order_item->order->status == 'cancelled')
                                                         <button type="button" class="btn btn-danger"> <i
                                                                 class="fa fa-close"></i> Cancelled</button>
+                                                    @elseif($order_item->order->status == 'refunded')
+                                                        <button type="button" class="btn btn-secondary"> <i
+                                                                class="fa fa-coins"></i>
+                                                            Refunded</button>
                                                     @endif
                                                     <br>
                                             </div>
@@ -130,8 +134,10 @@
                                                         {{ $order_items->order->discount ?? '0.00' }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="3" class="text-right">Coupon Code:     </th>
-                                                    <td><i class="fa" aria-hidden="true"></i>{{ $order_items->order->coupon_code ?? 'null' }}</td>
+                                                    <th colspan="3" class="text-right">Coupon Code: </th>
+                                                    <td><i class="fa"
+                                                            aria-hidden="true"></i>{{ $order_items->order->coupon_code ?? 'null' }}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3" class="text-right">Shipping:</th>
@@ -158,6 +164,10 @@
                                             <button type="button" class="btn btn-danger"><span class="fa fa-close"
                                                     aria-hidden="true"></span>
                                                 Cancelled</button>
+                                        @elseif($order_item->order->status == 'refunded')
+                                            <button type="button" class="btn btn-secondary"> <span class="fa fa-coins"
+                                                    aria-hidden="true"></span>
+                                                Refunded</button>
                                         @else
                                             <h2 class="h4 mb-3">Order Status</h2>
                                             <form method="POST"
@@ -223,6 +233,7 @@
         <!-- AdminLTE for demo purposes -->
         <script src="js/demo.js"></script>
     </body>
+   
 @endsection
 
 </html>
