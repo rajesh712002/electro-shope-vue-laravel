@@ -34,7 +34,7 @@
                         <div class="card-header">
                             <h2 class="h5 mb-0 pt-2 pb-2">My Orders</h2>
                         </div>
-                        <div class="card-body p-4">
+                        <div class="card-body p-4" id="order-data">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
@@ -109,6 +109,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-footer clearfix">
+                    <div class="pagination-container">
+                        {{ $order->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -121,5 +126,24 @@
             document.getElementById("delete-order-form-" + id).submit();
         }
     }
+
+    $(document).ready(function() {
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            fetchOrders(page);
+        });
+
+        function fetchOrders(page) {
+            $.ajax({
+                url: "?page=" + page,
+                success: function(data) {
+                    $('#order-data').html($(data).find('#order-data').html());
+                    
+                    $('.pagination-container').html($(data).find('.pagination-container').html());
+                }
+            });
+        }
+    });
 </script>
 @include('user.includes.footer')

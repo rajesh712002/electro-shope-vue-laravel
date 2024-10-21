@@ -130,6 +130,7 @@ class CategoryController extends Controller
 
         $category->save();
 
+        // sendEmail(121);
         return response()->json(['success' => 'Catagory Inserted successfully']);
     }
 

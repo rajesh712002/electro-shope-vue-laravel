@@ -135,7 +135,7 @@ class AdminloginController extends Controller
                 foreach ($order as $orders) {
                     $html .= '<tr>
                 
-                        <td><a href="' . route('admin.orderdetail', $orders->id) . '">' . $orders->id . '</a></td>
+                        <td><a  style="text-decoration: none;" href="' . route('admin.orderdetail', $orders->id) . '">' . $orders->id . '</a></td>
                         <td>' . $orders->user->name . '</td>
                        <td>' . $orders->first_name . ' ' . $orders->last_name . '<br>' .
                         $orders->address . ', ' .
@@ -314,14 +314,14 @@ class AdminloginController extends Controller
                     $query->where('prod_name', 'like', '%' . $request->get('keyword') . '%');
                 });
         }
-        $rating = $rating->paginate(7);
+        $rating = $rating->paginate(4);
 
         if ($request->ajax()) {
             $html = '';
             if ($rating->isNotEmpty()) {
                 foreach ($rating as $ratings) {
                     $html .='<tr>
-                        <td><img width="100" src="' . asset('admin_assets/images/' .$ratings->product->image) . '" alt=""></td>
+                        <td><img width="120" src="' . asset('admin_assets/images/' .$ratings->product->image) . '" alt=""></td>
                     <td>'.$ratings->product_id.'</td>
                     <td>'.$ratings->product->prod_name.'</td>
                     <td>'.$ratings->rating .'</td>

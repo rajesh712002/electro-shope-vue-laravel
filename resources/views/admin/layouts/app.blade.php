@@ -21,7 +21,34 @@
     <link rel="stylesheet" href="{{ asset('admin_assets/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_assets/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_assets/css/datetimepicker.css') }}">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+          .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+            display: none; /* Hidden by default */
+            justify-content: center; /* Center spinner horizontally */
+            align-items: center; /* Center spinner vertically */
+            z-index: 9999; /* On top of other elements */
+        }
+        /* Custom style for larger spinner */
+        .spinner-container {
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
+        .spinner-border {
+            width: 10rem; /* Adjust size as needed */
+            height: 10rem; /* Adjust size as needed */
+        }
+    </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
@@ -82,6 +109,11 @@
                 <span class="brand-text font-weight-light">ELECTRO SHOP</span>
             </a>
 
+            <div class="overlay">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
             <!-- Sidebar -->
             @include('admin.layouts.sidebar')
             <!-- /.sidebar -->

@@ -1,7 +1,31 @@
 @include('user.includes.header')
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
-    
+<style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner-border {
+        width: 10rem;
+        height: 10rem;
+    }
+</style>
 <main>
     <section class="section-5 pt-3 pb-3 mb-3 bg-white">
         <div class="container">
@@ -16,6 +40,14 @@
     </section>
 
     <section class="section-9 pt-4">
+        <div class="overlay">
+            <div class="spinner-container">
+                <div class="spinner-border"  role="status">
+                    {{-- <span class="visually-hidden">Loading...</span> --}}
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             @if (session('status'))
                 <div class="alert alert-danger">
@@ -182,8 +214,7 @@
                                 </div>
                                 <div class="d-flex justify-content-between mt-2">
                                     <div class="h6"><strong>Discount</strong></div>
-                                    <strong><i class="fa fa-inr"
-                                        aria-hidden="true">{{ $discount }}</i></strong>
+                                    <strong><i class="fa fa-inr" aria-hidden="true">{{ $discount }}</i></strong>
                                 </div>
                                 <div class="d-flex justify-content-between mt-2">
                                     <div class="h6"><strong>Shipping</strong></div>
@@ -198,7 +229,7 @@
                         </div>
 
 
-                       
+
 
 
                         {{-- Payment Detail --}}
@@ -321,9 +352,7 @@
 
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
-<script>
-    
-</script>
+<script></script>
 
 <script>
     function populateStripeForm() {
@@ -457,6 +486,7 @@
             });
         });
 
+
         //Braintree
         // document.querySelector("#BraintreeForm").addEventListener("submit", function(e) {
         //     // Reset values if they have been modified
@@ -479,6 +509,24 @@
         //     });
         // });
     });
+</script>
+
+
+<script>
+   
+    const forms = ["StripeForm", "PaypalForm", "BraintreeForm"];
+
+    
+    forms.forEach(function(formId) {
+        const form = document.getElementById(formId);
+        if (form) { 
+            form.addEventListener("submit", function() {
+                document.querySelector(".overlay").style.display = "flex";
+            });
+        }
+    });
+
+    
 </script>
 
 

@@ -50,7 +50,7 @@ class ShopController extends Controller
             $products = $products->orderBy('created_at', 'desc');
         }
         // $products = $products->orderBy('created_at', 'desc');
-        $products = $products->paginate(9);
+        $products = $products->paginate(6);
         $brands = Brand::where('status', '1')->get();
 
         return view('user.order.shop', compact('brands', 'products', 'categorys', 'categorySelected', 'subcategorySelected', 'brandsArray'));

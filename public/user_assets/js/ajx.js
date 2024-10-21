@@ -137,6 +137,7 @@ $(document).ready(function () {
         let csrfToken = $('meta[name="csrf-token"]').attr("content");
         console.log(data);
         var url = $(this).attr("action");
+        $(".overlay").show();
 
         $.ajax({
             url: url,
@@ -154,7 +155,10 @@ $(document).ready(function () {
                 window.location.href = "/user/cart";
             },
             error: function (xhr) {
+        $(".overlay").hide();
+
                 if (xhr.status === 422) {
+
                     var errors = xhr.responseJSON.errors;
 
                     if (errors.first_name) {
@@ -437,7 +441,7 @@ function removeItem(cartId) {
 
 $("#apply_discount").click(function () {
     let couponCode = $("#discount_code").val();
-    let url = "/user/apply_coupon"; 
+    let url = "/user/apply_coupon";
 
     if (!couponCode) {
         alert("Please enter a coupon code.");
@@ -459,7 +463,9 @@ $("#apply_discount").click(function () {
                 alert("Coupon applied successfully!");
                 $("#remove_coupon").show();
             } else {
+                $("#remove_coupon").show();
                 alert(response.message);
+
             }
         },
         error: function () {
@@ -469,7 +475,6 @@ $("#apply_discount").click(function () {
         },
     });
 });
-
 
 // Remove Coupon logic
 $(document).ready(function () {
@@ -489,7 +494,7 @@ $(document).ready(function () {
                     $("#remove_coupon").hide();
                     updateCartSummary();
 
-                    console.log(response.message); 
+                    console.log(response.message);
                 } else {
                     alert("Error removing coupon");
                 }
@@ -501,7 +506,6 @@ $(document).ready(function () {
     });
 });
 
-
 // Fetch coupons when the modal is triggered
 $(document).ready(function () {
     $("#couponModal").on("show.bs.modal", function () {
@@ -510,13 +514,15 @@ $(document).ready(function () {
             method: "GET",
             success: function (response) {
                 let couponList = $("#couponList");
-                couponList.empty(); 
+                couponList.empty();
                 if (response.length > 0) {
                     $.each(response, function (index, coupon) {
                         couponList.append(`
                                <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>Code:</strong><span style="color: red;"> ${coupon.code}</span> <br>
+                        <strong>Code:</strong><span style="color: red;"> ${
+                            coupon.code
+                        }</span> <br>
                         <strong>Max Uses:</strong> ${coupon.max_uses} <br>
                       
                         <strong>Expires on:</strong> ${coupon.expires_at}
@@ -549,7 +555,6 @@ $(document).ready(function () {
         });
     });
 });
-
 
 function updateCartSummary() {
     let total = 0;
@@ -737,6 +742,34 @@ $(document).ready(function () {
                             .html(errors.email);
                     }
                 }
+            },
+        });
+    });
+});
+
+$(document).ready(function () {
+    $("#SubCategoryForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $(".overlay").show();
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                $("#SubCategoryForm")[0].reset();
+                alert(response.success);
+                // window.location.href = "/admin/createsubcategories";
             },
         });
     });

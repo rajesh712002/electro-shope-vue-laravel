@@ -11,6 +11,7 @@ $(document).ready(function () {
         console.log(data);
         var url = $(this).attr("action");
 
+        $(".overlay").show();
         $.ajax({
             url: url,
             type: "POST",
@@ -22,6 +23,7 @@ $(document).ready(function () {
             data: data,
 
             success: function (response) {
+                $(".overlay").hide();
                 alert(response.success);
                 window.location.href = "/admin/category";
                 // $("#CategoryForm")[0].reset();
@@ -234,6 +236,7 @@ $(document).ready(function () {
         console.log(data);
         var url = $(this).attr("action");
 
+        $(".overlay").show();
         $.ajax({
             url: url,
             type: "POST",
@@ -247,7 +250,7 @@ $(document).ready(function () {
             success: function (response) {
                 $("#SubCategoryForm")[0].reset();
                 alert(response.success);
-                window.location.href = "/admin/createsubcategories";
+                // window.location.href = "/admin/createsubcategories";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
@@ -1526,4 +1529,3 @@ $(document).ready(function () {
         });
     });
 });
-

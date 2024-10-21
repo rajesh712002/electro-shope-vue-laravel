@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use Braintree\Gateway;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BraintreeController extends Controller
@@ -197,6 +198,13 @@ class BraintreeController extends Controller
             }
 
             sendEmail($orderId);
+
+            //Update Product Qty
+            foreach ($product as $products) {
+                $productUpdate = Product::findOrFail($products->id);
+                $productUpdate->qty -= $products->cqty;
+                $productUpdate->save();
+            }
 
             // Clear the cart after successful payment
             Cart::where('user_id', $userId)->delete();

@@ -69,7 +69,7 @@
                                 {{-- @dd($order) --}}
                                 @foreach ($order as $orders)
                                     <tr>
-                                        <td><a href="{{ route('admin.orderdetail', $orders->id) }}">{{ $orders->id }}</a>
+                                        <td><a style="text-decoration: none;" href="{{ route('admin.orderdetail', $orders->id) }}">{{ $orders->id }}</a>
                                         </td>
                                         <td>{{ $orders->user->name }}</td>
                                         <td>{{ $orders->first_name }} {{ $orders->last_name }} <br> {{ $orders->address }},

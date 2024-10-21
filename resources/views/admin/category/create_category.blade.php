@@ -29,7 +29,13 @@
         </div>
         <!-- Main content -->
         <section class="content">
-            <!-- Default box -->
+            <div class="overlay">
+                <div class="spinner-container">
+                    <div class="spinner-border" style="align-" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
 
             <div class="container-fluid">
                 <form action="{{ route('admin.store_cat') }}" id="CategoryForm" name="CategoryForm"

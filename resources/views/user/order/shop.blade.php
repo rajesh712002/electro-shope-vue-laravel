@@ -68,86 +68,97 @@
 
                 </div>
                 <div class="col-md-9">
-                    <div class="row pb-3">
-                        <div class="col-12 pb-1">
-                            <div class="d-flex align-items-center justify-content-end mb-4">
-                                <div class="ml-2">
+                    <div id="product-list">
+                        <div class="row pb-3">
+                            <div class="col-12 pb-1">
+                                <div class="d-flex align-items-center justify-content-end mb-4">
+                                    <div class="ml-2">
 
-                                    <select id="sort" name="sort" class="form-control"
-                                        onchange="sortProducts()">
-                                        <option>---Sort---</option>
-                                        <option value="latest">Latest</option>
-                                        <option value="price_desc">Price High</option>
-                                        <option value="price_asc">Price Low</option>
-                                    </select>
+                                        <select id="sort" name="sort" class="form-control"
+                                            onchange="sortProducts()">
+                                            <option value="">---Sort---</option>
+                                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>
+                                                Latest</option>
+                                            <option value="price_desc"
+                                                {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price High
+                                            </option>
+                                            <option value="price_asc"
+                                                {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price Low
+                                            </option>
+                                        </select>
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        @if (session('status'))
-                            <div class="alert alert-success">
-                                {{ session('status') }}
-                            </div>
-                        @endif
+                            @if (session('status'))
+                                <div class="alert alert-success">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
 
-                        @foreach ($products as $prod)
-                            <div class="col-md-4">
-                                <div class="card product-card">
-                                    <div class="product-image position-relative">
-                                        <img style="width: 70px; height: 70px;" src="{{ asset('admin_assets/images/' . $prod->brand->image) }}">
-                                        <a href="{{ route('viewproduct', $prod->slug) }}">
-                                            <img style="width: 200px; height: 200px; object-fit: contain;"
-                                                class="cardimgtop"
-                                                src="{{ asset('admin_assets/images/' . $prod->image) }}"
-                                                alt="">
-                                        </a>
-                                        <form method="POST" action="{{ route('user.addToWishlist') }}">
-                                            @csrf
-                                            <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
-                                            <input type="hidden" name="user_id" value="{{ checkUserLogin() }}" />
-                                            <button type="submit" class="whishlist "> <i
-                                                    class="far fa-heart"></i></button>
-                                        </form>
-                                        <div class="product-action">
-
-
-                                            <form action="{{ route('user.addToCart') }}" method="POST">
-                                                {{-- @dd($product) --}}
+                            @foreach ($products as $prod)
+                                <div class="col-md-4">
+                                    <div class="card product-card">
+                                        <div class="product-image position-relative">
+                                            <img style="width: 70px; height: 70px;"
+                                                src="{{ asset('admin_assets/images/' . $prod->brand->image) }}">
+                                            <a href="{{ route('viewproduct', $prod->slug) }}">
+                                                <img style="width: 200px; height: 200px; object-fit: contain;"
+                                                    class="cardimgtop"
+                                                    src="{{ asset('admin_assets/images/' . $prod->image) }}"
+                                                    alt="">
+                                            </a>
+                                            <form method="POST" action="{{ route('user.addToWishlist') }}">
                                                 @csrf
                                                 <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                                 <input type="hidden" name="user_id" value="{{ checkUserLogin() }}" />
-                                                <input type="hidden" name="qty" value="1" />
-                                                <input type="hidden" name="price" value="{{$prod->price}}" />
-                                                <input type="hidden" name="name" value="{{$prod->prod_name}}" />
-                                                <input type="hidden" name="image" value="{{$prod->image}}" />
-                                                <input type="hidden" name="max_qty" value="{{$prod->qty}}" />
-                                                <button type="submit" class="btn btn-dark"><i
-                                                        class="fas fa-shopping-cart"></i> Add To Cart</button>
+                                                <button type="submit" class="whishlist "> <i
+                                                        class="far fa-heart"></i></button>
                                             </form>
-                                            {{-- @endif --}}
+                                            <div class="product-action">
+
+
+                                                <form action="{{ route('user.addToCart') }}" method="POST">
+                                                    {{-- @dd($product) --}}
+                                                    @csrf
+                                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                                    <input type="hidden" name="user_id"
+                                                        value="{{ checkUserLogin() }}" />
+                                                    <input type="hidden" name="qty" value="1" />
+                                                    <input type="hidden" name="price" value="{{ $prod->price }}" />
+                                                    <input type="hidden" name="name"
+                                                        value="{{ $prod->prod_name }}" />
+                                                    <input type="hidden" name="image" value="{{ $prod->image }}" />
+                                                    <input type="hidden" name="max_qty" value="{{ $prod->qty }}" />
+                                                    <button type="submit" class="btn btn-dark"><i
+                                                            class="fas fa-shopping-cart"></i> Add To Cart</button>
+                                                </form>
+                                                {{-- @endif --}}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="card-body text-center mt-3">
-                                        <a class="h6 link"
-                                            href="{{ route('viewproduct', $prod->slug) }}">{{ $prod->prod_name }}</a>
+                                        <div class="card-body text-center mt-3">
+                                            <a class="h6 link"
+                                                href="{{ route('viewproduct', $prod->slug) }}">{{ $prod->prod_name }}</a>
 
-                                        <div class="price mt-2">
-                                            <span class="h5"><strong><i class="fa fa-inr" aria-hidden="true">
-                                                    </i>
-                                                    {{ $prod->price }}</strong></span>
-                                            <span
-                                                class="h6 text-underline"><del>{{ $prod->compare_price }}</del></span>
-                                            <div class="text-secondary"> InStock:- {{ $prod->qty }}</div>
+                                            <div class="price mt-2">
+                                                <span class="h5"><strong><i class="fa fa-inr" aria-hidden="true">
+                                                        </i>
+                                                        {{ $prod->price }}</strong></span>
+                                                <span
+                                                    class="h6 text-underline"><del>{{ $prod->compare_price }}</del></span>
+                                                <div class="text-secondary"> InStock:- {{ $prod->qty }}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            @endforeach
+                            <div class="col-md-12 pt-5">
+                                <nav aria-label="Page navigation example">
+                                    {{ $products->appends(['sort' => request('sort')])->onEachSide(1)->links() }}
+                                </nav>
                             </div>
-                        @endforeach
-                        <div class="col-md-12 pt-5">
-                            <nav aria-label="Page navigation example">
-                                {{ $products->onEachSide(1)->links() }}
-                            </nav>
                         </div>
                     </div>
                 </div>
@@ -167,5 +178,32 @@
         window.location.href = url.href;
     }
 </script>
+<script>
+    $(document).ready(function() {
+        $('#sort').on('change', function() {
+            var sortValue = $(this).val();
+            fetchProducts(1, sortValue);
+        });
 
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            var sortValue = $('#sort').val();
+            fetchProducts(page, sortValue);
+        });
+
+        function fetchProducts(page, sort) {
+            $.ajax({
+                url: '?page=' + page + '&sort=' + sort,
+                type: 'GET',
+                success: function(data) {
+                    $('#product-list').html($(data).find('#product-list').html());
+                },
+                error: function() {
+                    alert('Products could not be loaded.');
+                }
+            });
+        }
+    });
+</script>
 @include('user.includes.footer')

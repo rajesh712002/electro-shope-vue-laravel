@@ -2,6 +2,32 @@
 <html lang="en">
 
 <head>
+    <style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner-border {
+            width: 10rem;
+            height: 10rem;
+        }
+    </style>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Laravel Shop :: Administrative Panel</title>
@@ -51,6 +77,13 @@
                 <!-- Main content -->
                 <section class="content">
                     <!-- Default box -->
+                    <div class="overlay">
+                        <div class="spinner-container">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden" style="color: hsl(134, 100%, 50%)"><h1>Processing...</h1></span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-9">
@@ -233,7 +266,11 @@
         <!-- AdminLTE for demo purposes -->
         <script src="js/demo.js"></script>
     </body>
-   
+   <script>
+        document.getElementById("sendInvoiceEmail").addEventListener("submit", function() {
+            document.querySelector(".overlay").style.display = "flex";
+        });
+   </script>
 @endsection
 
 </html>
