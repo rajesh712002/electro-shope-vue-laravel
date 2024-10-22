@@ -150,12 +150,12 @@ $(document).ready(function () {
             data: data,
 
             success: function (response) {
+                $(".overlay").hide();
                 $("#CheckoutForm")[0].reset();
                 alert("Order Placed Successfully");
                 window.location.href = "/user/cart";
             },
             error: function (xhr) {
-        $(".overlay").hide();
 
                 if (xhr.status === 422) {
 

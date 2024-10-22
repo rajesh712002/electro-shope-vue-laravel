@@ -43,7 +43,7 @@ class ProductController extends Controller
                 });
             }
 
-            $product = $product->paginate(7);
+            $product = $product->paginate(4);
             
             if($request->ajax()){
                 $html = '';

@@ -127,7 +127,7 @@
                                             @elseif($orders->payment_status == 'paid with PayPal')
                                                 <td>
                                                     <form action="{{ route('paypal.refund', $orders->id) }}"
-                                                        method="POST">
+                                                        method="POST" id="refund">
                                                         @csrf
                                                         <button type="submit" class="btn btn-secondary">Refund</button>
                                                     </form>
@@ -152,6 +152,11 @@
     </div>
     <!-- /.content-wrapper -->
     <script type="text/javascript">
+      document.getElementById("refund").addEventListener("submit", function() {
+            document.querySelector(".overlay").style.display = "flex";
+        });
+
+
         $('#searchForm').on('submit', function(e) {
             e.preventDefault();
             fetchOrders();

@@ -185,8 +185,8 @@ Route::middleware([ValidAdmin::class])->group(function () {
         //Delete SubCategory
         Route::delete('/delete-subcategory/{subcategory}', [CategoryController::class, 'destroySubcategory'])->name('admin.destroy_subcat');
 
-        Route::get('admin/get-categories', [CategoryController::class, 'getCategories']);
-        Route::get('admin/get-subcategories/{id}', [CategoryController::class, 'getSubcategories']);
+        Route::get('/get-categories', [CategoryController::class, 'getCategories']);
+        Route::get('/get-subcategories/{id}', [CategoryController::class, 'getSubcategories']);
 
         //================================================================================================================================================================
 

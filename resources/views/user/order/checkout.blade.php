@@ -42,8 +42,8 @@
     <section class="section-9 pt-4">
         <div class="overlay">
             <div class="spinner-container">
-                <div class="spinner-border"  role="status">
-                    {{-- <span class="visually-hidden">Loading...</span> --}}
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         </div>
@@ -513,20 +513,23 @@
 
 
 <script>
-   
     const forms = ["StripeForm", "PaypalForm", "BraintreeForm"];
 
-    
+
     forms.forEach(function(formId) {
         const form = document.getElementById(formId);
-        if (form) { 
+        if (form) {
             form.addEventListener("submit", function() {
                 document.querySelector(".overlay").style.display = "flex";
+                setTimeout(function() {
+                    document.querySelector(".overlay").style.display = "none";
+                }, 5000);
             });
+           
+
+
         }
     });
-
-    
 </script>
 
 

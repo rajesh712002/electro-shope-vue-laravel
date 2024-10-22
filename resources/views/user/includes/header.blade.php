@@ -50,7 +50,31 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;500&family=Raleway:ital,wght@0,400;0,600;0,800;1,200&family=Roboto+Condensed:wght@400;700&family=Roboto:wght@300;400;700;900&display=swap"
         rel="stylesheet">
-
+        <style>
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+            }
+        
+            .spinner-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        
+            .spinner-border {
+                width: 10rem;
+                height: 10rem;
+            }
+        </style>
     <!-- Fav Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="#" />
 </head>
@@ -68,7 +92,7 @@
                 </div>
                 <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
                     <a href="{{ route('useraccount') }}" class="nav-link text-dark">My Account</a>
-                    <form action="">
+                    {{-- <form action="">
                         <div class="input-group">
                             <input type="text" placeholder="Search For Products" class="form-control"
                                 aria-label="Amount (to the nearest dollar)">
@@ -76,7 +100,7 @@
                                 <i class="fa fa-search"></i>
                             </span>
                         </div>
-                    </form>
+                    </form> --}}
                 </div>
             </div>
         </div>
@@ -126,7 +150,13 @@
                         @endif
 
 
-
+                        <div class="overlay">
+                            <div class="spinner-container">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
                     </ul>
                 </div>
                 <div class="right-nav py-0">

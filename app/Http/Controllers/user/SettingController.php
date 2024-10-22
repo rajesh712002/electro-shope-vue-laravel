@@ -217,6 +217,6 @@ class SettingController extends Controller
 
         sendCancleOrderEmail($id);
 
-        return redirect()->back();
+        return redirect()->back()->with('status','Order Cancelled successfully');
     }
 }

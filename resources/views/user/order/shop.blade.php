@@ -9,8 +9,21 @@
                 </ol>
             </div>
         </div>
+        
+        <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
+            <form action="" method="GET" id="searchForm">
+                <div class="input-group">
+                    <input type="text" placeholder="Search For Products" class="form-control"
+                        aria-label="Amount (to the nearest dollar)" value="{{ Request::get('keyword') }}">
+                    <span class="input-group-text">
+                        <button type="submit" class="btn btn-default">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    </span>
+                </div>
+            </form>
+        </div>
     </section>
-
     <section class="section-6 pt-5">
         <div class="container">
             <div class="row">

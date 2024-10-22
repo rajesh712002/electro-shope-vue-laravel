@@ -6,6 +6,7 @@ use Log;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\CustomerAddress;
@@ -24,10 +25,9 @@ class PaypalController extends Controller
 {
 
 
+
     public function paypal(Request $request)
     {
-        //   dd( $request->all());
-
         $rules = [
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
@@ -40,46 +40,45 @@ class PaypalController extends Controller
             'mobile' => 'required|digits:10',
         ];
 
-        // Perform validation
         $validator = Validator::make($request->all(), $rules);
 
-        // Return an error if validation fails
         if ($validator->fails()) {
             return redirect()->route('user.checkout')->with('status', 'Please Check Detail Correctly And Fill Up Them.');
         }
 
-        $provider = new PayPalClient;
-        $provider->setApiCredentials(config('paypal'));
-        $provider->getAccessToken();
+        //  current INR to USD exchange rate
+        $response = Http::get('https://api.exchangerate-api.com/v4/latest/INR');  // Example API endpoint, replace with a valid one
+        $exchangeRate = $response['rates']['USD'];  // Get INR to USD rate
 
-
-        $totalPrice = 0;
-
+        $totalPriceINR = 0;
         foreach ($request->price as $index => $price) {
             $quantity = $request->quantity[$index];
-            $totalPrice += $price * $quantity;
+            $totalPriceINR += $price * $quantity;
         }
-        // dd($totalPrice);
-        $items = array_map(function ($price, $name, $quantity) {
+
+        $totalPriceUSD = $totalPriceINR * $exchangeRate;
+
+        $items = array_map(function ($price, $name, $quantity) use ($exchangeRate) {
+            $priceUSD = $price * $exchangeRate;
             return [
                 "name" => $name,
                 "unit_amount" => [
                     "currency_code" => "USD",
-                    "value" => number_format($price, 2, '.', '')
+                    "value" => number_format($priceUSD, 2, '.', '')
                 ],
                 "quantity" => $quantity
             ];
         }, $request->price, $request->prod_name, $request->quantity);
 
-
-        //store Request in session
+        // dd($items);
+        // Store order data in session
         session()->put('order_data', [
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'country' => $request->country,
             'address' => $request->address,
-            'apartment' =>  $request->apartment,
+            'apartment' => $request->apartment,
             'city' => $request->city,
             'state' => $request->state,
             'zip' => $request->zip,
@@ -87,18 +86,21 @@ class PaypalController extends Controller
             'order_notes' => $request->order_notes,
         ]);
 
+        $discountAmountINR = session('discount_amount', 0);
+        $discountAmountUSD = $discountAmountINR * $exchangeRate;
 
-        // Calculate item total
-        $itemTotal = number_format(array_sum(array_map(function ($price, $quantity) {
-            return $price * $quantity;
-        }, $request->price, $request->quantity)), 2, '.', '');
+        $newTotalINR = $totalPriceINR - $discountAmountINR;
+        $newTotalUSD = $newTotalINR * $exchangeRate;
 
-        $couponCode = session('coupon_code', null);
-        $discountAmount = session('discount_amount', 0);
-        $newTotal = session('new_total', $itemTotal);
+        $itemTotalUSD = number_format($totalPriceUSD, 2, '.', '');  // Original item total in USD
+        $discountAmountUSD = number_format($discountAmountUSD, 2, '.', '');  // Discount in USD
+        $newTotalUSD = number_format($newTotalUSD, 2, '.', '');  // Total after discount in USD
 
-        // dd($newTotal);
-
+        // dd($newTotalUSD,$itemTotalUSD,$discountAmountUSD);
+        // PayPal order creation
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $provider->getAccessToken();
 
         $response = $provider->createOrder([
             "intent" => "CAPTURE",
@@ -110,15 +112,15 @@ class PaypalController extends Controller
                 [
                     "amount" => [
                         "currency_code" => "USD",
-                        "value" => number_format($newTotal, 2, '.', ''), // total after discounts
+                        "value" => $newTotalUSD,
                         "breakdown" => [
                             "item_total" => [
                                 "currency_code" => "USD",
-                                "value" => number_format($itemTotal, 2, '.', '') // exact item total before discounts
+                                "value" => $itemTotalUSD
                             ],
                             "discount" => [
                                 "currency_code" => "USD",
-                                "value" => number_format($discountAmount, 2, '.', '') // discount applied
+                                "value" => $discountAmountUSD
                             ]
                         ]
                     ],
@@ -126,8 +128,13 @@ class PaypalController extends Controller
                 ]
             ]
         ]);
-        // dd($response);
+        session()->put('new_total', $newTotalINR);
+        session()->put('new_total_usd', $newTotalUSD);
 
+
+
+
+        // dd($response);
         if (isset($response['id']) && $response['id'] != null) {
             foreach ($response['links'] as $link) {
                 if ($link['rel'] == 'approve') {
@@ -140,8 +147,6 @@ class PaypalController extends Controller
             return redirect()->route('cancel');
         }
     }
-
-
     public function success(Request $request)
     {
         $provider = new PayPalClient;
@@ -172,6 +177,7 @@ class PaypalController extends Controller
             $couponCode = session('coupon_code', null);
             $discount = session('discount_amount', 0);
             $newTotal = session('new_total', $totalSum);
+            $newTotalUSD = session('new_total_usd', null);
             // Create a new order session
             $orderData = session()->get('order_data');
 
@@ -205,6 +211,7 @@ class PaypalController extends Controller
             $order->discount = $discount;
             $order->coupon_code = $couponCode;
             $order->payment_status = 'paid with PayPal';
+            $order->usd = $newTotalUSD;
             $order->payment_id = $response['purchase_units'][0]['payments']['captures'][0]['id'];
 
             $order->user_id = $userId;
@@ -240,11 +247,17 @@ class PaypalController extends Controller
 
             sendEmail($orderId);
 
+            //Update Product Qty
+            foreach ($product as $products) {
+                $productUpdate = Product::findOrFail($products->id);
+                $productUpdate->qty -= $products->cqty;
+                $productUpdate->save();
+            }
             // Clear the cart after successful payment
             Cart::where('user_id', $userId)->delete();
 
             $request->session()->forget('order_data');
-            session()->forget(['coupon_code', 'discount_amount', 'new_total']);
+            session()->forget(['coupon_code', 'discount_amount', 'new_total', 'new_total_usd']);
 
             // Redirect with success message
             return redirect()->route('user.view_order')->with('status', 'Payment is successful and your order is placed.');
@@ -259,14 +272,14 @@ class PaypalController extends Controller
     public function cancel()
     {
 
-        return redirect()->route('user.index')->with('error', 'Payment Is Unsuccessful.');
+        return redirect()->route('user.index')->with('error', 'Opps!...Payment Is Unsuccessful.');
 
         // return "Payment Is Unsuccessful";
     }
 
 
 
-   
+
 
     public function refund(Request $request, $orderId)
     {
@@ -292,7 +305,7 @@ class PaypalController extends Controller
         $refundData = [
             'amount' => [
                 'currency_code' => 'USD',
-                'value' => number_format($order->grand_total, 2, '.', '')
+                'value' => number_format($order->usd, 2, '.', '')
             ]
         ];
 

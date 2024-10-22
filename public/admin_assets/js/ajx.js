@@ -992,7 +992,7 @@ $(document).ready(function () {
         $("#sub_category").html("");
         // if (category_id) {
         $.ajax({
-            url: "/admin/getsubcategories/" + category_id,
+            url: "/admin/get-subcategories/" + category_id,
             type: "GET",
             dataType: "json",
             success: function (data) {
@@ -1008,6 +1008,7 @@ $(document).ready(function () {
                             value.subcate_name +
                             "</option>"
                     );
+                    console.log(value);
                 });
 
                 // $('#sub_category').html('<option value="">Select Subcategory</option>');

@@ -121,10 +121,13 @@
 <script>
     function deleteOrder(id) {
         // alert(id);
-
+        
         if (confirm("Do you really want to Cancle this Order ?")) {
             document.getElementById("delete-order-form-" + id).submit();
+            document.querySelector(".overlay").style.display = "flex";
+
         }
+
     }
 
     $(document).ready(function() {
