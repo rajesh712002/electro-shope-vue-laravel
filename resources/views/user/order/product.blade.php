@@ -76,7 +76,7 @@
         <div class="container">
 
             <div class="row ">
-                <div class="col-md-5">
+                {{-- <div class="col-md-5">
                     <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner bg-light">
                             <div class="carousel-item" style="display: block ">
@@ -87,12 +87,73 @@
                         </div>
 
                     </div>
-                </div>
+                </div> --}}
                 {{-- <img width="10" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
+                <div class="col-md-5">
+                    <img style="width: 100px; height: 70px; object-fit: contain ! important"
+                            src="{{ asset('admin_assets/images/' . $product->brand->image) }}">
+                    <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner bg-light">
+                            @foreach ($images as $key => $image)
+                                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                                    <img class="w-100 h-100"
+                                        src="{{ asset('admin_assets/images/' . $image->images) }}"
+                                        alt="{{ $image->images }} image {{ $key + 1 }}">
+                                </div>
+                            @endforeach
+                        </div>
+                        <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
+                            <i class="fa fa-2x fa-angle-left text-dark"></i>
+                        </a>
+                        <a class="carousel-control-next" href="#product-carousel" data-bs-slide="next">
+                            <i class="fa fa-2x fa-angle-right text-dark"></i>
+                        </a>
+                    </div>
+                    {{-- <img width="10" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
+                </div>
+            
                 <div class="col-md-7">
                     <div class="bg-light right">
-                        <img style="width: 100px; height: 70px; object-fit: contain ! important"
-                            src="{{ asset('admin_assets/images/' . $product->brand->image) }}">
+                        {{-- <img style="width: 100px; height: 70px; object-fit: contain ! important"
+                            src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
+                        {{-- <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner bg-light">
+                                    @foreach ($images as $key => $image)
+                                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                                            <img class="w-100 h-100" src="{{ asset('admin_assets/images/' . $image->images) }}" alt="{{ $image->images }} image {{ $key + 1 }}">
+                                        </div>
+                                    @endforeach
+                                </div>
+                            
+                                <!-- Controls for the Carousel -->
+                                <a class="carousel-control-prev" href="#product-carousel" role="button" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#product-carousel" role="button" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </a>
+                            </div> --}}
+                        {{-- 
+                            <div class="col-md-5">
+                                <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner bg-light">
+                                        @foreach ($images as $key => $image)
+                                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                                            <img class="w-100 h-100" src="{{ asset('admin_assets/images/' . $image->images) }}" alt="{{ $image->images }} image {{ $key + 1 }}">
+                                        </div>
+                                    @endforeach
+                                    </div>
+                                    <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
+                                        <i class="fa fa-2x fa-angle-left text-dark"></i>
+                                    </a>
+                                    <a class="carousel-control-next" href="#product-carousel" data-bs-slide="next">
+                                        <i class="fa fa-2x fa-angle-right text-dark"></i>
+                                    </a>
+                                </div>
+                            </div> --}}
+
                         <h1>{{ $product->prod_name }}</h1>
                         <div class="d-flex mb-3">
 
@@ -136,191 +197,190 @@
                         <input type="hidden" name="prod_id" value="{{ $product->id }}" />
                         <input type="hidden" name="user_id" value="{{ checkUserLogin() }}" />
                         <input type="hidden" name="qty" value="1" />
-                        <input type="hidden" name="price" value="{{$product->price}}" />
-                        <input type="hidden" name="name" value="{{$product->prod_name}}" />
-                        <input type="hidden" name="image" value="{{$product->image}}" />
-                        <input type="hidden" name="max_qty" value="{{$product->qty}}" />
+                        <input type="hidden" name="price" value="{{ $product->price }}" />
+                        <input type="hidden" name="name" value="{{ $product->prod_name }}" />
+                        <input type="hidden" name="image" value="{{ $product->image }}" />
+                        <input type="hidden" name="max_qty" value="{{ $product->qty }}" />
                         <button type="submit" class="btn btn-dark"><i class="fas fa-shopping-cart"></i>
                             &nbsp;ADD TO CART</button>
                     </form>
 
 
                 </div>
-            </div>
-            {{-- @dd($order->product_id == $product->id) --}}
-            <div class="col-md-12 mt-5">
-                <div class="bg-light">
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
-                                data-bs-target="#description" type="button" role="tab"
-                                aria-controls="description" aria-selected="true">Description</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="shipping-tab" data-bs-toggle="tab"
-                                data-bs-target="#shipping" type="button" role="tab" aria-controls="shipping"
-                                aria-selected="false">Shipping & Returns</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
-                                type="button" role="tab" aria-controls="reviews"
-                                aria-selected="false">Reviews</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="description" role="tabpanel"
-                            aria-labelledby="description-tab">
-                            <p>
-                                {{ $product->description }}
-                            </p>
-                        </div>
-                        <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
-                            <p>After Shipping Your Order You Will No Able To Cancle Your Order </p>
-                        </div>
-
-                        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-
-                            {{-- @if ($order && $order->prod_id == $product->id) --}}
-
-                            <div class="col-md-8">
-                                @if (checkUserLogin())
-                                    
-                                <form method="POST" action="{{ route('usersaveRating', $product->id) }}"
-                                    id="ProductRatingForm" name="ProductRatingForm">
-                                    @csrf
-                                    <div class="row">
-                                        <h3 class="h4 pb-3">Write a Review</h3>
-                                        <div class="form-group col-md-6 mb-3">
-                                            <label for="name">Name</label>
-                                            <input type="text" class="form-control" name="name" id="name"
-                                                placeholder="Name">
-                                            <p></p>
-                                            <h6 style="color: red" class="error"></h6>
-                                        </div>
-                                        <div class="form-group col-md-6 mb-3">
-                                            <label for="email">Email</label>
-                                            <input type="email" class="form-control" name="email" id="email"
-                                                placeholder="Email">
-                                            <p></p>
-                                            <h6 style="color: red" class="error"></h6>
-
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label for="rating">Rating</label>
-                                            <br>
-                                            <div class="rating" style="width: 10rem" name="rating">
-                                                <input id="rating-5" type="radio" name="rating"
-                                                    value="5" /><label for="rating-5"><i
-                                                        class="fas fa-3x fa-star"></i></label>
-                                                <input id="rating-4" type="radio" name="rating"
-                                                    value="4" /><label for="rating-4"><i
-                                                        class="fas fa-3x fa-star"></i></label>
-                                                <input id="rating-3" type="radio" name="rating"
-                                                    value="3" /><label for="rating-3"><i
-                                                        class="fas fa-3x fa-star"></i></label>
-                                                <input id="rating-2" type="radio" name="rating"
-                                                    value="2" /><label for="rating-2"><i
-                                                        class="fas fa-3x fa-star"></i></label>
-                                                <input id="rating-1" type="radio" name="rating"
-                                                    value="1" /><label for="rating-1"><i
-                                                        class="fas fa-3x fa-star"></i></label>
-                                                <p></p>
-                                                <h6 style="color: red" class="error"></h6>
-                                            </div>
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label for="">How was your overall experience?</label>
-                                            <textarea name="comment" id="comment" class="form-control" cols="30" rows="10"
-                                                placeholder="How was your overall experience?"></textarea>
-                                            <p></p>
-                                            <h6 style="color: red" class="error"></h6>
-                                        </div>
-                                        <div>
-                                            <button type="submit" id="submit"
-                                                class="btn btn-dark">Submit</button>
-                                        </div>
-
-                                    </div>
-                                </form>
-                                @endif
+                {{-- @dd($order->product_id == $product->id) --}}
+                <div class="col-md-12 mt-5">
+                    <div class="bg-light">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                    data-bs-target="#description" type="button" role="tab"
+                                    aria-controls="description" aria-selected="true">Description</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="shipping-tab" data-bs-toggle="tab"
+                                    data-bs-target="#shipping" type="button" role="tab"
+                                    aria-controls="shipping" aria-selected="false">Shipping & Returns</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                                    data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews"
+                                    aria-selected="false">Reviews</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="description" role="tabpanel"
+                                aria-labelledby="description-tab">
+                                <p>
+                                    {{ $product->description }}
+                                </p>
+                            </div>
+                            <div class="tab-pane fade" id="shipping" role="tabpanel"
+                                aria-labelledby="shipping-tab">
+                                <p>After Shipping Your Order You Will No Able To Cancle Your Order </p>
                             </div>
 
-                            <div class="col-md-12 mt-5">
-                                <div class="overall-rating mb-3">
-                                    @if ($ratingcount > 0)
-                                        <div class="d-flex">
-                                            <h1 class="h3 pe-3">{{ number_format($ratingsum / $ratingcount, 1) }}
-                                            </h1>
-                                            <div class="star-rating mt-2"
-                                                title="{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
-                                                <div class="back-stars">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
 
-                                                    <div class="front-stars"
-                                                        style="width:{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                {{-- @if ($order && $order->prod_id == $product->id) --}}
+
+                                <div class="col-md-8">
+                                    @if (checkUserLogin())
+                                        <form method="POST" action="{{ route('usersaveRating', $product->id) }}"
+                                            id="ProductRatingForm" name="ProductRatingForm">
+                                            @csrf
+                                            <div class="row">
+                                                <h3 class="h4 pb-3">Write a Review</h3>
+                                                <div class="form-group col-md-6 mb-3">
+                                                    <label for="name">Name</label>
+                                                    <input type="text" class="form-control" name="name"
+                                                        id="name" placeholder="Name">
+                                                    <p></p>
+                                                    <h6 style="color: red" class="error"></h6>
+                                                </div>
+                                                <div class="form-group col-md-6 mb-3">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" class="form-control" name="email"
+                                                        id="email" placeholder="Email">
+                                                    <p></p>
+                                                    <h6 style="color: red" class="error"></h6>
+
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="rating">Rating</label>
+                                                    <br>
+                                                    <div class="rating" style="width: 10rem" name="rating">
+                                                        <input id="rating-5" type="radio" name="rating"
+                                                            value="5" /><label for="rating-5"><i
+                                                                class="fas fa-3x fa-star"></i></label>
+                                                        <input id="rating-4" type="radio" name="rating"
+                                                            value="4" /><label for="rating-4"><i
+                                                                class="fas fa-3x fa-star"></i></label>
+                                                        <input id="rating-3" type="radio" name="rating"
+                                                            value="3" /><label for="rating-3"><i
+                                                                class="fas fa-3x fa-star"></i></label>
+                                                        <input id="rating-2" type="radio" name="rating"
+                                                            value="2" /><label for="rating-2"><i
+                                                                class="fas fa-3x fa-star"></i></label>
+                                                        <input id="rating-1" type="radio" name="rating"
+                                                            value="1" /><label for="rating-1"><i
+                                                                class="fas fa-3x fa-star"></i></label>
+                                                        <p></p>
+                                                        <h6 style="color: red" class="error"></h6>
                                                     </div>
                                                 </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="">How was your overall experience?</label>
+                                                    <textarea name="comment" id="comment" class="form-control" cols="30" rows="10"
+                                                        placeholder="How was your overall experience?"></textarea>
+                                                    <p></p>
+                                                    <h6 style="color: red" class="error"></h6>
+                                                </div>
+                                                <div>
+                                                    <button type="submit" id="submit"
+                                                        class="btn btn-dark">Submit</button>
+                                                </div>
+
                                             </div>
-
-                                            {{-- @if ($productrat->product_id == $product->id) --}}
-
-                                            <div class="pt-2 ps-2">({{ $ratingcount }}
-                                                Reviews)</div>
-                                        </div>
+                                        </form>
                                     @endif
                                 </div>
-                                {{-- @dd($productrat) --}}
-                                <div class="rating-group mb-4">
-                                    @foreach ($productrat as $productratt)
-                                        @if ($productratt->product_id == $product->id)
-                                            <span> <strong>{{ $productratt->username }}</strong></span>
-                                            <div class="star-rating mt-2"
-                                                title="{{ ($productratt->rating * 100) / 5 }}%">
-                                                <div class="back-stars">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
 
-                                                    <div class="front-stars"
-                                                        style="width: {{ ($productratt->rating * 100) / 5 }}%">
+                                <div class="col-md-12 mt-5">
+                                    <div class="overall-rating mb-3">
+                                        @if ($ratingcount > 0)
+                                            <div class="d-flex">
+                                                <h1 class="h3 pe-3">{{ number_format($ratingsum / $ratingcount, 1) }}
+                                                </h1>
+                                                <div class="star-rating mt-2"
+                                                    title="{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
+                                                    <div class="back-stars">
                                                         <i class="fa fa-star" aria-hidden="true"></i>
                                                         <i class="fa fa-star" aria-hidden="true"></i>
                                                         <i class="fa fa-star" aria-hidden="true"></i>
                                                         <i class="fa fa-star" aria-hidden="true"></i>
                                                         <i class="fa fa-star" aria-hidden="true"></i>
+
+                                                        <div class="front-stars"
+                                                            style="width:{{ (($ratingsum / $ratingcount) * 100) / 5 }}%">
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="my-3">
-                                                <p>{{ $productratt->comment }}
 
-                                                </p>
+                                                {{-- @if ($productrat->product_id == $product->id) --}}
+
+                                                <div class="pt-2 ps-2">({{ $ratingcount }}
+                                                    Reviews)</div>
                                             </div>
                                         @endif
-                                    @endforeach
+                                    </div>
+                                    {{-- @dd($productrat) --}}
+                                    <div class="rating-group mb-4">
+                                        @foreach ($productrat as $productratt)
+                                            @if ($productratt->product_id == $product->id)
+                                                <span> <strong>{{ $productratt->username }}</strong></span>
+                                                <div class="star-rating mt-2"
+                                                    title="{{ ($productratt->rating * 100) / 5 }}%">
+                                                    <div class="back-stars">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+
+                                                        <div class="front-stars"
+                                                            style="width: {{ ($productratt->rating * 100) / 5 }}%">
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="my-3">
+                                                    <p>{{ $productratt->comment }}
+
+                                                    </p>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+
+
                                 </div>
 
 
+
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
     <script src="{{ asset('user_assets/js/ajx.js') }}"></script>

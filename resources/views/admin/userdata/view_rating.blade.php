@@ -10,8 +10,8 @@
                     <div class="col-sm-6">
                         <h1>Feedbacks</h1>
                     </div>
-                    <div class="col-sm-6 text-right">
-                        {{-- <a href="create-user.html" class="btn btn-primary">New User</a> --}}
+                    <div class="col-sm-6 text-left">
+                        <a href="{{ route('ratingsExcel') }}" class="btn btn-warning">Export Data</a>
                     </div>
                 </div>
             </div>

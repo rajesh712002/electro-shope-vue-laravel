@@ -62,11 +62,18 @@
                             <tbody id="userTableBody">
                                 @if ($product->isNotEmpty())
                                     @foreach ($product as $prod)
+                                        @php
+                                            $productImage = $prod->productImages->first();
+                                        @endphp
+                                        {{-- @dd($productImage->images) --}}
                                         <tr>
                                             {{-- @dump($prod->categorys) --}}
                                             <td>{{ $prod->id }}</td>
-                                            <td><img width="100" src="{{ asset('admin_assets/images/' . $prod->image) }}"
-                                                    alt=""></td>
+                                            <td>
+                                                @if(!empty($productImage->images))<img width="100" src="{{ asset('admin_assets/images/' . $productImage->images) }}"
+                                                    alt="">
+                                                @endif
+                                                </td>
                                             <td>{{ $prod->prod_name }}</td>
                                             <td>{{ $prod->categorys->name }}</td>
 

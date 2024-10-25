@@ -11,9 +11,9 @@
         </div>
         
         <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
-            <form action="" method="GET" id="searchForm">
+            {{-- <form action="" method="GET" id="searchForm">
                 <div class="input-group">
-                    <input type="text" placeholder="Search For Products" class="form-control"
+                    <input type="text" name="keyword" placeholder="Search For Products" class="form-control"
                         aria-label="Amount (to the nearest dollar)" value="{{ Request::get('keyword') }}">
                     <span class="input-group-text">
                         <button type="submit" class="btn btn-default">
@@ -21,7 +21,7 @@
                     </button>
                     </span>
                 </div>
-            </form>
+            </form> --}}
         </div>
     </section>
     <section class="section-6 pt-5">

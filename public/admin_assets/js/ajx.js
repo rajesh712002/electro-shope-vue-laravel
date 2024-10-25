@@ -670,9 +670,9 @@ $(document).ready(function () {
             data: data,
 
             success: function (response) {
-                $("#ProductForm")[0].reset();
+                // $("#ProductForm")[0].reset();
                 alert(response.success);
-                window.location.href = "/admin/createproducts";
+                window.location.href = "/admin/create-products";
             },
             error: function (xhr) {
                 if (xhr.status === 422) {

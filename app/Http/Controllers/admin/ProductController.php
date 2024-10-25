@@ -7,11 +7,15 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Models\ProductImage;
+use App\Models\TempImage;
 use Illuminate\Http\Request;
+// use Intervention\Image\Facades\Image;
+
 use function Laravel\Prompts\alert;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -20,7 +24,8 @@ class ProductController extends Controller
     {
 
 
-        $product = Product::with('sub_category', 'brand', 'categorys')->latest();
+        $product = Product::with('sub_category', 'brand', 'categorys','productImages')->latest();
+        // dd($product);
         $orderID = Order::where('');
         // dd($product->toArray());
         if (!empty($request->get('keyword'))) {
@@ -41,25 +46,25 @@ class ProductController extends Controller
                 ->orWhereHas('brand', function ($query) use ($request) {
                     $query->where('name', 'like', '%' . $request->get('keyword') . '%');
                 });
-            }
+        }
 
-            $product = $product->paginate(4);
-            
-            if($request->ajax()){
-                $html = '';
-                if($product->isNotEmpty()){
-                    foreach($product as $prod){
-                        $html .= '<tr>
-                        <td>'.$prod->id.'</td>
+        $product = $product->paginate(4);
+
+        if ($request->ajax()) {
+            $html = '';
+            if ($product->isNotEmpty()) {
+                foreach ($product as $prod) {
+                    $html .= '<tr>
+                        <td>' . $prod->id . '</td>
                         <td><img width="100" src="' . asset('admin_assets/images/' . $prod->image) . '" alt=""></td>
-                        <td>'. $prod->prod_name.'</td>
-                        <td>'.$prod->categorys->name.'</td>
-                        <td>'.$prod->sub_category->subcate_name.'</td>
-                        <td>'.$prod->brand->name.'</td>
-                        <td>'.$prod->description.'</td>
-                        <td>'.$prod->price.'</td>
-                        <td>'.$prod->compare_price.'</td>
-                        <td>'.$prod->qty.'</td>
+                        <td>' . $prod->prod_name . '</td>
+                        <td>' . $prod->categorys->name . '</td>
+                        <td>' . $prod->sub_category->subcate_name . '</td>
+                        <td>' . $prod->brand->name . '</td>
+                        <td>' . $prod->description . '</td>
+                        <td>' . $prod->price . '</td>
+                        <td>' . $prod->compare_price . '</td>
+                        <td>' . $prod->qty . '</td>
                          <td>' . ($prod->status == 1 ? ' <svg class="text-success-500 h-6 w-6 text-success" fill="none"
                                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                                 aria-hidden="true">
@@ -94,20 +99,19 @@ class ProductController extends Controller
                                 </form>
                             </td>
                         </tr>';
-                    }
-                }else{
-                    $html = '<tr>
+                }
+            } else {
+                $html = '<tr>
                     <td>No Data Found</td>
                     </tr>';
-                }
-
-                return response()->json([
-                    'data' => $html,
-                    'pagination' => (string) $product
-                ]);
             }
-            return view('admin.product.product', compact('product'));
-        
+
+            return response()->json([
+                'data' => $html,
+                'pagination' => (string) $product
+            ]);
+        }
+        return view('admin.product.product', compact('product'));
     }
 
     public function createProduct()
@@ -120,10 +124,14 @@ class ProductController extends Controller
 
     public function storeProduct(Request $request)
     {
+
+       
+        // // dd($request->image_array);
+        // exit();
         $rules = [
             'name' => 'required|alpha_num|max:50',
             'description' => 'required',
-            'image' => 'required|image',
+            // 'image' => 'required|image',
             'price' => 'required|numeric',
             'status' => 'required',
             'category' => 'required',
@@ -153,27 +161,125 @@ class ProductController extends Controller
         $product->brand_id  = $request->brand;
         $product->status = $request->status;
         //store Image
-        $image = $request->image;
-        $ext = $image->Extension();
-        $imagename = time() . '.' . $ext;
-        $image->move(public_path('admin_assets/images'), $imagename);
-        $product->image = $imagename;
+        // $image = $request->image;
+        // $ext = $image->Extension();
+        // $imagename = time() . '.' . $ext;
+        // $image->move(public_path('admin_assets/images'), $imagename);
+        // $product->image = $imagename;
 
         $product->save();
 
+        if (!empty($request->image_array)) {
+            foreach ($request->image_array as $temp_image_id) {
+                $tempImage = TempImage::find($temp_image_id);
+                $exstArray = explode('.', $tempImage->images);
+                $exst = last($exstArray);
+
+                $productImage = new ProductImage();
+                $productImage->product_id =  $product->id;
+                $productImage->images = 'NULL';
+                $productImage->save();
+
+                $imageName = $product->id . '-' . $productImage->id . '-' . time() . '.' . $exst;
+                $productImage->images = $imageName;
+                $productImage->update();
+
+                // File::delete(public_path('images/' . $tempImage->images));
+                // $tempImage->delete();
+
+                $sourcePath = public_path('images/') . $tempImage->images;
+                $destPath = public_path('admin_assets/images/') . $imageName;
+                // dd($destPath);
+                $this->createThumbnail($sourcePath, $destPath, 300, 275);
+            }
+        }
         return response()->json(['success' => 'Product Inserted successfully']);
     }
+
+    public function images()
+    {
+        return view('images');
+    }
+
+    // public function storeImage(Request $request)
+    // {
+    //     // Validate incoming request data
+    //     $request->validate([
+    //         'images' => 'required|array',
+    //         'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //     ]);
+
+    //     // Initialize an array to store image information
+    //     $images = [];
+    //     // Process each uploaded image
+    //     dd($request->file('images'));
+    //     foreach($request->file('images') as $image) {
+    //         // Generate a unique name for the image
+    //         $ext = $image->extension();
+    //         $imageName = time() . '_' . uniqid() . '.' . $ext;
+    //         $image->move(public_path('admin_assets/images'), $imageName);
+
+    //         // Add image name to the array
+    //         $images[] = ['images' => $imageName];
+    //     }
+    //     // Store images in the database using create method
+    //     foreach ($images as $imageData) {
+    //        $r= ProductImage::create([
+    //             'images' => $imageData['images'],  // Corrected this line
+    //             'product_id' => 22
+    //         ]);
+    //     }
+    //     // dd($r);
+
+    //     // Optionally, return success response or redirect
+    //     // return back()->with('success', 'Images uploaded successfully!')
+    //     //              ->with('images', $images);
+    // }
+
 
     //Update Product
 
 
+    public function storeImage(Request $request)
+    {
+        $image = $request->image;
+
+        if (!empty($image)) {
+            $ext = $image->Extension();
+            $imagename = time() . '_' . uniqid() . '.' . $ext;
+            $image->move(public_path('admin_assets/images'), $imagename);
+
+            $ProdImages = new TempImage();
+            $ProdImages->images = $imagename;
+            $ProdImages->save();
+            // return redirect()->back();
+
+            //Generate Thumbnail
+            $sourcePath = public_path('admin_assets/images/') . $imagename;
+            $destPath = public_path('images/') . $imagename;
+            // $image = Image::make($sourcePath);
+            // $image->fit(300, 275);
+            // $image->save($destPath);
+            $this->createThumbnail($sourcePath, $destPath, 300, 275);
+
+            return response()->json([
+                'status' => true,
+                'image_id' => $ProdImages->id,
+                'ImagePath' => asset('images/' . $imagename),
+                'message' => 'Image Uploaded Successfully'
+            ]);
+        }
+    }
+
+
     public function editProduct($id)
     {
+        $productImage = ProductImage::where('product_id','$id');
         $category = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
         $brand = Brand::where('status', 1)->pluck('name', 'id');
         $product = Product::findOrFail($id);
-        return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory'));
+        return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory','productImage'));
     }
 
     public function updateProduct(Request $request, $id)
@@ -453,5 +559,49 @@ class ProductController extends Controller
         $brand->delete();
         //return response()->json(['message' => 'Item Deleted successfully']);
         return redirect()->route('admin.brand')->with('success', 'Brand Deleted Successfully');
+    }
+
+
+    /**
+     * Create a thumbnail using PHP's built-in functions
+     */
+    private function createThumbnail($sourcePath, $destPath, $width, $height)
+    {
+        list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
+        $thumbnail = imagecreatetruecolor($width, $height);
+
+        switch ($sourceType) {
+            case IMAGETYPE_JPEG:
+                $sourceImage = imagecreatefromjpeg($sourcePath);
+                break;
+            case IMAGETYPE_PNG:
+                $sourceImage = imagecreatefrompng($sourcePath);
+                break;
+            case IMAGETYPE_GIF:
+                $sourceImage = imagecreatefromgif($sourcePath);
+                break;
+            default:
+                return false; // Unsupported image type
+        }
+
+        // Resize and crop the image to fit the thumbnail size
+        imagecopyresampled($thumbnail, $sourceImage, 0, 0, 0, 0, $width, $height, $sourceWidth, $sourceHeight);
+
+        // Save the thumbnail
+        switch ($sourceType) {
+            case IMAGETYPE_JPEG:
+                imagejpeg($thumbnail, $destPath, 90);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($thumbnail, $destPath, 9);
+                break;
+            case IMAGETYPE_GIF:
+                imagegif($thumbnail, $destPath);
+                break;
+        }
+
+        // Clean up memory
+        imagedestroy($sourceImage);
+        imagedestroy($thumbnail);
     }
 }

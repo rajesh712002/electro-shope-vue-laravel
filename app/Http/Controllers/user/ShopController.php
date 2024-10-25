@@ -11,6 +11,7 @@ use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\ProductImage;
 use App\Models\ProductRating;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -78,9 +79,11 @@ class ShopController extends Controller
 
         // get product details 
         $product = Product::with('brand')->where('slug', $slug)->first();
-
+       $images = DB::table('product_images')
+                ->join('products','products.id' ,'=' ,'product_images.product_id')
+                ->where('products.id','=',$product->id)->get();
         $productrat = ProductRating::get();
-
+// dd($images);
         // Calculate the count of ratings for the product
         $ratingcount = DB::table('product_ratings')
             ->join('products', 'products.id', '=', 'product_ratings.product_id')
@@ -93,7 +96,7 @@ class ShopController extends Controller
             ->where('products.slug', '=', $slug)
             ->sum('product_ratings.rating');
 
-        return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum'));
+        return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum','images'));
     }
 
 

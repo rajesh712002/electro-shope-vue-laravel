@@ -19,6 +19,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminloginController;
 use App\Http\Controllers\Auth\AuthenticationController;
 use App\Http\Controllers\admin\DiscountCouponController;
+use App\Http\Controllers\ExportController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -81,6 +82,11 @@ Route::prefix('user')->group(function () {
 });
 
 //=======//==============//====================
+//  ==>  Export Ecxel File
+Route::get('users-excel', [ExportController::class, 'usersExcel'])->name('usersExcel');
+Route::get('orders-excel', [ExportController::class, 'ordersExcel'])->name('ordersExcel');
+Route::get('ratings-excel', [ExportController::class, 'ratingsExcel'])->name('ratingsExcel');
+
 
 //  ==>  Payment Integration
 
@@ -131,13 +137,12 @@ Route::middleware([ValidUser::class])->group(function (): void {
 
         Route::post('/apply_coupon', [CheckoutController::class, 'applyCoupon'])->name('apply_coupon');
         Route::post('/remove_coupon', [DiscountCouponController::class, 'removeCoupon'])->name('removeCoupon');
-        Route::get('/get_coupons',[DiscountCouponController::class,'getCoupons'])->name('get_coupons');
+        Route::get('/get_coupons', [DiscountCouponController::class, 'getCoupons'])->name('get_coupons');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
-
-        
     });
 });
+
 
 //=======//==============//=====================//============================//===================================//==========================================//
 //=======//==============//=====================//============================//===================================//==========================================//
@@ -206,6 +211,10 @@ Route::middleware([ValidAdmin::class])->group(function () {
         //Insert Product
         Route::get('/create-products', [ProductController::class, 'createProduct'])->name('admin.create_prod');
         Route::post('/products', [ProductController::class, 'storeProduct'])->name('admin.store_prod');
+
+        // Route::get('/image', [ProductController::class, 'images'])->name('images');
+        Route::get('/images',[ProductController::class,'images'])->name('images');
+        Route::post('/images', action: [ProductController::class, 'storeImage'])->name('storeImage');
         //Update Product
         Route::get('/edit-products/{product}', [ProductController::class, 'editProduct'])->name('admin.edit_prod');
         Route::put('/update-product/{product}', [ProductController::class, 'updateProduct'])->name('admin.update_prod');

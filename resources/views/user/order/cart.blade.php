@@ -377,7 +377,7 @@
                                                 id="cart-total">{{ $newTotal }}</span></div>
                                     </div>
                                     <div class="pt-5">
-                                        <a href="{{ route('user.checkout') }}"
+                                        <a id="checkout" href="{{ route('user.checkout') }}"
                                             class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                                     </div>
                                 </div>
@@ -417,7 +417,7 @@
                                     <div><i class="fa fa-inr" aria-hidden="true"></i> {{ $guestTotalSum }}</div>
                                 </div>
                                 <div class="pt-5">
-                                    <a href="{{ route('user.checkout') }}"
+                                    <a  href="{{ route('user.checkout') }}"
                                         class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                                 </div>
                             </div>
@@ -463,6 +463,10 @@
             location.reload();
         });
     }
+
+    document.getElementById("checkout").addEventListener("submit", function() {
+            document.querySelector(".overlay").style.display = "flex";
+        });
 </script>
 
 

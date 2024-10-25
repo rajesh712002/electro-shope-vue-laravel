@@ -11,6 +11,9 @@
                     <div class="col-sm-6">
                         <h1>Users</h1>
                     </div>
+                    <div class="col-sm-6 text-left">
+                        <a href="{{ route('usersExcel') }}" class="btn btn-warning">Export Data</a>
+                    </div>
                 </div>
             </div>
         </section>

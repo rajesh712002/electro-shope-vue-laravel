@@ -10,6 +10,7 @@
                     <div class="col-sm-6">
                         <h1>Categories</h1>
                     </div>
+                   
                     <div class="col-sm-6 text-right">
                         <a href="{{ route('admin.create_cat') }}" class="btn btn-primary">New Category</a>
                     </div>

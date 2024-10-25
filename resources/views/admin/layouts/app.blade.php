@@ -5,7 +5,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
         crossorigin="anonymous"></script>
 
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <meta charset="utf-8">
@@ -26,27 +27,39 @@
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-          .overlay {
+        .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
-            display: none; /* Hidden by default */
-            justify-content: center; /* Center spinner horizontally */
-            align-items: center; /* Center spinner vertically */
-            z-index: 9999; /* On top of other elements */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Transparent background */
+            display: none;
+            /* Hidden by default */
+            justify-content: center;
+            /* Center spinner horizontally */
+            align-items: center;
+            /* Center spinner vertically */
+            z-index: 9999;
+            /* On top of other elements */
         }
+
         /* Custom style for larger spinner */
         .spinner-container {
-            display: flex; /* Use flexbox for centering */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
+            display: flex;
+            /* Use flexbox for centering */
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
         }
+
         .spinner-border {
-            width: 10rem; /* Adjust size as needed */
-            height: 10rem; /* Adjust size as needed */
+            width: 10rem;
+            /* Adjust size as needed */
+            height: 10rem;
+            /* Adjust size as needed */
         }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">

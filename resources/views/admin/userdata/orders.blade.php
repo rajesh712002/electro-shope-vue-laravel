@@ -21,7 +21,8 @@
                     <div class="col-sm-6">
                         <h1>Orders</h1>
                     </div>
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-6 text-left">
+                        <a href="{{ route('ordersExcel') }}" class="btn btn-warning">Export Data</a>
                     </div>
                 </div>
             </div>
