@@ -137,11 +137,19 @@
                                     <tbody>
                                         @foreach ($product as $item)
                                             <tr id="cart-item-{{ $item->cid }}">
-                                                <td>
-                                                    <a href="{{ route('viewproduct', $item->slug) }}">
+                                                <td><a href="{{ route('viewproduct', $item->slug) }}">
+                                                    <img  width="120" height="120"
+                                                        class="cardimgtop"
+                                                        @if (!empty($item->images))
+                                                         src="{{ asset('admin_assets/images/' . $item->images) }}" alt="">
+                                                        @else
+                                                        src="{{ asset('admin_assets/images/' . $item->image) }}" alt="">
+                                                         @endif
+                                                        </a>
+                                                    {{-- <a href="{{ route('viewproduct', $item->slug) }}">
                                                         <img src="{{ asset('admin_assets/images/' . $item->image) }}"
                                                             width="120" height="120">
-                                                    </a>
+                                                    </a> --}}
                                                 </td>
                                                 <td>{{ $item->prod_name }}</td>
                                                 <td>{{ $item->price }}</td>
@@ -360,14 +368,14 @@
                                         <button class="btn btn-dark" type="button" id="apply_discount">Apply
                                             Coupon</button>
 
-                                        </div>
-                                        <button class="btn btn-danger btn-sm" type="button" id="remove_coupon"
+                                    </div>
+                                    <button class="btn btn-danger btn-sm" type="button" id="remove_coupon"
                                         style="display: {{ $couponCode ? 'inline-block' : 'none' }};">Remove
                                         Coupon</button>
-                                        <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal"
-                                            data-bs-target="#couponModal">
-                                            View Available Coupons
-                                        </button>
+                                    <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal"
+                                        data-bs-target="#couponModal">
+                                        View Available Coupons
+                                    </button>
 
                                     <br><br>
 
@@ -417,7 +425,7 @@
                                     <div><i class="fa fa-inr" aria-hidden="true"></i> {{ $guestTotalSum }}</div>
                                 </div>
                                 <div class="pt-5">
-                                    <a  href="{{ route('user.checkout') }}"
+                                    <a href="{{ route('user.checkout') }}"
                                         class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                                 </div>
                             </div>
@@ -465,8 +473,8 @@
     }
 
     document.getElementById("checkout").addEventListener("submit", function() {
-            document.querySelector(".overlay").style.display = "flex";
-        });
+        document.querySelector(".overlay").style.display = "flex";
+    });
 </script>
 
 

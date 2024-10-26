@@ -76,10 +76,15 @@ class CartController extends Controller
             $product = DB::table('carts')
                 ->join('users', 'carts.user_id', '=', 'users.id')
                 ->join('products', 'carts.product_id', '=', 'products.id')
+                ->leftJoin('product_images', function ($join) {
+                    $join->on('product_images.product_id', '=', 'products.id')
+                         ->whereRaw('product_images.id = (SELECT MIN(id) FROM product_images WHERE product_images.product_id = products.id)');
+                })
                 ->where('users.id', $userId)
-                ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
+                ->select('products.*', 'carts.qty as cqty', 'carts.id as cid','product_images.images as images')
                 ->get();
 
+                // dd($product);
             //in cart raw
             $totalSum = DB::table('carts')
                 ->join('products', 'carts.product_id', '=', 'products.id')

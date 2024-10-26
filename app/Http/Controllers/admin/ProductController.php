@@ -6,9 +6,9 @@ use App\Models\Brand;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\TempImage;
 use App\Models\Subcategory;
 use App\Models\ProductImage;
-use App\Models\TempImage;
 use Illuminate\Http\Request;
 // use Intervention\Image\Facades\Image;
 
@@ -16,6 +16,7 @@ use function Laravel\Prompts\alert;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -24,7 +25,7 @@ class ProductController extends Controller
     {
 
 
-        $product = Product::with('sub_category', 'brand', 'categorys','productImages')->latest();
+        $product = Product::with('sub_category', 'brand', 'categorys', 'productImages')->latest();
         // dd($product);
         $orderID = Order::where('');
         // dd($product->toArray());
@@ -54,8 +55,10 @@ class ProductController extends Controller
             $html = '';
             if ($product->isNotEmpty()) {
                 foreach ($product as $prod) {
+                    // $images = $prod->productImages->images->first();
                     $html .= '<tr>
                         <td>' . $prod->id . '</td>
+                        
                         <td><img width="100" src="' . asset('admin_assets/images/' . $prod->image) . '" alt=""></td>
                         <td>' . $prod->prod_name . '</td>
                         <td>' . $prod->categorys->name . '</td>
@@ -125,7 +128,7 @@ class ProductController extends Controller
     public function storeProduct(Request $request)
     {
 
-       
+
         // // dd($request->image_array);
         // exit();
         $rules = [
@@ -201,44 +204,6 @@ class ProductController extends Controller
         return view('images');
     }
 
-    // public function storeImage(Request $request)
-    // {
-    //     // Validate incoming request data
-    //     $request->validate([
-    //         'images' => 'required|array',
-    //         'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //     ]);
-
-    //     // Initialize an array to store image information
-    //     $images = [];
-    //     // Process each uploaded image
-    //     dd($request->file('images'));
-    //     foreach($request->file('images') as $image) {
-    //         // Generate a unique name for the image
-    //         $ext = $image->extension();
-    //         $imageName = time() . '_' . uniqid() . '.' . $ext;
-    //         $image->move(public_path('admin_assets/images'), $imageName);
-
-    //         // Add image name to the array
-    //         $images[] = ['images' => $imageName];
-    //     }
-    //     // Store images in the database using create method
-    //     foreach ($images as $imageData) {
-    //        $r= ProductImage::create([
-    //             'images' => $imageData['images'],  // Corrected this line
-    //             'product_id' => 22
-    //         ]);
-    //     }
-    //     // dd($r);
-
-    //     // Optionally, return success response or redirect
-    //     // return back()->with('success', 'Images uploaded successfully!')
-    //     //              ->with('images', $images);
-    // }
-
-
-    //Update Product
-
 
     public function storeImage(Request $request)
     {
@@ -274,63 +239,87 @@ class ProductController extends Controller
 
     public function editProduct($id)
     {
-        $productImage = ProductImage::where('product_id','$id');
+        $product = Product::findOrFail($id);
+        $productImage = ProductImage::where('product_id', $product->id)->get();
         $category = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
         $brand = Brand::where('status', 1)->pluck('name', 'id');
         $product = Product::findOrFail($id);
-        return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory','productImage'));
+        // dd($productImage);
+        return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory', 'productImage'));
     }
 
     public function updateProduct(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        // File::delete(public_path('admin_assets/images/' . $product->image));
-
-
-        $rules = [
-            'name' => 'required|alpha_num|max:50',
-            'description' => 'required',
-            'image' => 'required|image',
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'status' => 'required',
-            'category' => 'required',
-            'slug' => 'required|alpha_num|unique:products,slug,' . $product->id . ',id',
-            'qty' => 'required|numeric',
-            'brand' => 'required'
+            'compare_price' => 'nullable|numeric',
+            'sku' => 'nullable|string|max:255',
+            'qty' => 'required|integer|min:0',
+            'status' => 'required|boolean',
+            'category' => 'required|exists:categories,id',
+            'sub_category' => 'nullable|exists:subcategories,id',
+            'brand' => 'required|exists:brands,id',
+            'image_array' => 'array', // For existing images
+            'image_array.*' => 'exists:product_images,id', // Validate each existing image ID
+        ]);
 
-        ];
+        // Find the product
+        $product = Product::findOrFail($id);
 
-        $validator = Validator::make($request->all(), $rules);
+        // Update the product details
+        $product->update([
+            'prod_name' => $request->name,
+            'slug' => $request->slug,
+            'description' => $request->description,
+            'price' => $request->price,
+            'compare_price' => $request->compare_price,
+            'sku' => $request->sku,
+            'qty' => $request->qty,
+            'status' => $request->status,
+            'category_id' => $request->category,
+            'sub_category_id' => $request->sub_category,
+            'brand_id' => $request->brand,
+        ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        // Handle new images
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $image) {
+                // Store the new image
+                $path = $image->store('product_images', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'images' => $path,
+                ]);
+            }
         }
 
-        $product->prod_name = $request->name;
-        $product->slug = $request->slug;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->compare_price = $request->compare_price;
-        $product->sku = $request->sku;
-        // $product->track_qty = $request->track_qty;
-        $product->qty = $request->qty;
-        $product->category_id  = $request->category;
-        $product->sub_category_id  = $request->sub_category;
-        $product->brand_id  = $request->brand;
-        $product->status = $request->status;
-        //store Image
-        $image = $request->image;
-        $ext = $image->Extension();
-        $imagename = time() . '.' . $ext;
-        $image->move(public_path('admin_assets/images'), $imagename);
-        $product->image = $imagename;
+        // Handle existing images
+        if ($request->has('image_array')) {
+            foreach ($request->image_array as $existingImageId) {
+                // Make sure the existing image ID is associated with the product
+                if (!ProductImage::where('id', $existingImageId)->where('product_id', $product->id)->exists()) {
+                    return redirect()->back()->withErrors(['image_array' => 'Invalid image selected.']);
+                }
+            }
+        }
 
-        $product->save();
+        // Handle deleted images
+        if ($request->has('deleted_images')) {
+            foreach ($request->deleted_images as $deletedImageId) {
+                $productImage = ProductImage::findOrFail($deletedImageId);
+                Storage::disk('public')->delete($productImage->images); // Delete the image from storage
+                $productImage->delete(); // Remove the image record from the database
+            }
+        }
 
-        return response()->json(['success' => 'Product Updated successfully']);
+        // Redirect back with success message
+        return redirect()->route('admin.product')->with('success', 'Product updated successfully.');
     }
-
 
     public function destroyProduct($id)
     {

@@ -10,8 +10,7 @@
                     <picture>
                         <source media="(max-width: 799px)" srcset="{{ asset('admin_assets/images/phones.png') }}" />
                         <a href="{{ route('usershop') }}">
-                            <source media="(min-width: 800px)"
-                                srcset="{{ asset('admin_assets/images/phones.png') }}" />
+                            <source media="(min-width: 800px)" srcset="{{ asset('admin_assets/images/phones.png') }}" />
                         </a>
                         <img src="{{ asset('admin_assets/images/phones.png') }}" alt="" />
                     </picture>
@@ -176,30 +175,39 @@
                         <div class="card product-card">
                             <div class="product-image position-relative">
                                 <a href="{{ route('viewproduct', $prod->slug) }}">
-                                    <img style="width: 200px; height: 200px; object-fit: contain;" class="cardimgtop"
-                                        src="{{ asset('admin_assets/images/' . $prod->image) }}" alt="">
-                                    {{-- <a class="whishlist" href="222"><i class="far fa-heart"></i></a> --}}
-                                    <form method="POST" action="{{ route('user.addToWishlist') }}">
-                                        @csrf
-                                        <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
-                                        <input type="hidden" name="user_id" value="{{ chechUserLogin() }}" />
+                                    {{-- <img style="width: 200px; height: 200px; object-fit: contain;" class="cardimgtop"
+                                        src="{{ asset('admin_assets/images/' . $prod->image) }}" alt=""> --}}
 
-                                        <button type="submit" class="whishlist "><i
-                                                class="far fa-heart"></i></button>
+                                    @php
+                                        $image = $prod->productImages->first();
+                                    @endphp
+                                    <img style="width: 200px; height: 200px; object-fit: contain;" class="cardimgtop"
+                                        @if (!empty($image->images)) src="{{ asset('admin_assets/images/' . $image->images) }}"
+                                            alt="">
+                                        @else
+                                            src="{{ asset('admin_assets/images/' . $prod->image) }}"
+                                            alt=""> @endif
+                                        {{-- <a class="whishlist" href="222"><i class="far fa-heart"></i></a> --}} <form method="POST"
+                                        action="{{ route('user.addToWishlist') }}">
+                                    @csrf
+                                    <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
+                                    <input type="hidden" name="user_id" value="{{ chechUserLogin() }}" />
+
+                                    <button type="submit" class="whishlist "><i class="far fa-heart"></i></button>
                                     </form>
                                 </a>
                                 <div class="product-action">
-                                  
+
                                     <form action="{{ route('user.addToCart') }}" method="POST">
                                         {{-- @dd($product) --}}
                                         @csrf
                                         <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                         <input type="hidden" name="user_id" value="{{ chechUserLogin() }}" />
                                         <input type="hidden" name="qty" value="1" />
-                                        <input type="hidden" name="price" value="{{$prod->price}}" />
-                                        <input type="hidden" name="name" value="{{$prod->prod_name}}" />
-                                        <input type="hidden" name="image" value="{{$prod->image}}" />
-                                        <input type="hidden" name="max_qty" value="{{$prod->qty}}" />
+                                        <input type="hidden" name="price" value="{{ $prod->price }}" />
+                                        <input type="hidden" name="name" value="{{ $prod->prod_name }}" />
+                                        <input type="hidden" name="image" value="{{ $prod->image }}" />
+                                        <input type="hidden" name="max_qty" value="{{ $prod->qty }}" />
 
                                         <button type="submit" class="btn btn-dark"><i
                                                 class="fas fa-shopping-cart"></i> Add To Cart</button>

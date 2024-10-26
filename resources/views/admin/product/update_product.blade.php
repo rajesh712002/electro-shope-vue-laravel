@@ -82,7 +82,8 @@
                                 </div>
                             </div>
                             <div class="row" id="productImages">
-                                @if ($productImage->count() > 0)
+                                @if (!empty($productImage))
+                                {{-- @dd($productImage) --}}
                                     @foreach ($productImage as $image)
                                         <div class="col-md-3" style="width: 18rem;">
                                             <input type="hidden" name="image_array[]" value="{{ $image->id }}">

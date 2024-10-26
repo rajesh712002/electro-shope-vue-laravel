@@ -42,7 +42,7 @@ function getcategory()
 
 function getproduct()
 {
-    return $product = Product::orderBy('created_at', 'desc')->limit(12)->get();
+    return $product = Product::with('productImages')->orderBy('created_at', 'desc')->limit(12)->get();
 }
 
 function cartCount()

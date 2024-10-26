@@ -117,10 +117,19 @@
                                             <img style="width: 70px; height: 70px;"
                                                 src="{{ asset('admin_assets/images/' . $prod->brand->image) }}">
                                             <a href="{{ route('viewproduct', $prod->slug) }}">
+                                           @php
+                                               $image = $prod->productImages->first()
+                                           @endphp
+                                            {{-- @dd($prod->productImages->first()->images) --}}
                                                 <img style="width: 200px; height: 200px; object-fit: contain;"
                                                     class="cardimgtop"
+                                                    @if(!empty($image->images))
+                                                    src="{{ asset('admin_assets/images/' . $image->images) }}"
+                                                    alt="">
+                                                    @else
                                                     src="{{ asset('admin_assets/images/' . $prod->image) }}"
                                                     alt="">
+                                                    @endif
                                             </a>
                                             <form method="POST" action="{{ route('user.addToWishlist') }}">
                                                 @csrf

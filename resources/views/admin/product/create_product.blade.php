@@ -235,7 +235,7 @@
 
         const dropzone = new Dropzone('#image', {
             url: "{{ route('storeImage') }}",
-            maxFiles: 4,
+            maxFiles: 7,
             paramName: 'image',
             addRemoveLinks: true,
             acceptedFiles: "image/jpeg,image/png,image/jpg,image/gif",

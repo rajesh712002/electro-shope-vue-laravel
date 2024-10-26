@@ -26,7 +26,12 @@ class ShopController extends Controller
         $brandsArray = [];
 
         $categorys = Category::withCount('product')->get();
-        $products = Product::where('status', 1);
+        $products = Product::with('productImages')->where('status', 1);
+
+        // $images = DB::table('product_images')
+        //         ->join('products','products.id' ,'=' ,'product_images.product_id')
+        //         ->where('products.id','=',$products->id)->first();
+                // dd( $products);
         //Filter
         if (!empty($categoryslug)) {
             $category = Category::where('slug', $categoryslug)->first();
@@ -52,6 +57,7 @@ class ShopController extends Controller
         }
         // $products = $products->orderBy('created_at', 'desc');
         $products = $products->paginate(6);
+        // dd( $products);
         $brands = Brand::where('status', '1')->get();
 
         return view('user.order.shop', compact('brands', 'products', 'categorys', 'categorySelected', 'subcategorySelected', 'brandsArray'));

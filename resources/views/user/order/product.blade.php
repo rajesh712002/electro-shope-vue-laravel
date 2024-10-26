@@ -208,8 +208,11 @@
 
                 </div>
                 {{-- @dd($order->product_id == $product->id) --}}
+                <br>
+                <br>
                 <div class="col-md-12 mt-5">
                     <div class="bg-light">
+                        <br><br>
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
