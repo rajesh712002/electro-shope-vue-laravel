@@ -248,6 +248,75 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+    {{-- <script>
+        Dropzone.autoDiscover = false;
+
+        const uploadedFiles = new Set(); // To track uploaded files by name
+
+        const dropzone = new Dropzone('#image', {
+            url: "{{ route('updateImages') }}",
+            maxFiles: 7,
+            paramName: 'image',
+            addRemoveLinks: true,
+            acceptedFiles: "image/jpeg,image/png,image/jpg,image/gif",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            init: function() {
+                this.on('addedfile', function(file) {
+                    // Check if file is already uploaded
+                    if (uploadedFiles.has(file.name)) {
+                        this.removeFile(file); // Remove duplicate file
+                        alert("This image has already been uploaded."); // Notify user
+                    } else if (this.files.length > this.options.maxFiles) {
+                        this.removeFile(file); // Remove excess file
+                        alert("You can only upload a maximum of " + this.options.maxFiles +
+                            " images."); // Notify user
+                    } else {
+                        uploadedFiles.add(file.name); // Add file name to the set
+                    }
+                });
+
+                this.on('success', function(file, response) {
+                    var html = `<div class="col-md-3" style="width: 18rem;">
+                        <input type="hidden" name="image_array[]" value="${response.image_id}">
+                            <img src="${response.ImagePath}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="#" class="btn btn-danger" data-file="${file.name}">Delete</a>
+                            </div>
+                        </div>`;
+                    $("#productImages").append(html);
+                });
+
+                this.on('removedfile', function(file) {
+                    uploadedFiles.delete(file.name); // Remove from the set when file is removed
+                    // Optionally, you can also remove the related image card from the DOM here if needed
+                    const deleteButton = $(`.btn-danger[data-file="${file.name}"]`);
+                    if (deleteButton.length) {
+                        deleteButton.closest('.col-md-3').remove();
+                    }
+                });
+            }
+        });
+
+        // Handle delete button
+        $(document).on('click', '.btn-danger', function(e) {
+            e.preventDefault();
+            const fileName = $(this).data('file');
+
+            // Remove the file from Dropzone
+            dropzone.files.forEach((file, index) => {
+                if (file.name === fileName) {
+                    dropzone.removeFile(file); // Remove file from Dropzone
+                    uploadedFiles.delete(file.name); // Remove from the set
+                }
+            });
+
+            // Also remove the image card from the displayed images
+            $(this).closest('.col-md-3').remove();
+        });
+    </script> --}}
+
     <script>
         Dropzone.autoDiscover = false;
 
@@ -255,7 +324,7 @@
 
         const dropzone = new Dropzone('#image', {
             url: "{{ route('storeImage') }}",
-            maxFiles: 4,
+            maxFiles: 7,
             paramName: 'image',
             addRemoveLinks: true,
             acceptedFiles: "image/jpeg,image/png,image/jpg,image/gif",

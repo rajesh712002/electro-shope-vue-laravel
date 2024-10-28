@@ -19,10 +19,10 @@
                 </div>
                 <div class="col-md-9">
                     @if (session('status'))
-                    <div class="alert alert-success">
-                        {{ session('status') }}
-                    </div>
-                @endif
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                     <div class="card">
                         <div class="card-header">
                             <h2 class="h5 mb-0 pt-2 pb-2">My Wishlist</h2>
@@ -34,11 +34,18 @@
                                 <div class="card-body p-4">
                                     <div
                                         class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
-                                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a
-                                                href="{{ route('viewproduct', $item->slug) }}"
+                                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start">
+                                            <a href="{{ route('viewproduct', $item->slug) }}"
                                                 class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;">
-                                                <img src="{{ asset('admin_assets/images/' . $item->image) }}"
-                                                    width="120" height="120">
+                                                <img width="120" height="120" class="cardimgtop"
+                                                    @if (!empty($item->images))
+                                                     src="{{ asset('admin_assets/images/' . $item->images) }}"
+                                                    alt="">
+                                                @else
+                                                    src="{{ asset('admin_assets/images/' . $item->image) }}"
+                                                    alt="">
+                                                     @endif
+                                                    </a>
                                                 <div class="pt-2">
                                                     <h3 class="product-title fs-base mb-2"><a class="text-dark"
                                                             href="{{ route('viewproduct', $item->slug) }}">{{ $item->prod_name }}</a>
@@ -91,7 +98,7 @@
 <script>
     function deleteProduct(id) {
         // if (confirm("Do you really want to remove this Item ?")) {
-            document.getElementById("delete-product-form-" + id).submit();
+        document.getElementById("delete-product-form-" + id).submit();
         // }
     }
 </script>

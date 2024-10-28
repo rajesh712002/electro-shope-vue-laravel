@@ -72,6 +72,9 @@
                                             <td>
                                                 @if(!empty($productImage->images))<img width="100" src="{{ asset('admin_assets/images/' . $productImage->images) }}"
                                                     alt="">
+                                                    @else
+                                                    <img width="100" src="{{ asset('admin_assets/images/' . $prod->image) }}"
+                                                    alt="">
                                                 @endif
                                                 </td>
                                             <td>{{ $prod->prod_name }}</td>

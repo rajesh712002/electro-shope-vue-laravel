@@ -231,8 +231,12 @@ class CartController extends Controller
         $product = DB::table('wishlists')
             ->join('users', 'wishlists.user_id', '=', 'users.id')
             ->join('products', 'wishlists.product_id', '=', 'products.id')
+            ->leftJoin('product_images', function ($join) {
+                $join->on('product_images.product_id', '=', 'products.id')
+                     ->whereRaw('product_images.id = (SELECT MIN(id) FROM product_images WHERE product_images.product_id = products.id)');
+            })
             ->where('users.id', $userId)
-            ->select('products.*', 'wishlists.id as wid')
+            ->select('products.*', 'wishlists.id as wid','product_images.images as images')
             ->get();
         // dd($product);
         return view('user.order.wishlist', compact('product'));

@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use console;
 
 class ProductController extends Controller
 {
@@ -55,11 +56,15 @@ class ProductController extends Controller
             $html = '';
             if ($product->isNotEmpty()) {
                 foreach ($product as $prod) {
-                    // $images = $prod->productImages->images->first();
+                    $productImage = $prod->productImages->first();
+
+                    $imageUrl = !empty($productImage) && !empty($productImage->images)
+                        ? asset('admin_assets/images/' . $productImage->images)
+                        : asset('admin_assets/images/' . $prod->image);
+                    // dd($imageUrl);
                     $html .= '<tr>
                         <td>' . $prod->id . '</td>
-                        
-                        <td><img width="100" src="' . asset('admin_assets/images/' . $prod->image) . '" alt=""></td>
+                        <td><img width="100" src="' . $imageUrl . '" alt=""></td>
                         <td>' . $prod->prod_name . '</td>
                         <td>' . $prod->categorys->name . '</td>
                         <td>' . $prod->sub_category->subcate_name . '</td>
@@ -175,6 +180,8 @@ class ProductController extends Controller
         if (!empty($request->image_array)) {
             foreach ($request->image_array as $temp_image_id) {
                 $tempImage = TempImage::find($temp_image_id);
+                // dd($tempImage);
+
                 $exstArray = explode('.', $tempImage->images);
                 $exst = last($exstArray);
 
@@ -208,10 +215,12 @@ class ProductController extends Controller
     public function storeImage(Request $request)
     {
         $image = $request->image;
-
+        
+        
         if (!empty($image)) {
             $ext = $image->Extension();
             $imagename = time() . '_' . uniqid() . '.' . $ext;
+            // dd($image);
             $image->move(public_path('admin_assets/images'), $imagename);
 
             $ProdImages = new TempImage();
@@ -249,76 +258,193 @@ class ProductController extends Controller
         return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory', 'productImage'));
     }
 
+    // public function updateImages(Request $request)
+    // {
+    //     // dd($request->all);
+
+    //     $image = $request->image;
+    //     // dd($image);
+    //     if (!empty($image)) {
+    //         $ext = $image->extension();
+    //         $imagename = time() . '_' . uniqid() . '.' . $ext;
+    //         $image->move(public_path('admin_assets/images'), $imagename);
+
+    //         $ProdImages = new TempImage();
+    //         $ProdImages->images = $imagename;
+    //         $ProdImages->save();
+
+    //         $prodImage = new ProductImage();
+            
+    //         if($prodImage->images = $imagename){
+    //             $prodImage->delete();
+    //         }
+
+    //         // Generate Thumbnail
+    //         $sourcePath = public_path('admin_assets/images/') . $imagename;
+    //         $destPath = public_path('images/') . $imagename;
+    //         $this->createThumbnail($sourcePath, $destPath, 300, 275);
+
+    //         return response()->json([
+    //             'status' => true,
+    //             'image_id' => $ProdImages->id,
+    //             'ImagePath' => asset('images/' . $imagename),
+    //             'message' => 'Image Uploaded Successfully'
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => false,
+    //         'message' => 'No image uploaded'
+    //     ]);
+    // }
+
+    // public function updateProduct(Request $request, $id)
+    // {
+    //     // dd($request->all);
+    //     // Validate the request
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'slug' => 'required|string|max:255',
+    //         'description' => 'nullable|string',
+    //         'price' => 'required|numeric',
+    //         'compare_price' => 'nullable|numeric',
+    //         'sku' => 'nullable|string|max:255',
+    //         'qty' => 'required|integer|min:0',
+    //         'status' => 'required|boolean',
+    //         'category' => 'required|exists:categories,id',
+    //         'sub_category' => 'nullable|exists:subcategories,id',
+    //         'brand' => 'required|exists:brands,id',
+    //         // 'image_array' => 'array', // For existing images
+    //         // 'image_array.*' => 'exists:product_images,id', // Validate each existing image ID
+    //     ]);
+
+    //     // Find the product
+    //     $product = Product::with('productImages')->findOrFail($id);
+    //     // dd($request->image_array, $product->images);
+    //     // Update the product details
+    //     // dd($request->name);
+    //     // $product->update([
+    //     //     'prod_name' => $request->name,
+    //     //     'slug' => $request->slug,
+    //     //     'description' => $request->description,
+    //     //     'price' => $request->price,
+    //     //     'compare_price' => $request->compare_price,
+    //     //     'sku' => $request->sku,
+    //     //     'qty' => $request->qty,
+    //     //     'status' => $request->status,
+    //     //     'category_id' => $request->category,
+    //     //     'sub_category_id' => $request->sub_category,
+    //     //     'brand_id' => $request->brand,
+    //     // ]);
+
+    //     // dd($request->image_array);
+    //     if (!empty($request->image_array)) {
+    //         foreach ($request->image_array as $temp_image_id) {
+    //             $tempImage = TempImage::find($temp_image_id);
+    //             $exstArray = explode('.', $tempImage->images);
+    //             dd($tempImage);
+    //             $exst = last($exstArray);
+
+    //             $productImage = new ProductImage();
+    //             $productImage->product_id =  $id;
+    //             $productImage->images = 'NULL';
+    //             $productImage->save();
+
+    //             $imageName = $product->id . '-' . $productImage->id . '-' . time() . '.' . $exst;
+    //             $productImage->images = $imageName;
+    //             $productImage->update();
+
+    //             // File::delete(public_path('images/' . $tempImage->images));
+    //             // $tempImage->delete();
+
+    //             $sourcePath = public_path('images/') . $tempImage->images;
+    //             $destPath = public_path('admin_assets/images/') . $imageName;
+    //             // dd($destPath);
+    //             $this->createThumbnail($sourcePath, $destPath, 300, 275);
+    //         }
+    //     }
+
+    //     // Redirect back with success message
+    //     return redirect()->route('admin.product')->with('success', 'Product updated successfully.');
+    // }
+
+  
     public function updateProduct(Request $request, $id)
     {
-        // Validate the request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
-            'description' => 'nullable|string',
+
+
+        // // dd($request->image_array);
+        // exit();
+        $rules = [
+            'name' => 'required|alpha_num|max:50',
+            'description' => 'required',
+            // 'image' => 'required|image',
             'price' => 'required|numeric',
-            'compare_price' => 'nullable|numeric',
-            'sku' => 'nullable|string|max:255',
-            'qty' => 'required|integer|min:0',
-            'status' => 'required|boolean',
-            'category' => 'required|exists:categories,id',
-            'sub_category' => 'nullable|exists:subcategories,id',
-            'brand' => 'required|exists:brands,id',
-            'image_array' => 'array', // For existing images
-            'image_array.*' => 'exists:product_images,id', // Validate each existing image ID
-        ]);
+            'status' => 'required',
+            'category' => 'required',
+            'slug' => 'required|alpha_num',
+            'qty' => 'required|numeric',
+            'brand' => 'required|alpha_num'
 
-        // Find the product
-        $product = Product::findOrFail($id);
+        ];
 
-        // Update the product details
-        $product->update([
-            'prod_name' => $request->name,
-            'slug' => $request->slug,
-            'description' => $request->description,
-            'price' => $request->price,
-            'compare_price' => $request->compare_price,
-            'sku' => $request->sku,
-            'qty' => $request->qty,
-            'status' => $request->status,
-            'category_id' => $request->category,
-            'sub_category_id' => $request->sub_category,
-            'brand_id' => $request->brand,
-        ]);
+        $validator = Validator::make($request->all(), $rules);
 
-        // Handle new images
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $image) {
-                // Store the new image
-                $path = $image->store('product_images', 'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'images' => $path,
-                ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $product = Product::with('productImages')->find($id);
+// dd($product);
+        // $product = new Product();
+        $product->prod_name = $request->name;
+        $product->slug = $request->slug;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->compare_price = $request->compare_price;
+        $product->sku = $request->sku;
+        // $product->track_qty = $request->track_qty;
+        $product->qty = $request->qty;
+        $product->category_id  = $request->category;
+        $product->sub_category_id  = $request->sub_category;
+        $product->brand_id  = $request->brand;
+        $product->status = $request->status;
+        //store Image
+        // $image = $request->image;
+        // $ext = $image->Extension();
+        // $imagename = time() . '.' . $ext;
+        // $image->move(public_path('admin_assets/images'), $imagename);
+        // $product->image = $imagename;
+
+        $product->save();
+
+        if (!empty($request->image_array)) {
+            foreach ($request->image_array as $temp_image_id) {
+                $tempImage = TempImage::find($temp_image_id);
+                // dd($tempImage);
+
+                $exstArray = explode('.', $tempImage->images);
+                $exst = last($exstArray);
+
+                $productImage = new ProductImage();
+                $productImage->product_id =  $product->id;
+                $productImage->images = 'NULL';
+                $productImage->save();
+
+                $imageName = $product->id . '-' . $productImage->id . '-' . time() . '.' . $exst;
+                $productImage->images = $imageName;
+                $productImage->update();
+
+                // File::delete(public_path('images/' . $tempImage->images));
+                // $tempImage->delete();
+
+                $sourcePath = public_path('images/') . $tempImage->images;
+                $destPath = public_path('admin_assets/images/') . $imageName;
+                // dd($destPath);
+                $this->createThumbnail($sourcePath, $destPath, 300, 275);
             }
         }
-
-        // Handle existing images
-        if ($request->has('image_array')) {
-            foreach ($request->image_array as $existingImageId) {
-                // Make sure the existing image ID is associated with the product
-                if (!ProductImage::where('id', $existingImageId)->where('product_id', $product->id)->exists()) {
-                    return redirect()->back()->withErrors(['image_array' => 'Invalid image selected.']);
-                }
-            }
-        }
-
-        // Handle deleted images
-        if ($request->has('deleted_images')) {
-            foreach ($request->deleted_images as $deletedImageId) {
-                $productImage = ProductImage::findOrFail($deletedImageId);
-                Storage::disk('public')->delete($productImage->images); // Delete the image from storage
-                $productImage->delete(); // Remove the image record from the database
-            }
-        }
-
-        // Redirect back with success message
-        return redirect()->route('admin.product')->with('success', 'Product updated successfully.');
+   
+        return response()->json(['success' => 'Product Updated successfully']);
     }
 
     public function destroyProduct($id)

@@ -76,42 +76,41 @@
         <div class="container">
 
             <div class="row ">
-                {{-- <div class="col-md-5">
-                    <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner bg-light">
-                            <div class="carousel-item" style="display: block ">
-                                <img class="w-100 h-100" src="{{ asset('admin_assets/images/' . $product->image) }}"
-                                    alt="">
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div> --}}
-                {{-- <img width="10" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
                 <div class="col-md-5">
-                    <img style="width: 100px; height: 70px; object-fit: contain ! important"
-                            src="{{ asset('admin_assets/images/' . $product->brand->image) }}">
+                    <img style="width: 100px; height: 70px; object-fit: contain !important"
+                        src="{{ asset('admin_assets/images/' . $product->brand->image) }}">
                     <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner bg-light">
-                            @foreach ($images as $key => $image)
-                                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+
+                        @if ($images->count() > 0)
+                            <div class="carousel-inner bg-light">
+                                @foreach ($images as $key => $image)
+                                    <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                                        <img class="w-100 h-100"
+                                            src="{{ asset('admin_assets/images/' . $image->images) }}"
+                                            alt="{{ $image->images }} image {{ $key + 1 }}">
+                                    </div>
+                                @endforeach
+                            </div>
+                            <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
+                                <i class="fa fa-2x fa-angle-left text-dark"></i>
+                            </a>
+                            <a class="carousel-control-next" href="#product-carousel" data-bs-slide="next">
+                                <i class="fa fa-2x fa-angle-right text-dark"></i>
+                            </a>
+                        @else
+                            {{-- @dd($product->image) --}}
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
                                     <img class="w-100 h-100"
-                                        src="{{ asset('admin_assets/images/' . $image->images) }}"
-                                        alt="{{ $image->images }} image {{ $key + 1 }}">
+                                        src="{{ asset('admin_assets/images/' . $product->image) }}"
+                                        alt="Default product image">
                                 </div>
-                            @endforeach
-                        </div>
-                        <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
-                            <i class="fa fa-2x fa-angle-left text-dark"></i>
-                        </a>
-                        <a class="carousel-control-next" href="#product-carousel" data-bs-slide="next">
-                            <i class="fa fa-2x fa-angle-right text-dark"></i>
-                        </a>
+                            </div>
+                        @endif
                     </div>
-                    {{-- <img width="10" src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
                 </div>
-            
+
+
                 <div class="col-md-7">
                     <div class="bg-light right">
                         {{-- <img style="width: 100px; height: 70px; object-fit: contain ! important"
