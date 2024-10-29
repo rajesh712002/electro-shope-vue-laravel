@@ -215,8 +215,8 @@ class ProductController extends Controller
     public function storeImage(Request $request)
     {
         $image = $request->image;
-        
-        
+
+
         if (!empty($image)) {
             $ext = $image->Extension();
             $imagename = time() . '_' . uniqid() . '.' . $ext;
@@ -258,45 +258,32 @@ class ProductController extends Controller
         return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory', 'productImage'));
     }
 
-    // public function updateImages(Request $request)
-    // {
-    //     // dd($request->all);
+    public function updateImages(Request $request)
+    {
+        $image = $request->image;
+        $ext = $image->extension();
+        $sourcePath = $image->getPathName();
 
-    //     $image = $request->image;
-    //     // dd($image);
-    //     if (!empty($image)) {
-    //         $ext = $image->extension();
-    //         $imagename = time() . '_' . uniqid() . '.' . $ext;
-    //         $image->move(public_path('admin_assets/images'), $imagename);
+        $productImage = new ProductImage();
+        $productImage->product_id = $request->product_id;
+        $productImage->images = 'NULL';
+        $productImage->save();
 
-    //         $ProdImages = new TempImage();
-    //         $ProdImages->images = $imagename;
-    //         $ProdImages->save();
+        $imageName = $request->product_id . '-' . $productImage->id . '-' . time() . '.' . $ext;
+        $productImage->images = $imageName;
+        $productImage->update();
 
-    //         $prodImage = new ProductImage();
-            
-    //         if($prodImage->images = $imagename){
-    //             $prodImage->delete();
-    //         }
+        //Generate Thumbnail
+        $destPath = public_path('admin_assets/images/') . $imageName;
+        $this->createThumbnail($sourcePath, $destPath, 300, 275);
 
-    //         // Generate Thumbnail
-    //         $sourcePath = public_path('admin_assets/images/') . $imagename;
-    //         $destPath = public_path('images/') . $imagename;
-    //         $this->createThumbnail($sourcePath, $destPath, 300, 275);
-
-    //         return response()->json([
-    //             'status' => true,
-    //             'image_id' => $ProdImages->id,
-    //             'ImagePath' => asset('images/' . $imagename),
-    //             'message' => 'Image Uploaded Successfully'
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'status' => false,
-    //         'message' => 'No image uploaded'
-    //     ]);
-    // }
+        return response()->json([
+            'status' => true,
+            'image_id' => $productImage->id,
+            'ImagePath' => asset('admin_assets/images/' . $productImage->images),
+            'message' => 'Image Saved Successfully'
+        ]);
+    }
 
     // public function updateProduct(Request $request, $id)
     // {
@@ -368,7 +355,9 @@ class ProductController extends Controller
     //     return redirect()->route('admin.product')->with('success', 'Product updated successfully.');
     // }
 
-  
+
+
+
     public function updateProduct(Request $request, $id)
     {
 
@@ -394,7 +383,7 @@ class ProductController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $product = Product::with('productImages')->find($id);
-// dd($product);
+        // dd($product);
         // $product = new Product();
         $product->prod_name = $request->name;
         $product->slug = $request->slug;
@@ -417,33 +406,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        if (!empty($request->image_array)) {
-            foreach ($request->image_array as $temp_image_id) {
-                $tempImage = TempImage::find($temp_image_id);
-                // dd($tempImage);
 
-                $exstArray = explode('.', $tempImage->images);
-                $exst = last($exstArray);
-
-                $productImage = new ProductImage();
-                $productImage->product_id =  $product->id;
-                $productImage->images = 'NULL';
-                $productImage->save();
-
-                $imageName = $product->id . '-' . $productImage->id . '-' . time() . '.' . $exst;
-                $productImage->images = $imageName;
-                $productImage->update();
-
-                // File::delete(public_path('images/' . $tempImage->images));
-                // $tempImage->delete();
-
-                $sourcePath = public_path('images/') . $tempImage->images;
-                $destPath = public_path('admin_assets/images/') . $imageName;
-                // dd($destPath);
-                $this->createThumbnail($sourcePath, $destPath, 300, 275);
-            }
-        }
-   
         return response()->json(['success' => 'Product Updated successfully']);
     }
 
@@ -451,13 +414,35 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // File::delete(public_path('admin_assets/images/' . $product->image));
+        $productImages = ProductImage::where('product_id', $product->id)->get();
 
+        File::delete(public_path('admin_assets/images/' . $productImages->images));
+        $productImages->delete();
         $product->delete();
         //return response()->json(['message' => 'Item Deleted successfully']);
         return redirect()->route('admin.product')->with('success', 'Product Deleted Successfully');
     }
 
+    public function destroyProductImages(Request $request)
+    {
+        $productImages = ProductImage::find($request->id);
+
+        // dd($request->all);
+        if (empty($productImages)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Image Not Found'
+            ]);
+        }
+
+        File::delete(public_path('admin_assets/images/' . $productImages->images));
+
+        $productImages->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Image Deleted Successfully'
+        ]);
+    }
 
 
     //BRANDS =====================================================================================================================

@@ -127,7 +127,7 @@ class AdminloginController extends Controller
                 });
         }
 
-        $order = $order->paginate(7);
+        $order = $order->paginate(4);
 
         if ($request->ajax()) {
             $html = '';

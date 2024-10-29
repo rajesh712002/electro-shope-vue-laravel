@@ -94,7 +94,7 @@
                                             @endif
 
 
-                                            <td>{{ $prod->description }}</td>
+                                            <td>{!! $prod->description !!}</td>
                                             <td><i class="fa fa-inr"></i> {{ $prod->price }}</td>
                                             <td><i class="fa fa-inr"></i> {{ $prod->compare_price }}</td>
                                             <td>{{ $prod->qty }}</td>

@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 @extends('admin.layouts.app')
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
-
-
+<script src="https://cdn.tiny.cloud/1/adkflfpe6mrdbxryjc4huob43fi29gg6o1a9gjfbf22la31k/tinymce/7/tinymce.min.js"
+    referrerpolicy="origin"></script>
 @section('content')
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -60,8 +61,8 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="description">Description</label>
-                                                <textarea name="description" id="description" cols="30" rows="10"
-                                                    value="{{ old('description', $product->description) }}" class=" summernote" placeholder="Description"></textarea>
+                                                <textarea name="description" id="description" cols="30" rows="10" class="form-control"
+                                                    placeholder="Description">{{ old('description', $product->description) }}</textarea>
                                                 <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
@@ -83,7 +84,7 @@
                             </div>
                             <div class="row" id="productImages">
                                 @if (!empty($productImage))
-                                {{-- @dd($productImage) --}}
+                                    {{-- @dd($productImage) --}}
                                     @foreach ($productImage as $image)
                                         <div class="col-md-3" style="width: 18rem;">
                                             <input type="hidden" name="image_array[]" value="{{ $image->id }}">
@@ -249,6 +250,18 @@
     </div>
     <!-- /.content-wrapper -->
     {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#description',
+                plugins: 'lists link image preview code',
+                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image | code preview',
+                menubar: false,
+                branding: false
+            });
+        });
+    </script> --}}
+
+    {{-- <script>
         Dropzone.autoDiscover = false;
 
         const uploadedFiles = new Set(); // To track uploaded files by name
@@ -257,6 +270,9 @@
             url: "{{ route('updateImages') }}",
             maxFiles: 7,
             paramName: 'image',
+            params: {
+                'product_id': '{{ $product->id }}'
+            },
             addRemoveLinks: true,
             acceptedFiles: "image/jpeg,image/png,image/jpg,image/gif",
             headers: {
@@ -311,21 +327,26 @@
                     uploadedFiles.delete(file.name); // Remove from the set
                 }
             });
+            // console.log(image_id);
+            // deleteImages(image_id);
 
             // Also remove the image card from the displayed images
             $(this).closest('.col-md-3').remove();
         });
+
+    
     </script> --}}
 
     <script>
         Dropzone.autoDiscover = false;
-
+    
         const uploadedFiles = new Set(); // To track uploaded files by name
-
+    
         const dropzone = new Dropzone('#image', {
-            url: "{{ route('storeImage') }}",
+            url: "{{ route('updateImages') }}",
             maxFiles: 7,
             paramName: 'image',
+            params: { 'product_id': '{{ $product->id }}' },
             addRemoveLinks: true,
             acceptedFiles: "image/jpeg,image/png,image/jpg,image/gif",
             headers: {
@@ -333,33 +354,30 @@
             },
             init: function() {
                 this.on('addedfile', function(file) {
-                    // Check if file is already uploaded
                     if (uploadedFiles.has(file.name)) {
-                        this.removeFile(file); // Remove duplicate file
-                        alert("This image has already been uploaded."); // Notify user
+                        this.removeFile(file);
+                        alert("This image has already been uploaded.");
                     } else if (this.files.length > this.options.maxFiles) {
-                        this.removeFile(file); // Remove excess file
-                        alert("You can only upload a maximum of " + this.options.maxFiles +
-                            " images."); // Notify user
+                        this.removeFile(file);
+                        alert("You can only upload a maximum of " + this.options.maxFiles + " images.");
                     } else {
-                        uploadedFiles.add(file.name); // Add file name to the set
+                        uploadedFiles.add(file.name);
                     }
                 });
-
+    
                 this.on('success', function(file, response) {
-                    var html = `<div class="col-md-3" style="width: 18rem;">
+                    const html = `<div class="col-md-3" style="width: 18rem;">
                         <input type="hidden" name="image_array[]" value="${response.image_id}">
-                            <img src="${response.ImagePath}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                            <a href="#" class="btn btn-danger" data-file="${file.name}">Delete</a>
-                            </div>
-                        </div>`;
+                        <img src="${response.ImagePath}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <a href="#" class="btn btn-danger" data-file="${file.name}" data-id="${response.image_id}">Delete</a>
+                        </div>
+                    </div>`;
                     $("#productImages").append(html);
                 });
-
+    
                 this.on('removedfile', function(file) {
-                    uploadedFiles.delete(file.name); // Remove from the set when file is removed
-                    // Optionally, you can also remove the related image card from the DOM here if needed
+                    uploadedFiles.delete(file.name);
                     const deleteButton = $(`.btn-danger[data-file="${file.name}"]`);
                     if (deleteButton.length) {
                         deleteButton.closest('.col-md-3').remove();
@@ -367,22 +385,83 @@
                 });
             }
         });
-
-        // Handle delete button
+    
+        // Handle delete button click
         $(document).on('click', '.btn-danger', function(e) {
             e.preventDefault();
             const fileName = $(this).data('file');
-
+            const imageId = $(this).data('id'); // Retrieve the image ID from data-id attribute
+    
+            console.log("Image ID:", imageId);
+            
             // Remove the file from Dropzone
             dropzone.files.forEach((file, index) => {
                 if (file.name === fileName) {
-                    dropzone.removeFile(file); // Remove file from Dropzone
-                    uploadedFiles.delete(file.name); // Remove from the set
+                    dropzone.removeFile(file);
+                    uploadedFiles.delete(file.name);
                 }
             });
-
+    
+            // Call deleteImages function with the image ID
+            deleteImages(imageId);
+    
             // Also remove the image card from the displayed images
             $(this).closest('.col-md-3').remove();
+        });
+    
+        function deleteImages(id) {
+            console.log("Image ID:", id);
+            if (confirm("Do you want to delete this image?")) {
+                $.ajax({
+                    url: '{{ route('destroyProductImages') }}',
+                    type: 'DELETE',
+                    data: {
+                        id: id,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            // Optionally, remove the deleted image from the DOM
+                            $(`.btn-danger[data-id="${id}"]`).closest('.col-md-3').remove();
+                        } else {
+                            alert(response.message || "An error occurred while deleting the image.");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("Error: " + (xhr.responseJSON ? xhr.responseJSON.message : "Could not delete the image. Please try again."));
+                    }
+                });
+            }
+        }
+    </script>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#description',
+                plugins: 'lists link image preview code table media textcolor paste',
+                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | table | forecolor backcolor | code preview | save',
+                menubar: false,
+                branding: false,
+                // Enable automatic content cleanup
+                cleanup: true,
+                // Add a save button that could call a custom function
+                setup: function(editor) {
+                    editor.ui.registry.addButton('save', {
+                        text: 'Save',
+                        onAction: function() {
+                            // Implement your save functionality here
+                            alert('Save functionality needs to be implemented!');
+                        }
+                    });
+                },
+                // Configure other settings as needed
+                image_advtab: true, // Enables advanced image options
+                media_dimensions: false, // Disable media dimensions if not needed
+                image_caption: true, // Enables image captions
+            });
         });
     </script>
 @endsection

@@ -31,7 +31,7 @@ class ShopController extends Controller
         // $images = DB::table('product_images')
         //         ->join('products','products.id' ,'=' ,'product_images.product_id')
         //         ->where('products.id','=',$products->id)->first();
-                // dd( $products);
+        // dd( $products);
         //Filter
         if (!empty($categoryslug)) {
             $category = Category::where('slug', $categoryslug)->first();
@@ -46,6 +46,11 @@ class ShopController extends Controller
             $subcategorySelected = $subcategory->id;
         }
 
+        $keyword = request()->query('keyword');
+        if (!empty($keyword)) {
+            $products = $products->where('prod_name', 'like', '%' . $keyword . '%'); // Search by product name
+        }
+
         $sort = request()->query('sort');
         if ($sort == 'price_desc') {
             $products = $products->orderBy('price', 'desc');
@@ -56,7 +61,7 @@ class ShopController extends Controller
             $products = $products->orderBy('created_at', 'desc');
         }
         // $products = $products->orderBy('created_at', 'desc');
-        $products = $products->paginate(6);
+        $products = $products->paginate(3);
         // dd( $products);
         $brands = Brand::where('status', '1')->get();
 
@@ -85,11 +90,11 @@ class ShopController extends Controller
 
         // get product details 
         $product = Product::with('brand')->where('slug', $slug)->first();
-       $images = DB::table('product_images')
-                ->join('products','products.id' ,'=' ,'product_images.product_id')
-                ->where('products.id','=',$product->id)->get();
+        $images = DB::table('product_images')
+            ->join('products', 'products.id', '=', 'product_images.product_id')
+            ->where('products.id', '=', $product->id)->get();
         $productrat = ProductRating::get();
-// dd($images);
+        // dd($images);
         // Calculate the count of ratings for the product
         $ratingcount = DB::table('product_ratings')
             ->join('products', 'products.id', '=', 'product_ratings.product_id')
@@ -102,7 +107,7 @@ class ShopController extends Controller
             ->where('products.slug', '=', $slug)
             ->sum('product_ratings.rating');
 
-        return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum','images'));
+        return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum', 'images'));
     }
 
 
@@ -151,7 +156,6 @@ class ShopController extends Controller
                 ]
             );
             return response()->json(['redirect_url' => route('viewproduct', ['slug' => $product->slug])]);
-            
         } else {
             $rating = new ProductRating();
             // $user_id = Auth::user()->id;
@@ -162,9 +166,8 @@ class ShopController extends Controller
             $rating->comment = $request->comment;
             $rating->rating = $request->rating;
             $rating->save();
-            
-            return response()->json(['redirect_url' => route('viewproduct', ['slug' => $product->slug])]);
 
+            return response()->json(['redirect_url' => route('viewproduct', ['slug' => $product->slug])]);
         }
     }
 }

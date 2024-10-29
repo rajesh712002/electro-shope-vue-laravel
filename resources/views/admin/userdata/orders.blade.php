@@ -143,7 +143,7 @@
                     </div>
                     <div class="card-footer clearfix">
                         <div class="pagination-container">
-                        {{ $order->links() }}
+                        {{ $order->onEachSide(1)->links() }}
                     </div>
                 </div>
             </div>

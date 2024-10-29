@@ -1,9 +1,12 @@
+<!DOCTYPE html>
 @extends('admin.layouts.app')
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
 
+<!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/adkflfpe6mrdbxryjc4huob43fi29gg6o1a9gjfbf22la31k/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
-@section('content')
+   @section('content')
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -50,11 +53,12 @@
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
                                         </div>
+                                  
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="description">Description</label>
-                                                <textarea name="description" id="description" cols="30" rows="10" value="{{ old('name') }}"
-                                                    class=" summernote" placeholder="Description"></textarea>
+                                                <textarea name="description" id="description" cols="30" rows="10" class="form-control"
+                                                    placeholder="Description">{{ old('description') }}</textarea>
                                                 <p></p>
                                                 <h6 style="color: red" class="error"></h6>
                                             </div>
@@ -296,5 +300,46 @@
             $(this).closest('.col-md-3').remove();
         });
     </script>
+
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#description',
+                plugins: 'lists link image preview code',
+                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image | code preview',
+                menubar: false,
+                branding: false
+            });
+        });
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#description',
+                plugins: 'lists link image preview code table media textcolor paste',
+                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | table | forecolor backcolor | code preview | save',
+                menubar: false,
+                branding: false,
+                // Enable automatic content cleanup
+                cleanup: true,
+                // Add a save button that could call a custom function
+                setup: function(editor) {
+                    editor.ui.registry.addButton('save', {
+                        text: 'Save',
+                        onAction: function() {
+                            // Implement your save functionality here
+                            alert('Save functionality needs to be implemented!');
+                        }
+                    });
+                },
+                // Configure other settings as needed
+                image_advtab: true, // Enables advanced image options
+                media_dimensions: false, // Disable media dimensions if not needed
+                image_caption: true, // Enables image captions
+            });
+        });
+    </script>
+    
 @endsection
 <script src="{{ asset('admin_assets/js/ajx.js') }}"></script>

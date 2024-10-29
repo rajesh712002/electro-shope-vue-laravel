@@ -216,6 +216,8 @@ Route::middleware([ValidAdmin::class])->group(function () {
         Route::get('/images',[ProductController::class,'images'])->name('images');
         Route::post('/images', action: [ProductController::class, 'storeImage'])->name('storeImage');
         Route::post('/update/images',[ProductController::class,'updateImages'])->name('updateImages');
+        Route::delete('/delete/images',[ProductController::class,'destroyProductImages'])->name('destroyProductImages');
+
         //Update Product
         Route::get('/edit-products/{product}', [ProductController::class, 'editProduct'])->name('admin.edit_prod');
         Route::put('/update-product/{product}', [ProductController::class, 'updateProduct'])->name('admin.update_prod');

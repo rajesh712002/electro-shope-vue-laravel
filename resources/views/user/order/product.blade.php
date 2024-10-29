@@ -188,7 +188,7 @@
                     <h2 class="price "><i class="fa fa-inr" aria-hidden="true">{{ $product->price }}</i>
                     </h2>
                     {{-- @dd(Auth::user()->id) --}}
-                    <p>{{ $product->description }}</p>
+                    <p>{!! $product->description !!}</p>
 
                     <form action="{{ route('user.addToCart') }}" method="POST">
                         {{-- @dd($product) --}}
@@ -233,7 +233,7 @@
                             <div class="tab-pane fade show active" id="description" role="tabpanel"
                                 aria-labelledby="description-tab">
                                 <p>
-                                    {{ $product->description }}
+                                    {!! $product->description !!}
                                 </p>
                             </div>
                             <div class="tab-pane fade" id="shipping" role="tabpanel"
