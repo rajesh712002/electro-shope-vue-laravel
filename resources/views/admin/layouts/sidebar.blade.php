@@ -41,6 +41,15 @@
             </li>
 
             <li class="nav-item">
+                <a href="{{ route('admin.viewBanner') }}" class="nav-link">
+                    {{-- <i class="fas fa-truck nav-icon"></i> --}}
+                    <i class="fas fa-percent nav-icon"></i>
+
+                    <p>Banners</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a href="{{ route('admin.coupons') }}" class="nav-link">
                     {{-- <i class="fas fa-truck nav-icon"></i> --}}
                     <i class="fas fa-percent nav-icon"></i>

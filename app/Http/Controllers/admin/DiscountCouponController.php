@@ -4,12 +4,14 @@ namespace App\Http\Controllers\admin;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Banner;
 use Illuminate\Http\Request;
 use App\Models\DiscountCoupon;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class DiscountCouponController extends Controller
@@ -86,8 +88,8 @@ class DiscountCouponController extends Controller
     public function editCoupon($id)
     {
         // dd($id);
-        $couponCode = DiscountCoupon::findOrFail($id);
-        return view('admin.coupon.update-coupon-code', compact('couponCode'));
+        $banner = Banner::findOrFail($id);
+        return view('admin.coupon.update-coupon-code', compact('banner'));
     }
 
     public function updateCoupon(Request $request, $id)
@@ -144,7 +146,7 @@ class DiscountCouponController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Coupon removed successfully',
-            'discount_amount' => 0, 
+            'discount_amount' => 0,
             'coupon_code' => ''
         ]);
     }
@@ -155,10 +157,112 @@ class DiscountCouponController extends Controller
         $currentTime = Carbon::now($timezone);
 
         $coupons = DB::table('discount_coupons')
-        ->where('status',1)
-        ->where('expires_at', '>=', $currentTime)
-        ->get(); 
+            ->where('status', 1)
+            ->where('expires_at', '>=', $currentTime)
+            ->get();
         return response()->json($coupons);
         // dd($coupons);
+    }
+
+
+    //================================================================================================================================================================
+    //Banner
+
+    public function viewBanner(){
+        $banner = Banner::orderBy('id','desc')->paginate(2);
+        return view('admin.coupon.banner',compact('banner'));
+    }
+
+    public function createBanner()
+    {
+        return view('admin.coupon.create-banner');
+    }
+
+    public function storeBanner(Request $request)
+    {
+        $rules = [
+
+            'name' => 'required|string|max:50',
+            'status' => 'required',
+            'image' => 'required|image',
+            'description' => 'required'
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $banner = new Banner();
+        $banner->title = $request->name;
+        $banner->description = $request->description;
+        $banner->status = $request->status;
+        $image = $request->image;
+        $ext = $image->Extension();
+        $imagename = time() . '.' . $ext;
+        $image->move(public_path('admin_assets/images'), $imagename);
+        $banner->image = $imagename;
+        $banner->save();
+        return response()->json(['success' => 'Banner Inserted Successfully']);
+    }
+
+
+
+    public function editBanner($id)
+    {
+        $banner = Banner::findOrFail($id);
+        return view('admin.coupon.update-banner',compact('banner'));
+    }
+
+    public function updateBanner(Request $request,$id)
+    {
+        $banner = Banner::findOrFail($id);
+        
+        $rules = [
+
+            'name' => 'required|string|max:50',
+            'status' => 'required',
+            'image' => 'required|image',
+            'description' => 'required'
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        // $banner = new Banner();
+        $banner->title = $request->name;
+        $banner->description = $request->description;
+        $banner->status = $request->status;
+        $image = $request->image;
+        $ext = $image->Extension();
+        $imagename = time() . '.' . $ext;
+        $image->move(public_path('admin_assets/images'), $imagename);
+        $banner->image = $imagename;
+        $banner->save();
+        return response()->json(['success' => 'Banner Updated Successfully']);
+    }
+
+    public function deleteBanner($id){
+        $banner = Banner::findOrFail($id);
+
+        File::delete(public_path('admin_assets/images/' . $banner->image));
+
+        $banner->delete();
+        //return response()->json(['message' => 'Item Deleted successfully']);
+        return redirect()->route('admin.viewBanner')->with('success', 'Banner Deleted Successfully');
+    }
+
+    public function bannerCursor(){
+        $banner = Banner::where('status','1')->get();
+        $banner = $banner->map(function($item) {
+            $item->image_path = asset('admin_assets/images/' . $item->image); // Assuming 'images' is the column name for the image filename
+            return $item;
+        });
+        // dd($banner);
+        return response()->json($banner);
     }
 }

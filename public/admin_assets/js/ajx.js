@@ -1530,3 +1530,225 @@ $(document).ready(function () {
         });
     });
 });
+
+//=======//==============//=====================//=========================//=================================================//
+//=======//==============//=====================//=========================//=================================================//
+
+//For Banner Insert
+$(document).ready(function () {
+    $("#BannerForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                console.log(response);
+                alert(response.success);
+                window.location.href = "/admin/banner";
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    // $.each(errors, function (key, value) {
+                    //     $('[name="' + key + '"]')
+                    //         .parent()
+                    //         .find(".error, .error_no_margin")
+                    //         .text("** " + value[0] + "!");
+                    // });
+
+                    if (errors.name) {
+                        $("#name")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.name);
+                    } else {
+                        $("#name")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.name);
+                    }
+
+                    if (errors.slug) {
+                        $("#slug")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.slug);
+                    } else {
+                        $("#slug")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.slug);
+                    }
+
+                    if (errors.status) {
+                        $("#status")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.status);
+                    } else {
+                        $("#status")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.status);
+                    }
+
+                    if (errors.image) {
+                        $("#image")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.image);
+                    } else {
+                        $("#image")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.image);
+                    }
+
+                    if (errors.description) {
+                        $("#description")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.description);
+                    } else {
+                        $("#description")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.description);
+                    }
+                }
+            },
+        });
+    });
+});
+
+
+//For Banner Update
+$(document).ready(function () {
+    $("#UpdateBannerForm").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData($(this)[0]);
+        let csrfToken = $('meta[name="csrf-token"]').attr("content");
+        console.log(data);
+        var url = $(this).attr("action");
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            contentType: false,
+            processData: false,
+            data: data,
+
+            success: function (response) {
+                alert(response.success);
+                window.location.href = "/admin/banner";
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    // $.each(errors, function (key, value) {
+                    //     $('[name="' + key + '"]')
+                    //         .parent()
+                    //         .find(".error, .error_no_margin")
+                    //         .text("** " + value[0] + "!");
+                    // });
+
+                    if (errors.name) {
+                        $("#name")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.name);
+                    } else {
+                        $("#name")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.name);
+                    }
+
+                    if (errors.slug) {
+                        $("#slug")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.slug);
+                    } else {
+                        $("#slug")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.slug);
+                    }
+
+                    if (errors.status) {
+                        $("#status")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.status);
+                    } else {
+                        $("#status")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.status);
+                    }
+
+                    if (errors.image) {
+                        $("#image")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.image);
+                    } else {
+                        $("#image")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.image);
+                    }
+
+                    if (errors.description) {
+                        $("#description")
+                            .addClass("is-invalid")
+                            .siblings("p")
+                            .addClass("invalid-feedback")
+                            .html(errors.description);
+                    } else {
+                        $("#description")
+                            .removeClass("is-invalid")
+                            // .siblings("p")
+                            .removeClass("invalid-feedback")
+                            .html(errors.description);
+                    }
+                }
+            },
+        });
+    });
+});
+

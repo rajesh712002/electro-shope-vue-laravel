@@ -774,3 +774,41 @@ $(document).ready(function () {
         });
     });
 });
+
+//BannerCursor
+$(document).ready(function(e) {
+    console.log('hello')
+    e.preventDefault();
+    $.ajax({
+        url: '/user/bannerCursor',
+        method: 'GET',
+        success: function(data) {
+            console.log('hello')
+            let carouselInner = $('#carouselExampleIndicators .carousel-inner');
+            carouselInner.empty();
+
+            data.forEach((item, index) => {
+                let activeClass = index === 0 ? 'active' : '';
+                carouselInner.append(`
+                <div class="carousel-item ${activeClass}">
+                    <picture>
+                        <source media="(max-width: 799px)" srcset="${item.image_path}">
+                        <source media="(min-width: 800px)" srcset="${item.image_path}">
+                        <img src="${item.image_path}" alt="${item.title}" />
+                    </picture>
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3">
+                            <h1 class="display-4 text-white mb-3">${item.title}</h1>
+                            <p class="mx-md-5 px-5">${item.description}</p>
+                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="${item.link}">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+            `);
+            });
+        },
+        error: function(error) {
+            console.log("Error fetching carousel data", error);
+        }
+    });
+});

@@ -138,6 +138,7 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::post('/apply_coupon', [CheckoutController::class, 'applyCoupon'])->name('apply_coupon');
         Route::post('/remove_coupon', [DiscountCouponController::class, 'removeCoupon'])->name('removeCoupon');
         Route::get('/get_coupons', [DiscountCouponController::class, 'getCoupons'])->name('get_coupons');
+        Route::get('/bannerCursor', [DiscountCouponController::class, 'bannerCursor'])->name('admin.bannerCursor');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
     });
@@ -236,6 +237,17 @@ Route::middleware([ValidAdmin::class])->group(function () {
         //Delete Coupon Code
         Route::delete('coupon-delete/{id}', [DiscountCouponController::class, 'deleteCoupon'])->name('admin.couponDelete');
 
+        //================================================================================================================================================================
+        //Banner
+        Route::get('banner', [DiscountCouponController::class, 'viewBanner'])->name('admin.viewBanner');
+        //Insert
+        Route::get('banner-create', [DiscountCouponController::class, 'createBanner'])->name('admin.createBanner');
+        Route::post('banner-store', [DiscountCouponController::class, 'storeBanner'])->name('admin.storeBanner');
+        //Update
+        Route::get('banner-edit/{id}', [DiscountCouponController::class, 'editBanner'])->name('admin.editBanner');
+        Route::put('banner-update/{id}', [DiscountCouponController::class, 'updateBanner'])->name('admin.updateBanner');
+        //Delete
+        Route::delete('banner-delete/{id}', [DiscountCouponController::class, 'deleteBanner'])->name('admin.deleteBanner');
         //================================================================================================================================================================
 
         //User Data

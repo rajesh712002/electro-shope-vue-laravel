@@ -250,8 +250,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $productImage = ProductImage::where('product_id', $product->id)->get();
-        $category = Category::where('status', 1)->pluck('name', 'id');
-        $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
+        $category = Category::where('status', 1)->pluck('name', 'id');//subcate_id is category_id misssplace mistack in SubCategory Table
+        $subcategory = Subcategory::where('status', 1)->where('subcate_id',$product->category_id )->pluck('subcate_name', 'id');
         $brand = Brand::where('status', 1)->pluck('name', 'id');
         $product = Product::findOrFail($id);
         // dd($productImage);
@@ -285,78 +285,6 @@ class ProductController extends Controller
         ]);
     }
 
-    // public function updateProduct(Request $request, $id)
-    // {
-    //     // dd($request->all);
-    //     // Validate the request
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'slug' => 'required|string|max:255',
-    //         'description' => 'nullable|string',
-    //         'price' => 'required|numeric',
-    //         'compare_price' => 'nullable|numeric',
-    //         'sku' => 'nullable|string|max:255',
-    //         'qty' => 'required|integer|min:0',
-    //         'status' => 'required|boolean',
-    //         'category' => 'required|exists:categories,id',
-    //         'sub_category' => 'nullable|exists:subcategories,id',
-    //         'brand' => 'required|exists:brands,id',
-    //         // 'image_array' => 'array', // For existing images
-    //         // 'image_array.*' => 'exists:product_images,id', // Validate each existing image ID
-    //     ]);
-
-    //     // Find the product
-    //     $product = Product::with('productImages')->findOrFail($id);
-    //     // dd($request->image_array, $product->images);
-    //     // Update the product details
-    //     // dd($request->name);
-    //     // $product->update([
-    //     //     'prod_name' => $request->name,
-    //     //     'slug' => $request->slug,
-    //     //     'description' => $request->description,
-    //     //     'price' => $request->price,
-    //     //     'compare_price' => $request->compare_price,
-    //     //     'sku' => $request->sku,
-    //     //     'qty' => $request->qty,
-    //     //     'status' => $request->status,
-    //     //     'category_id' => $request->category,
-    //     //     'sub_category_id' => $request->sub_category,
-    //     //     'brand_id' => $request->brand,
-    //     // ]);
-
-    //     // dd($request->image_array);
-    //     if (!empty($request->image_array)) {
-    //         foreach ($request->image_array as $temp_image_id) {
-    //             $tempImage = TempImage::find($temp_image_id);
-    //             $exstArray = explode('.', $tempImage->images);
-    //             dd($tempImage);
-    //             $exst = last($exstArray);
-
-    //             $productImage = new ProductImage();
-    //             $productImage->product_id =  $id;
-    //             $productImage->images = 'NULL';
-    //             $productImage->save();
-
-    //             $imageName = $product->id . '-' . $productImage->id . '-' . time() . '.' . $exst;
-    //             $productImage->images = $imageName;
-    //             $productImage->update();
-
-    //             // File::delete(public_path('images/' . $tempImage->images));
-    //             // $tempImage->delete();
-
-    //             $sourcePath = public_path('images/') . $tempImage->images;
-    //             $destPath = public_path('admin_assets/images/') . $imageName;
-    //             // dd($destPath);
-    //             $this->createThumbnail($sourcePath, $destPath, 300, 275);
-    //         }
-    //     }
-
-    //     // Redirect back with success message
-    //     return redirect()->route('admin.product')->with('success', 'Product updated successfully.');
-    // }
-
-
-
 
     public function updateProduct(Request $request, $id)
     {
@@ -365,7 +293,7 @@ class ProductController extends Controller
         // // dd($request->image_array);
         // exit();
         $rules = [
-            'name' => 'required|alpha_num|max:50',
+            'name' => 'required|string|max:50',
             'description' => 'required',
             // 'image' => 'required|image',
             'price' => 'required|numeric',
@@ -415,33 +343,35 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $productImages = ProductImage::where('product_id', $product->id)->get();
-
-        File::delete(public_path('admin_assets/images/' . $productImages->images));
-        $productImages->delete();
+        foreach ($productImages as $image) {
+            File::delete(public_path('admin_assets/images/' . $image->images));
+        }
+    
+        ProductImage::where('product_id', $product->id)->delete();
+     
         $product->delete();
         //return response()->json(['message' => 'Item Deleted successfully']);
-        return redirect()->route('admin.product')->with('success', 'Product Deleted Successfully');
+        return redirect()->route('admin.product')->with('status', 'Product Deleted Successfully');
     }
 
     public function destroyProductImages(Request $request)
     {
         $productImages = ProductImage::find($request->id);
 
-        // dd($request->all);
-        if (empty($productImages)) {
+        // dd($productImages);
+        if (!empty($productImages)) {
+            File::delete(public_path('admin_assets/images/' . $productImages->images));
+            $productImages->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Image Deleted Successfully'
+            ]);
+        } else {
             return response()->json([
                 'status' => false,
                 'message' => 'Image Not Found'
             ]);
         }
-
-        File::delete(public_path('admin_assets/images/' . $productImages->images));
-
-        $productImages->delete();
-        return response()->json([
-            'status' => true,
-            'message' => 'Image Deleted Successfully'
-        ]);
     }
 
 

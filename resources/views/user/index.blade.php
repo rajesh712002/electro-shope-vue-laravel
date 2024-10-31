@@ -1,7 +1,20 @@
+<!DOCTYPE html>
+
 @include('user.includes.header')
+<style>
+    .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+</style>
 <main>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
+
     <section class="section-1">
-        <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel"
+        {{-- <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel"
             data-bs-interval="false">
             <div class="carousel-inner">
                 <div class="carousel-item active">
@@ -82,7 +95,22 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
+        </div> --}}
+        <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel"
+            data-bs-interval="false">
+            <div class="carousel-inner"></div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
+
     </section>
     <section class="section-2">
         <div class="container">
@@ -132,8 +160,7 @@
 
                                             <img style="width: 100px; height: 100px; object-fit:contain ;"
                                                 class="imgfluid"
-                                                src="{{ asset('admin_assets/images/' . $item->image) }}"
-                                                alt="">
+                                                src="{{ asset('admin_assets/images/' . $item->image) }}" alt="">
 
                                         </div>
                                     </a>
@@ -228,9 +255,48 @@
                         </div>
                     </div>
                 @endforeach
-
             </div>
         </div>
     </section>
 </main>
+<script>
+    $(document).ready(function(e) {
+        console.log('hello')
+        // e.preventDefault();
+        $.ajax({
+            url: '/user/bannerCursor',
+            method: 'GET',
+            success: function(data) {
+                console.log('hello')
+                let carouselInner = $('#carouselExampleIndicators .carousel-inner');
+                carouselInner.empty();
+
+                data.forEach((item, index) => {
+                    let activeClass = index === 0 ? 'active' : '';
+                    carouselInner.append(`
+                    <div class="carousel-item ${activeClass}">
+                        <picture>
+                            <source media="(max-width: 100%)" srcset="${item.image_path}">
+                            <source media="(min-width: 100%)" srcset="${item.image_path}">
+                            <img src="${item.image_path}" alt="${item.title}" />
+                        </picture>
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3">
+                                <h1 class="display-4 text-white mb-3">${item.title}</h1>
+                                <p class="mx-md-5 px-5">${item.description}</p>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3" href="{{ route('usershop') }}">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                });
+            },
+            error: function(error) {
+                console.log("Error fetching carousel data", error);
+            }
+        });
+    });
+</script>
+{{-- <script src="{{ asset('admin_assets/js/ajx.js') }}"></script> --}}
+
 @include('user.includes.footer')

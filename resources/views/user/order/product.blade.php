@@ -100,10 +100,10 @@
                         @else
                             {{-- @dd($product->image) --}}
                             <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img class="w-100 h-100"
+                                <div class="carousel-inner bg-light">
+                                    <img class=""
                                         src="{{ asset('admin_assets/images/' . $product->image) }}"
-                                        alt="Default product image">
+                                        alt="">
                                 </div>
                             </div>
                         @endif

@@ -180,8 +180,10 @@
                                     <h2 class="h4 mb-3">Product status</h2>
                                     <div class="mb-3">
                                         <select name="status" id="status" class="form-control">
-                                            <option value="1">Active</option>
-                                            <option value="0">Block</option>
+                                            <option {{ $product->status == 1 ? 'selected' : '' }} value="1">Active
+                                            </option>
+                                            <option {{ $product->status == 0 ? 'selected' : '' }} value="0">Block
+                                            </option>
                                         </select>
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
@@ -198,7 +200,8 @@
                                             <option value="">---select---</option>
 
                                             @foreach ($category as $key => $value)
-                                                <option value="{{ $key }}">{{ $value }}</option>
+                                                <option {{ $product->category_id == $key ? 'selected' : '' }}
+                                                    value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
                                         <p></p>
@@ -209,9 +212,10 @@
                                         <select name="sub_category" id="sub_category" class="form-control">
                                             <option value="">---select---</option>
 
-                                            {{-- @foreach ($subcategory as $key => $value)
-                                                <option value="{{ $key }}">{{ $value }}</option>
-                                            @endforeach --}}
+                                            @foreach ($subcategory as $key => $value)
+                                                <option {{ $product->sub_category_id == $key ? 'selected' : '' }}
+                                                    value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
                                         </select>
 
                                     </div>
@@ -225,7 +229,8 @@
                                             <option value="">---select---</option>
 
                                             @foreach ($brand as $key => $value)
-                                                <option value="{{ $key }}">{{ $value }}</option>
+                                                <option {{ $product->brand_id == $key ? 'selected' : '' }}
+                                                    value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
                                         <p></p>
@@ -249,19 +254,9 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            tinymce.init({
-                selector: '#description',
-                plugins: 'lists link image preview code',
-                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image | code preview',
-                menubar: false,
-                branding: false
-            });
-        });
-    </script> --}}
 
-    {{-- <script>
+
+    <script>
         Dropzone.autoDiscover = false;
 
         const uploadedFiles = new Set(); // To track uploaded files by name
@@ -280,80 +275,6 @@
             },
             init: function() {
                 this.on('addedfile', function(file) {
-                    // Check if file is already uploaded
-                    if (uploadedFiles.has(file.name)) {
-                        this.removeFile(file); // Remove duplicate file
-                        alert("This image has already been uploaded."); // Notify user
-                    } else if (this.files.length > this.options.maxFiles) {
-                        this.removeFile(file); // Remove excess file
-                        alert("You can only upload a maximum of " + this.options.maxFiles +
-                            " images."); // Notify user
-                    } else {
-                        uploadedFiles.add(file.name); // Add file name to the set
-                    }
-                });
-
-                this.on('success', function(file, response) {
-                    var html = `<div class="col-md-3" style="width: 18rem;">
-                        <input type="hidden" name="image_array[]" value="${response.image_id}">
-                            <img src="${response.ImagePath}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                            <a href="#" class="btn btn-danger" data-file="${file.name}">Delete</a>
-                            </div>
-                        </div>`;
-                    $("#productImages").append(html);
-                });
-
-                this.on('removedfile', function(file) {
-                    uploadedFiles.delete(file.name); // Remove from the set when file is removed
-                    // Optionally, you can also remove the related image card from the DOM here if needed
-                    const deleteButton = $(`.btn-danger[data-file="${file.name}"]`);
-                    if (deleteButton.length) {
-                        deleteButton.closest('.col-md-3').remove();
-                    }
-                });
-            }
-        });
-
-        // Handle delete button
-        $(document).on('click', '.btn-danger', function(e) {
-            e.preventDefault();
-            const fileName = $(this).data('file');
-
-            // Remove the file from Dropzone
-            dropzone.files.forEach((file, index) => {
-                if (file.name === fileName) {
-                    dropzone.removeFile(file); // Remove file from Dropzone
-                    uploadedFiles.delete(file.name); // Remove from the set
-                }
-            });
-            // console.log(image_id);
-            // deleteImages(image_id);
-
-            // Also remove the image card from the displayed images
-            $(this).closest('.col-md-3').remove();
-        });
-
-    
-    </script> --}}
-
-    <script>
-        Dropzone.autoDiscover = false;
-    
-        const uploadedFiles = new Set(); // To track uploaded files by name
-    
-        const dropzone = new Dropzone('#image', {
-            url: "{{ route('updateImages') }}",
-            maxFiles: 7,
-            paramName: 'image',
-            params: { 'product_id': '{{ $product->id }}' },
-            addRemoveLinks: true,
-            acceptedFiles: "image/jpeg,image/png,image/jpg,image/gif",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            init: function() {
-                this.on('addedfile', function(file) {
                     if (uploadedFiles.has(file.name)) {
                         this.removeFile(file);
                         alert("This image has already been uploaded.");
@@ -364,7 +285,7 @@
                         uploadedFiles.add(file.name);
                     }
                 });
-    
+
                 this.on('success', function(file, response) {
                     const html = `<div class="col-md-3" style="width: 18rem;">
                         <input type="hidden" name="image_array[]" value="${response.image_id}">
@@ -375,7 +296,7 @@
                     </div>`;
                     $("#productImages").append(html);
                 });
-    
+
                 this.on('removedfile', function(file) {
                     uploadedFiles.delete(file.name);
                     const deleteButton = $(`.btn-danger[data-file="${file.name}"]`);
@@ -385,15 +306,16 @@
                 });
             }
         });
-    
+
         // Handle delete button click
         $(document).on('click', '.btn-danger', function(e) {
             e.preventDefault();
-            const fileName = $(this).data('file');
-            const imageId = $(this).data('id'); // Retrieve the image ID from data-id attribute
-    
+            const fileName = $(this).data('file');//If retrived Old Image than store id in this like 77 ............If we upload in currunt page first time than here store image name like CRT.png
+            const imageId = $(this).data('id'); // If we upload in currunt page first time than here store image ID like 78
+            console.log("Image ID:", fileName);
             console.log("Image ID:", imageId);
-            
+            console.log($(this));
+
             // Remove the file from Dropzone
             dropzone.files.forEach((file, index) => {
                 if (file.name === fileName) {
@@ -401,14 +323,18 @@
                     uploadedFiles.delete(file.name);
                 }
             });
-    
-            // Call deleteImages function with the image ID
-            deleteImages(imageId);
-    
+
+            if (imageId) {
+                deleteImages(imageId); 
+            } else if (fileName) {
+                deleteImages(fileName); 
+            } else {
+                console.log("Error: imageId is undefined");
+            }
             // Also remove the image card from the displayed images
             $(this).closest('.col-md-3').remove();
         });
-    
+
         function deleteImages(id) {
             console.log("Image ID:", id);
             if (confirm("Do you want to delete this image?")) {
@@ -420,22 +346,24 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        console.log(response);
                         if (response.success) {
-                            alert(response.message);
                             // Optionally, remove the deleted image from the DOM
                             $(`.btn-danger[data-id="${id}"]`).closest('.col-md-3').remove();
+                            alert(response.message);
                         } else {
                             alert(response.message || "An error occurred while deleting the image.");
                         }
                     },
                     error: function(xhr, status, error) {
-                        alert("Error: " + (xhr.responseJSON ? xhr.responseJSON.message : "Could not delete the image. Please try again."));
+                        alert("Error: " + (xhr.responseJSON ? xhr.responseJSON.message :
+                            "Could not delete the image. Please try again."));
                     }
                 });
             }
         }
     </script>
-    
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -52,7 +52,7 @@
                                     <div class="mb-3">
                                         <label class="form-label " for="image">Photo </label>
                                         <input type="file" name="image" id="image"
-                                            class=" form-control form-control-lg " value="{{ old('image') }}">
+                                            class=" form-control form-control-lg " value="{{ old('image',$brand->image) }}">
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
@@ -62,8 +62,8 @@
                                         <label for="status">Status</label>
                                         <select name="status" id="status" class=" form-control">
                                             <option value="">---select---</option>
-                                            <option value="1">Active</option>
-                                            <option value="0">Block</option>
+                                            <option {{($brand->status == 1) ? 'selected' : ''}} value="1">Active</option>
+                                            <option {{($brand->status == 0) ? 'selected' : ''}} value="0">Block</option>
                                         </select>
                                         <p></p>
                                         <h6 style="color: rgb(255, 0,0)" class="error"></h6>

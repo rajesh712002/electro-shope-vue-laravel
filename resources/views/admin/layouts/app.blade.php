@@ -81,6 +81,11 @@
                 <!-- <ol class="breadcrumb p-0 m-0 bg-white">
       <li class="breadcrumb-item active">Dashboard</li>
      </ol> -->
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
             </div>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
