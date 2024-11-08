@@ -151,10 +151,11 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        File::delete(public_path('admin_assets/images/' . $category->image));
+        // File::delete(public_path('admin_assets/images/' . $category->image));
         //Validation 
         $rules = [
             'name' => 'required|alpha_num|max:50',
+            'image' => $request->isMethod('post') ? 'required|image' : 'nullable|image',
             'slug' => 'required|alpha_num|max:100|unique:categories,slug,' . $category->id . ',id',
             'status' => 'required|max:50'
 
@@ -172,12 +173,14 @@ class CategoryController extends Controller
         $category->slug = $request->slug;
         $category->status = $request->status;
         //store Image
-        $image = $request->image;
-        $ext = $image->Extension();
-        $imagename = time() . '.' . $ext;
-        $image->move(public_path('admin_assets/images'), $imagename);
-        $category->image = $imagename;
-
+        if ($request->hasFile('image')) {
+        File::delete(public_path('admin_assets/images/' . $category->image));
+            $image = $request->image;
+            $ext = $image->Extension();
+            $imagename = time() . '.' . $ext;
+            $image->move(public_path('admin_assets/images'), $imagename);
+            $category->image = $imagename;
+        }
         $category->save();
 
         return response()->json(['success' => 'Catagory Updated successfully']);
@@ -209,7 +212,7 @@ class CategoryController extends Controller
 
         // dd($subcategory);
         if (!empty($request->get('keyword'))) {
-           $subcategory->where('subcate_name', 'like', '%' . $request->get('keyword') . '%')
+            $subcategory->where('subcate_name', 'like', '%' . $request->get('keyword') . '%')
                 ->orWhere('subcate_id', 'like', '%' . $request->get('keyword') . '%')
                 ->orWhere('id', 'like', '%' . $request->get('keyword') . '%')
                 ->orWhereHas('category', function ($query) use ($request) {
@@ -218,7 +221,7 @@ class CategoryController extends Controller
         }
 
         $subcategory = $subcategory->paginate(4);
-// dd($subcategory);
+        // dd($subcategory);
         if ($request->ajax()) {
             $html = '';
 
@@ -264,8 +267,7 @@ class CategoryController extends Controller
                             </td>
                         </tr>';
                 }
-            } 
-            else {
+            } else {
                 $html .= '<tr>
                         <td colspan="6" class="text-center">No Subcategory found.</td>
                     </tr>';
@@ -332,9 +334,10 @@ class CategoryController extends Controller
     public function updateSubcategory($id, Request $request)
     {
         $subcategory = Subcategory::findOrFail($id);
-        File::delete(public_path('admin_assets/images/' . $subcategory->image));
+        // File::delete(public_path('admin_assets/images/' . $subcategory->image));
         $rules = [
             'category' => 'required|max:50',
+            'image' => $request->isMethod('post') ? 'required|image' : 'nullable|image',
             'name' => 'required|alpha_num|max:50',
             'slug' => 'required|alpha_num|max:100|unique:subcategories,slug,' . $subcategory->id . ',id',
             'status' => 'required'
@@ -349,11 +352,14 @@ class CategoryController extends Controller
         $subcategory->slug = $request->slug;
         $subcategory->status = $request->status;
         //store Image
-        $image = $request->image;
-        $ext = $image->Extension();
-        $imagename = time() . '.' . $ext;
-        $image->move(public_path('admin_assets/images'), $imagename);
-        $subcategory->image = $imagename;
+        if ($request->hasFile('image')) {
+        File::delete(public_path('admin_assets/images/' . $subcategory->image));
+            $image = $request->image;
+            $ext = $image->Extension();
+            $imagename = time() . '.' . $ext;
+            $image->move(public_path('admin_assets/images'), $imagename);
+            $subcategory->image = $imagename;
+        }
         $subcategory->save();
         return response()->json(['success' => 'SubCatagory Updated successfully']);
     }

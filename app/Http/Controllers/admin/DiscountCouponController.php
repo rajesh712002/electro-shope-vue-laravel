@@ -88,8 +88,9 @@ class DiscountCouponController extends Controller
     public function editCoupon($id)
     {
         // dd($id);
-        $banner = Banner::findOrFail($id);
-        return view('admin.coupon.update-coupon-code', compact('banner'));
+        $couponCode = DiscountCoupon::findOrFail($id);
+        // dd($couponCode);
+        return view('admin.coupon.update-coupon-code', compact('couponCode'));
     }
 
     public function updateCoupon(Request $request, $id)
@@ -168,9 +169,10 @@ class DiscountCouponController extends Controller
     //================================================================================================================================================================
     //Banner
 
-    public function viewBanner(){
-        $banner = Banner::orderBy('id','desc')->paginate(2);
-        return view('admin.coupon.banner',compact('banner'));
+    public function viewBanner()
+    {
+        $banner = Banner::orderBy('id', 'desc')->paginate(10);
+        return view('admin.coupon.banner', compact('banner'));
     }
 
     public function createBanner()
@@ -212,18 +214,18 @@ class DiscountCouponController extends Controller
     public function editBanner($id)
     {
         $banner = Banner::findOrFail($id);
-        return view('admin.coupon.update-banner',compact('banner'));
+        return view('admin.coupon.update-banner', compact('banner'));
     }
 
-    public function updateBanner(Request $request,$id)
+    public function updateBanner(Request $request, $id)
     {
         $banner = Banner::findOrFail($id);
-        
+
         $rules = [
 
             'name' => 'required|string|max:50',
             'status' => 'required',
-            'image' => 'required|image',
+            'image' => $request->isMethod('post') ? 'required|image' : 'nullable|image',
             'description' => 'required'
 
         ];
@@ -237,16 +239,20 @@ class DiscountCouponController extends Controller
         $banner->title = $request->name;
         $banner->description = $request->description;
         $banner->status = $request->status;
-        $image = $request->image;
-        $ext = $image->Extension();
-        $imagename = time() . '.' . $ext;
-        $image->move(public_path('admin_assets/images'), $imagename);
-        $banner->image = $imagename;
+        if ($request->hasFile('image')) {
+            File::delete(public_path('admin_assets/images/' . $banner->image));
+            $image = $request->image;
+            $ext = $image->Extension();
+            $imagename = time() . '.' . $ext;
+            $image->move(public_path('admin_assets/images'), $imagename);
+            $banner->image = $imagename;
+        }
         $banner->save();
         return response()->json(['success' => 'Banner Updated Successfully']);
     }
 
-    public function deleteBanner($id){
+    public function deleteBanner($id)
+    {
         $banner = Banner::findOrFail($id);
 
         File::delete(public_path('admin_assets/images/' . $banner->image));
@@ -256,10 +262,11 @@ class DiscountCouponController extends Controller
         return redirect()->route('admin.viewBanner')->with('success', 'Banner Deleted Successfully');
     }
 
-    public function bannerCursor(){
-        $banner = Banner::where('status','1')->get();
-        $banner = $banner->map(function($item) {
-            $item->image_path = asset('admin_assets/images/' . $item->image); // Assuming 'images' is the column name for the image filename
+    public function bannerCursor()
+    {
+        $banner = Banner::where('status', '1')->orderBy('id', 'desc')->get();
+        $banner = $banner->map(function ($item) {
+            $item->image_path = asset('admin_assets/images/' . $item->image);
             return $item;
         });
         // dd($banner);

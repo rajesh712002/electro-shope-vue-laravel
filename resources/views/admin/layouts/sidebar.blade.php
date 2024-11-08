@@ -1,5 +1,7 @@
 <!-- Sidebar -->
 <div class="sidebar">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <!-- Sidebar user (optional) -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -42,10 +44,8 @@
 
             <li class="nav-item">
                 <a href="{{ route('admin.viewBanner') }}" class="nav-link">
-                    {{-- <i class="fas fa-truck nav-icon"></i> --}}
-                    <i class="fas fa-percent nav-icon"></i>
-
-                    <p>Banners</p>
+                    <i class="nav-icon fa fa-window-restore" aria-hidden="true"></i>
+                    <p>Banners</p>                   
                 </a>
             </li>
 

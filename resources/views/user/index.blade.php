@@ -152,10 +152,11 @@
 
 
                     @foreach (getcategory() as $item)
+                    {{-- @dump($item) --}}
                         @if ($item->status == 1)
                             <div class="col-lg-3">
                                 <div class="cat-card">
-                                    <a href="{{ route('usershop') }}">
+                                    <a href="{{ route('usershop',$item->slug) }}">
                                         <div class="left">
 
                                             <img style="width: 100px; height: 100px; object-fit:contain ;"
@@ -165,7 +166,7 @@
                                         </div>
                                     </a>
                                     <div class="right">
-                                        <a href="{{ route('usershop') }}">
+                                        <a href="{{ route('usershop',$item->slug) }}">
                                             <div class="cat-data">
                                                 <h2><b>{{ $item->name }}</b></h2>
                                                 <p><b>{{ $item->product_count }} Products</b></p>
@@ -220,7 +221,7 @@
                                     <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                     <input type="hidden" name="user_id" value="{{ chechUserLogin() }}" />
 
-                                    <button type="submit" class="whishlist "><i class="far fa-heart"></i></button>
+                                    <button type="submit" class="whishlist " style="border: none;  background: none;"><i class="far fa-heart"></i></button>
                                     </form>
                                 </a>
                                 <div class="product-action">
@@ -278,7 +279,7 @@
                         <picture>
                             <source media="(max-width: 100%)" srcset="${item.image_path}">
                             <source media="(min-width: 100%)" srcset="${item.image_path}">
-                            <img src="${item.image_path}" alt="${item.title}" />
+                            <img src="${item.image_path}" alt="${item.title}" class="d-block w-100 img-fluid" style="object-fit: contain; max-height: 600px;" />
                         </picture>
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-3">

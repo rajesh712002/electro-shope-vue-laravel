@@ -250,8 +250,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $productImage = ProductImage::where('product_id', $product->id)->get();
-        $category = Category::where('status', 1)->pluck('name', 'id');//subcate_id is category_id misssplace mistack in SubCategory Table
-        $subcategory = Subcategory::where('status', 1)->where('subcate_id',$product->category_id )->pluck('subcate_name', 'id');
+        $category = Category::where('status', 1)->pluck('name', 'id'); //subcate_id is category_id misssplace mistack in SubCategory Table
+        $subcategory = Subcategory::where('status', 1)->where('subcate_id', $product->category_id)->pluck('subcate_name', 'id');
         $brand = Brand::where('status', 1)->pluck('name', 'id');
         $product = Product::findOrFail($id);
         // dd($productImage);
@@ -346,9 +346,9 @@ class ProductController extends Controller
         foreach ($productImages as $image) {
             File::delete(public_path('admin_assets/images/' . $image->images));
         }
-    
+
         ProductImage::where('product_id', $product->id)->delete();
-     
+
         $product->delete();
         //return response()->json(['message' => 'Item Deleted successfully']);
         return redirect()->route('admin.product')->with('status', 'Product Deleted Successfully');
@@ -547,12 +547,12 @@ class ProductController extends Controller
     {
 
         $brand = Brand::findOrFail($id);
-        File::delete(public_path('admin_assets/images/' . $brand->image));
+        // File::delete(public_path('admin_assets/images/' . $brand->image));
         $rules = [
 
             'name' => 'required|alpha_num|max:50',
             'slug' => 'required|alpha_num|max:100|unique:brands,slug,' . $brand->id . ',id',
-            'image' => 'required|image',
+            'image' => $request->isMethod('post') ? 'required|image' : 'nullable|image',
             'status' => 'required'
         ];
 
@@ -566,12 +566,14 @@ class ProductController extends Controller
         $brand->slug = $request->slug;
         $brand->status = $request->status;
         // store Image
-        $image = $request->image;
-        $ext = $image->Extension();
-        $imagename = time() . '.' . $ext;
-        $image->move(public_path('admin_assets/images'), $imagename);
-        $brand->image = $imagename;
-
+        if ($request->hasFile('image')) {
+        File::delete(public_path('admin_assets/images/' . $brand->image));
+            $image = $request->image;
+            $ext = $image->Extension();
+            $imagename = time() . '.' . $ext;
+            $image->move(public_path('admin_assets/images'), $imagename);
+            $brand->image = $imagename;
+        }
         $brand->save();
 
         return response()->json(['success' => 'Brand Updated successfully']);

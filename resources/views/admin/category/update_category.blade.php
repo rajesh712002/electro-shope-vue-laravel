@@ -58,10 +58,19 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label " for="image">Photo </label>
+                                        <label class="form-label" for="image">Photo</label>
                                         <input type="file" name="image" id="image"
-                                            class=" form-control form-control-lg " value="{{ old('image',$category->image) }}">
+                                            class="form-control form-control-lg">
 
+                                        @if ($category->image)
+                                            <div class="mt-2">
+                                                <p>Current Image:</p>
+                                                <img src="{{ asset('admin_assets/images/' . $category->image) }}"
+                                                    alt="Banner Image" width="150">
+                                            </div>
+                                        @endif
+
+                                        <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>
                                 </div>
@@ -71,8 +80,10 @@
                                         <select name="status" id="status" class=" form-control"
                                             value="{{ old('status', $category->status) }}">
                                             <option value="">---select---</option>
-                                            <option {{($category->status == 1) ? 'selected' : ''}} value="1">Active</option>
-                                            <option {{($category->status == 0) ? 'selected' : ''}} value="0">Block</option>
+                                            <option {{ $category->status == 1 ? 'selected' : '' }} value="1">Active
+                                            </option>
+                                            <option {{ $category->status == 0 ? 'selected' : '' }} value="0">Block
+                                            </option>
                                         </select>
                                         <h6 style="color: rgb(255, 0,0)" class="error"></h6>
 

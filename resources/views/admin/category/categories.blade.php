@@ -32,6 +32,7 @@
             <!-- Default box -->
             <div class="container-fluid">
                 @include('admin.message')
+                {{-- @dd(getcategory()) --}}
                 <form>
                     <div class="card">
                         <form method="get" action="" id="searchForm">

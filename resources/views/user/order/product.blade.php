@@ -85,7 +85,7 @@
                             <div class="carousel-inner bg-light">
                                 @foreach ($images as $key => $image)
                                     <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                                        <img class="w-100 h-100"
+                                        <img class=""
                                             src="{{ asset('admin_assets/images/' . $image->images) }}"
                                             alt="{{ $image->images }} image {{ $key + 1 }}">
                                     </div>

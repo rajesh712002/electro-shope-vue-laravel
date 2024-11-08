@@ -51,8 +51,15 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label " for="image">Photo </label>
-                                        <input type="file" name="image" id="image"
-                                            class=" form-control form-control-lg " value="{{ old('image',$brand->image) }}">
+                                        <input type="file" name="image" id="image" class="form-control form-control-lg">
+                                        
+                                        @if($brand->image)
+                                            <div class="mt-2">
+                                                <p>Current Image:</p>
+                                                <img src="{{ asset('admin_assets/images/' . $brand->image) }}" alt="Banner Image" width="150">
+                                            </div>
+                                        @endif
+                                        
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>

@@ -48,6 +48,8 @@ Route::prefix('user')->group(function () {
     Route::post('/login', [AuthenticationController::class, 'userLoginCheck'])->name('usercheck');
     // Route::get('/dashboard', [UserController::class, 'dashboard'])->name('userdeshboard');
 
+    Route::get('/bannerCursor', [DiscountCouponController::class, 'bannerCursor'])->name('admin.bannerCursor');
+
     Route::get('/about-us', [UserController::class, 'aboutUs'])->name('aboutus');
     Route::get('/contact-us', [UserController::class, 'contactUs'])->name('contactus');
     Route::get('/privacy', [UserController::class, 'privacy'])->name('privacy');
@@ -138,7 +140,6 @@ Route::middleware([ValidUser::class])->group(function (): void {
         Route::post('/apply_coupon', [CheckoutController::class, 'applyCoupon'])->name('apply_coupon');
         Route::post('/remove_coupon', [DiscountCouponController::class, 'removeCoupon'])->name('removeCoupon');
         Route::get('/get_coupons', [DiscountCouponController::class, 'getCoupons'])->name('get_coupons');
-        Route::get('/bannerCursor', [DiscountCouponController::class, 'bannerCursor'])->name('admin.bannerCursor');
 
         Route::get('/orderEmail/{id}', [CheckoutController::class, 'orderEmail']);
     });

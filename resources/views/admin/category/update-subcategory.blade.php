@@ -48,9 +48,9 @@
                                         <select name="category" id="category" class="form-control"
                                             value="{{ old('category') }}">
                                             <option value="">---select---</option>
-
                                             @foreach ($options as $key => $value)
-                                                <option value="{{ $key }}">{{ $value }}</option>
+                                                <option {{ $subcategory->subcate_id == $key ? 'selected' : '' }}
+                                                    value="{{ $key }}">{{ $value }}</option>
                                             @endforeach
                                         </select>
                                         <p></p>
@@ -77,10 +77,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label " for="image">Photo </label>
+                                        <label class="form-label" for="image">Photo</label>
                                         <input type="file" name="image" id="image"
-                                            class=" form-control form-control-lg "
-                                            value="{{ old('image', $subcategory->image) }}">
+                                            class="form-control form-control-lg">
+
+                                        @if ($subcategory->image)
+                                            <div class="mt-2">
+                                                <p>Current Image:</p>
+                                                <img src="{{ asset('admin_assets/images/' . $subcategory->image) }}"
+                                                    alt="Banner Image" width="150">
+                                            </div>
+                                        @endif
+
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
                                     </div>

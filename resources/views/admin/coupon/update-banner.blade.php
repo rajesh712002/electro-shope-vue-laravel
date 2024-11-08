@@ -83,13 +83,28 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="mb-3">
+                                    {{-- <div class="mb-3">
                                         <label class="form-label " for="image">Banner </label>
                                         <input type="file" name="image" id="image"
                                             class=" form-control form-control-lg " value="{{ old('image',$banner->image) }}">
                                         <p></p>
                                         <h6 style="color: red" class="error"></h6>
+                                    </div> --}}
+                                    <div class="mb-3">
+                                        <label class="form-label" for="image">Banner</label>
+                                        <input type="file" name="image" id="image" class="form-control form-control-lg">
+                                        
+                                        @if($banner->image)
+                                            <div class="mt-2">
+                                                <p>Current Image:</p>
+                                                <img src="{{ asset('admin_assets/images/' . $banner->image) }}" alt="Banner Image" width="150">
+                                            </div>
+                                        @endif
+                                        
+                                        <p></p>
+                                        <h6 style="color: red" class="error"></h6>
                                     </div>
+                                    
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-3">

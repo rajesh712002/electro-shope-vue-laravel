@@ -148,7 +148,7 @@
                                                     <input type="hidden" name="prod_id" value="{{ $prod->id }}" />
                                                     <input type="hidden" name="user_id"
                                                         value="{{ checkUserLogin() }}" />
-                                                    <button type="submit" class="whishlist "> <i
+                                                    <button type="submit" class="whishlist " style="border: none;  background: none;"> <i
                                                             class="far fa-heart"></i></button>
                                                 </form>
                                                 <div class="product-action">
