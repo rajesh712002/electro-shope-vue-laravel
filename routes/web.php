@@ -21,9 +21,9 @@ use App\Http\Controllers\Auth\AuthenticationController;
 use App\Http\Controllers\admin\DiscountCouponController;
 use App\Http\Controllers\ExportController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/{any}', function () {
+    return view('welcome');
+})->where('any', '.*');
 
 // Route::get('/orderEmail', function () {
 //     sendEmail(7);
@@ -32,7 +32,7 @@ use App\Http\Controllers\ExportController;
 
 //USER
 
-Route::get('/', action: [UserController::class, 'index'])->name('userindex');
+Route::get('/a', action: [UserController::class, 'index'])->name('userindex');
 
 Route::get('/testing', function () {
     return view('user.order.testing');

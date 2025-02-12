@@ -15,15 +15,7 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="row d-flex justify-content-center">
-                @if (Session::has('success'))
-                    <div class="col-md-10 mt-4">
-                        <div class="alert alert-success">
-                            <b>{{ Session::get('success') }}</b>
-                        </div>
-                    </div>
-                @endif
-            </div> --}}
+           
             <!-- /.container-fluid -->
         </section>
         <!-- Main content -->

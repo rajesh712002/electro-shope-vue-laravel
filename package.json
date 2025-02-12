@@ -7,10 +7,24 @@
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
+        "@vitejs/plugin-vue": "^5.2.1",
         "axios": "^1.6.4",
         "bootstrap": "^5.2.3",
+        "laravel-mix": "^6.0.49",
         "laravel-vite-plugin": "^1.0",
         "sass": "^1.56.1",
-        "vite": "^5.0"
+        "vite": "^5.0",
+        "vue": "^3.5.13",
+        "vue-loader": "^17.4.2",
+        "vue-template-compiler": "^0.1.0"
+    },
+    "dependencies": {
+        "font-awesome": "^4.7.0",
+        "jquery": "^3.7.1",
+        "jQuery": "^1.7.4",
+        "jquery-datetimepicker": "^2.5.21",
+        "tinymce": "^7.6.1",
+        "vue-router": "^4.5.0",
+        "vue2-dropzone": "^3.6.0"
     }
 }

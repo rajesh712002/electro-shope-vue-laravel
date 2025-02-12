@@ -28,7 +28,7 @@
         <title>Admin Panel</title>
         <link href="css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
         <link href="{{ asset('admin_assets/css/css/helper.css') }}" rel="stylesheet">
-        {{-- {{ asset('admin_assets/css/adminlte.min.css') }} --}}
+       
         <link href="{{ asset('admin_assets/css/css/style.css') }}" rel="stylesheet">
     </head>
 

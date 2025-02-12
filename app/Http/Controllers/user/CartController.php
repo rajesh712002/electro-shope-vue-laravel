@@ -127,7 +127,7 @@ class CartController extends Controller
         $cart = Cart::where('id', $id)
             ->where('user_id', $userId)
             ->firstOrFail();
-
+        
         $product = DB::table('products')
             ->where('id', $cart->product_id)
             ->select('qty as pqty')
