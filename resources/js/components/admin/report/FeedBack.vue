@@ -22,8 +22,8 @@
                                 <div class="card-header">
                                     <div class="card-tools">
                                         <div class="input-group" style="width: 250px;">
-                                            <input type="text" v-model="keyword" class="form-control float-right"
-                                                placeholder="Search" />
+                                            <input type="text" v-model="searchKeyword" class="form-control float-right"
+                                                placeholder="Search feedback..." />
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default">
                                                     <i class="fas fa-search"></i>
@@ -46,30 +46,45 @@
                                             <th>Comment</th>
                                         </tr>
                                     </thead>
-                                    <tbody v-if="ratings.length > 0">
+                                    <tbody>
                                         <tr v-for="rating in ratings" :key="rating.id">
-                                            <td>
-                                                <img :src="`{{ asset('admin_assets/images') }}/${rating.product.image}`"
+                                            <!-- <td>
+                                                <img :src="`/admin_assets/images/${rating.product.image}`"
                                                     width="120" height="120" alt="Product Image" />
+                                            </td> -->
+                                            <td v-if="rating.product && rating.product.image">
+                                                <img :src="`/admin_assets/images/${rating.product.image}`" width="120"
+                                                    height="120" alt="Product Image" />
+                                            </td>
+                                            <td v-else>
+                                                <span class="text-muted">No Image Available</span>
                                             </td>
                                             <td>{{ rating.product_id }}</td>
-                                            <td>{{ rating.product.prod_name }}</td>
+
+                                            <!-- <td>{{ rating.product.prod_name }}</td> -->
+                                            <td v-if="rating.product">
+                                                {{ rating.product.prod_name || 'No Product Name' }}
+                                            </td>
+                                            <td v-else>
+                                                <span class="text-danger">Product Not Found</span>
+                                            </td>
                                             <td>{{ rating.rating }}</td>
                                             <td>{{ rating.username }}</td>
                                             <td>{{ rating.comment }}</td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="6" class="text-center">No ratings found</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
                             <div class="card-footer clearfix">
-                                <div class="pagination-container">
-                                    <pagination :data="pagination" @pagination-change-page="fetchRatings"></pagination>
+                                <div v-if="pagination && pagination.length > 0">
+                                    <ul class="pagination">
+                                        <li v-for="(link, index) in pagination" :key="index" class="page-item">
+                                            <button v-if="link.url" @click="goToPage(link.label)" class="page-link"
+                                                :class="{ 'disabled': link.label === '« Previous' || link.label === 'Next »' }"
+                                                v-html="link.label"></button>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -83,34 +98,45 @@
 <script>
 import AdminLayout from '../../admin/Layouts/AdminLayout.vue';
 import axios from "axios";
+
 export default {
     components: {
         AdminLayout
     },
     data() {
         return {
-            ratings: [],
-            keyword: '',
-            pagination: {},
+            ratings: { data: [] },
+            pagination: "",
+            searchKeyword: "",
+            currentPage: 1,
         };
     },
+    mounted() {
+        this.fetchRatings();
+        if (this.$route.query.success) {
+            this.successMessage = this.$route.query.success;
+        }
+    },
     methods: {
-        fetchRatings(page = 1) {
-            axios
-                .get(`${window.location.origin}/admin/viewRating`, {
-                    params: { keyword: this.keyword, page },
-                })
-                .then((response) => {
-                    this.ratings = response.data.data;
-                    this.pagination = response.data.pagination;
+        async fetchRatings() {
+            try {
+                const response = await axios.get(`/api/feddbacks-report`, {
+                    params: { search: this.searchKeyword, page: this.currentPage }
                 });
+                console.log("hi", response);
+                this.ratings = response.data.rating;
+                this.pagination = response.data.pagination;
+            } catch (error) {
+                console.error('Error fetching ratings:', error);
+            }
         },
         searchRatings() {
             this.fetchRatings();
         },
-    },
-    mounted() {
-        this.fetchRatings();
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+            this.fetchRatings();
+        }
     },
 };
 </script>

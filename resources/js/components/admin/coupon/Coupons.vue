@@ -56,7 +56,7 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody v-if="coupons.length > 0">
+                                        <tbody>
                                             <tr v-for="coupon in coupons" :key="coupon.id">
                                                 <td>{{ coupon.id }}</td>
                                                 <td>{{ coupon.code }}</td>
@@ -110,16 +110,24 @@
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        <tbody v-else>
+                                        <!-- <tbody v-else>
                                             <tr>
                                                 <td colspan="13" class="text-center">No coupons found</td>
                                             </tr>
-                                        </tbody>
+                                        </tbody> -->
                                     </table>
                                 </div>
 
                                 <div class="card-footer clearfix">
-                                    <pagination :data="pagination" @pagination-change-page="fetchCoupons"></pagination>
+                                    <div v-if="pagination && pagination.length > 0">
+                                        <ul class="pagination">
+                                            <li v-for="(link, index) in pagination" :key="index" class="page-item">
+                                                <button v-if="link.url" @click="goToPage(link.label)" class="page-link"
+                                                    :class="{ 'disabled': link.label === '« Previous' || link.label === 'Next »' }"
+                                                    v-html="link.label"></button>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -143,42 +151,55 @@ export default {
     },
     data() {
         return {
-            coupons: [],
-            keyword: '',
-            pagination: {},
-            message: null,
+            coupons: { data: [] },
+            pagination: "",
+            searchKeyword: "",
+            currentPage: 1,
         };
     },
     methods: {
-        fetchCoupons(page = 1) {
-            axios
-                .get('/admin/coupons', {
-                    params: { keyword: this.keyword, page },
-                })
-                .then((response) => {
-                    this.coupons = response.data.data;
-                    this.pagination = response.data.pagination;
+        async fetchCoupons() {
+            try {
+                const response = await axios.get(`/api/coupon-show`, {
+                    params: { search: this.searchKeyword, page: this.currentPage }
                 });
+                console.log("hi", response);
+                this.coupons = response.data.discount;
+                this.pagination = response.data.pagination;
+            } catch (error) {
+                console.error('Error fetching coupons:', error);
+            }
         },
         searchCoupons() {
             this.fetchCoupons();
         },
-        deleteCoupon(id) {
-            if (confirm("Do you really want to delete this record?")) {
-                axios
-                    .delete(`/admin/coupons/${id}`)
-                    .then(() => {
-                        this.fetchCoupons(); // Reload the list after deletion
-                    })
-                    .catch((error) => {
-                        this.message = 'Error deleting coupon';
-                        console.error(error);
-                    });
-            }
+        // deleteCoupon(id) {
+        //     if (confirm("Do you really want to delete this record?")) {
+        //         axios
+        //             .delete(`/admin/coupons/${id}`)
+        //             .then(() => {
+        //                 this.fetchCoupons(); // Reload the list after deletion
+        //             })
+        //             .catch((error) => {
+        //                 this.message = 'Error deleting coupon';
+        //                 console.error(error);
+        //             });
+        //     }
+        // },
+
+        searchCoupons() {
+            this.fetchCoupons();
         },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+            this.fetchCoupons();
+        }
     },
     mounted() {
         this.fetchCoupons();
+        if (this.$route.query.success) {
+            this.successMessage = this.$route.query.success;
+        }
     },
 };
 </script>

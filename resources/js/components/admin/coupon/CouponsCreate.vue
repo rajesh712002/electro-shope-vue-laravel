@@ -115,18 +115,18 @@ export default {
                 expires_at: { label: "Expires At", type: "text", placeholder: "YYYY-MM-DD HH:MM:SS" },
                 description: { label: "Description", type: "textarea", placeholder: "Description" },
             },
-            successMessage: "",
+            successMessage:null,
             errors: {},
         };
     },
-    mounted() {
-        $("#starts_at").datetimepicker({ format: "Y-m-d H:i:s" });
-        $("#expires_at").datetimepicker({ format: "Y-m-d H:i:s" });
-    },
+    // mounted() {
+    //     $("#starts_at").datetimepicker({ format: "Y-m-d H:i:s" });
+    //     $("#expires_at").datetimepicker({ format: "Y-m-d H:i:s" });
+    // },
     methods: {
         async submitForm() {
             try {
-                const response = await axios.post("/admin/couponStore", this.form);
+                const response = await axios.post(`/api/create-coupon`, this.form);
                 this.successMessage = response.data.message;
                 this.resetForm();
             } catch (error) {

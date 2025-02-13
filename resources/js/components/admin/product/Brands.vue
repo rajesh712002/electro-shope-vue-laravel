@@ -52,7 +52,7 @@
                                             <td>{{ brand.name }}</td>
                                             <td>{{ brand.slug }}</td>
                                             <td>
-                                                <svg v-if="brand.status === 1"
+                                                <svg v-if="brand.status == 1"
                                                     class="text-success-500 h-6 w-6 text-success" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                     aria-hidden="true">
@@ -68,7 +68,7 @@
                                                 </svg>
                                             </td>
                                             <td>
-                                                <router-link :to="`/admin/edit-brand/${brand.id}`"
+                                                <router-link :to="'/brands-update/' + brand.id"
                                                     class="btn btn-primary">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                                         viewBox="0 0 20 20" class="w-4 h-4 mr-1">
@@ -91,7 +91,15 @@
                                 </table>
                             </div>
                             <div class="card-footer clearfix">
-                                <div class="pagination-container" v-html="pagination"></div>
+                                <div v-if="pagination && pagination.length > 0">
+                                    <ul class="pagination">
+                                        <li v-for="(link, index) in pagination" :key="index" class="page-item">
+                                            <button v-if="link.url" @click="goToPage(link.label)" class="page-link"
+                                                :class="{ 'disabled': link.label === '« Previous' || link.label === 'Next »' }"
+                                                v-html="link.label"></button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -110,35 +118,55 @@ export default {
     },
     data() {
         return {
-            brands: [],
-            keyword: '',
-            pagination: ''
+            brands: { data: [] },
+            pagination: "",
+            searchKeyword: "",
+            currentPage: 1,
         };
     },
     methods: {
-        fetchBrands(page = 1) {
-            axios.get('/admin/brands', {
-                params: {
-                    keyword: this.keyword,
-                    page: page
-                }
-            })
-                .then(response => {
-                    this.brands = response.data.data;
-                    this.pagination = response.data.pagination;
-                });
+        async fetchBrands() {
+            try {
+                let result = await axios.get(`api/brand-show?page=${this.currentPage}&search=${this.searchKeyword}`);
+                console.log("Full response:", result);
+
+                // Store the categories and pagination
+                this.brands = result.data.brand;
+                this.pagination = result.data.pagination;
+                console.log(this.pagination)
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        },
+        // .then(response => {
+        //     this.brands = response.data.data;
+        //     this.pagination = response.data.pagination;
+        // });
+        searchBrands() {
+            this.fetchBrands();
+        },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+            this.fetchBrands();
         },
         deleteBrand(id) {
             if (confirm("Do you really want to delete this record?")) {
-                axios.delete(`/admin/brands/${id}`)
+                axios.delete(`/api/delete-brand/${id}`)
                     .then(() => {
                         this.fetchBrands();
+                    })
+                    .catch((error) => {
+                        console.error(error);
                     });
             }
-        }
+        },
     },
+
     mounted() {
         this.fetchBrands();
+        if (this.$route.query.success) {
+            this.successMessage = this.$route.query.success;
+        }
     }
 };
 </script>

@@ -59,13 +59,13 @@
                                             <th>Refund</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <!-- <tbody>
                                         <tr v-for="order in orders" :key="order.id">
-                                            <td>
-                                                <!-- <a :href="'{{ route('admin.orderdetail', '') }}' + '/' + order.id">{{
+                                            <td> -->
+                                    <!-- <a :href="'{{ route('admin.orderdetail', '') }}' + '/' + order.id">{{
                                                     order.id
                                                 }}</a> -->
-                                                {{ order.id }}
+                                    <!-- {{ order.id }}
                                             </td>
                                             <td>{{ order.user.name }}</td>
                                             <td>
@@ -91,20 +91,59 @@
                                                 </form>
                                             </td>
                                         </tr>
+                                    </tbody> -->
+
+                                    <tbody>
+                                        <tr v-for="order in orders" :key="order.id">
+                                            <td>{{ order.id }}</td>
+                                            <td>{{ order.user ? order.user.name : 'N/A' }}</td>
+                                            <td>
+                                                {{ order.first_name }} {{ order.last_name }}<br />
+                                                {{ order.address }}, {{ order.apartment ?? '' }}, {{ order.pincode
+                                                }}<br />
+                                                {{ order.state }}, {{ order.city }}
+                                            </td>
+                                            <td>{{ order.email }}</td>
+                                            <td>{{ order.mobile }}</td>
+                                            <td>
+                                                <button :class="statusClass(order.status)" class="btn">
+                                                    <span :class="statusIcon(order.status)"></span> {{ order.status }}
+                                                </button>
+                                            </td>
+                                            <td>{{ order.payment_status }}</td>
+                                            <td><i class="fa fa-inr" aria-hidden="true"></i> {{ order.grand_total }}
+                                            </td>
+                                            <td>{{ formatDate(order.created_at) }}</td>
+                                            <!-- <td v-if="canRefund(order)">
+                                                <form :action="refundUrl(order)" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-secondary">Refund</button>
+                                                </form>
+                                            </td> -->
+                                        </tr>
                                     </tbody>
+
                                 </table>
                             </div>
 
                             <!-- Pagination -->
                             <div class="card-footer clearfix">
-                                <div class="pagination-container" v-html="pagination"></div>
+                                <div v-if="pagination && pagination.length > 0">
+                                    <ul class="pagination">
+                                        <li v-for="(link, index) in pagination" :key="index" class="page-item">
+                                            <button v-if="link.url" @click="goToPage(link.label)" class="page-link"
+                                                :class="{ 'disabled': link.label === '« Previous' || link.label === 'Next »' }"
+                                                v-html="link.label"></button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
         </template>
-    </AdminLayout> 
+    </AdminLayout>
 </template>
 
 <script>
@@ -116,29 +155,24 @@ export default {
     },
     data() {
         return {
-            orders: [],
-            pagination: '',
-            searchKeyword: '',
-            statusMessage: '',
-            errorMessage: ''
+            orders: { data: [] },
+            pagination: "",
+            searchKeyword: "",
+            currentPage: 1,
         };
     },
     methods: {
-        fetchOrders(page = 1) {
-            // axios
-            //     .get('{{ route('admin.orders') }}', {
-            //         params: {
-            //             page: page,
-            //             keyword: this.searchKeyword
-            //         }
-            //     })
-            //     .then((response) => {
-            //         this.orders = response.data.orders;
-            //         this.pagination = response.data.pagination;
-            //     })
-            //     .catch((error) => {
-            //         this.errorMessage = 'An error occurred while fetching the orders.';
-            //     });
+        async fetchOrders() {
+            try {
+                const response = await axios.get(`/api/orders-report`, {
+                    params: { search: this.searchKeyword, page: this.currentPage }
+                });
+                console.log("hi", response);
+                this.orders = response.data.order;
+                this.pagination = response.data.pagination;
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
         },
         statusClass(status) {
             switch (status) {
@@ -189,10 +223,20 @@ export default {
         //     } else if (order.payment_status === 'paid with PayPal') {
         //         return '{{ route('paypal.refund', '') }}' + '/' + order.id;
         //     }
-        // }
+        // },
+        searchOrders() {
+            this.fetchOrders();
+        },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+            this.fetchOrders();
+        }
     },
     mounted() {
         this.fetchOrders();
+        if (this.$route.query.success) {
+            this.successMessage = this.$route.query.success;
+        }
     }
 };
 </script>

@@ -185,7 +185,7 @@ export default {
                 const formData = new FormData();
                 formData.append("_method", "PUT"); // Laravel requires this for PUT requests with FormData
                 formData.append("category", this.form.category);
-                formData.append("name", this.form.name);
+                formData.append("subcate_name", this.form.subcate_name);
                 formData.append("slug", this.form.slug);
                 if (this.form.image) {
                     formData.append("image", this.form.image);

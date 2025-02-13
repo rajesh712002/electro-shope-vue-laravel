@@ -22,8 +22,8 @@
                                 <div class="card-header">
                                     <div class="card-tools">
                                         <div class="input-group" style="width: 250px;">
-                                            <input type="text" v-model="keyword" class="form-control float-right"
-                                                placeholder="Search" />
+                                            <input type="text" v-model="searchKeyword" class="form-control float-right"
+                                                placeholder="Search users..." />
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default">
                                                     <i class="fas fa-search"></i>
@@ -41,26 +41,38 @@
                                             <th>User ID</th>
                                             <th>User Name</th>
                                             <th>User Email</th>
+                                            <!-- <th>Actions</th> -->
                                         </tr>
                                     </thead>
-                                    <tbody v-if="users.length > 0">
+                                    <tbody>
                                         <tr v-for="user in users" :key="user.id">
                                             <td>{{ user.id }}</td>
                                             <td>{{ user.name }}</td>
                                             <td>{{ user.email }}</td>
+                                            <!-- <td>
+                                                <button @click="deleteUser(user.id)" class="btn btn-danger btn-sm">
+                                                    Delete
+                                                </button>
+                                            </td> -->
                                         </tr>
-                                    </tbody>
+                                        <!-- </tbody>
                                     <tbody v-else>
                                         <tr>
-                                            <td colspan="3" class="text-center">No users found</td>
-                                        </tr>
+                                            <td colspan="4" class="text-center">No users found</td>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
 
                             <div class="card-footer clearfix">
-                                <div class="pagination-container">
-                                    <pagination :data="pagination" @pagination-change-page="fetchUsers"></pagination>
+                                <div v-if="pagination && pagination.length > 0">
+                                    <ul class="pagination">
+                                        <li v-for="(link, index) in pagination" :key="index" class="page-item">
+                                            <button v-if="link.url" @click="goToPage(link.label)" class="page-link"
+                                                :class="{ 'disabled': link.label === '« Previous' || link.label === 'Next »' }"
+                                                v-html="link.label"></button>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -74,35 +86,49 @@
 <script>
 import AdminLayout from '../../admin/Layouts/AdminLayout.vue';
 import axios from "axios";
+
 export default {
     components: {
         AdminLayout
     },
     data() {
         return {
-            users: [],
-            keyword: '',
-            pagination: {},
+            users: { data: [] },
+            pagination: "",
+            searchKeyword: "",
+            currentPage: 1,
         };
-    },
-    methods: {
-        fetchUsers(page = 1) {
-            axios
-                .get(`${window.location.origin}/admin/users`, {
-                    params: { keyword: this.keyword, page },
-                })
-                .then((response) => {
-                    this.users = response.data.data;
-                    this.pagination = response.data.pagination;
-                });
-        },
-        searchUsers() {
-            this.fetchUsers();
-        },
     },
     mounted() {
         this.fetchUsers();
+        if (this.$route.query.success) {
+            this.successMessage = this.$route.query.success;
+        }
     },
+    methods: {
+        async fetchUsers() {
+            try {
+                const response = await axios.get(`/api/users-report`, {
+                    params: { search: this.searchKeyword, page: this.currentPage }
+                });
+                console.log(response)
+                this.users = response.data.users;
+                this.pagination = response.data.pagination;
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        },
+        searchBanner() {
+            this.fetchUsers();
+        },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+            this.fetchUsers();
+        },
+
+    },
+
+
 };
 </script>
 

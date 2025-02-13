@@ -137,6 +137,7 @@ export default {
                 const response = await axios.post(`http://127.0.0.1:8001/api/create-category`,formData);
 
                 this.successMessage = response.data.success;
+                console.log(this.successMessage)
                 this.resetForm();
             } catch (error) {
                 if (error.response && error.response.data.errors) {

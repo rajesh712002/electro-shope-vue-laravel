@@ -79,29 +79,38 @@ class AdminloginController extends Controller
 
         $users = $users->paginate(3);
 
-        if ($request->ajax()) {
-            $html = '';
-            if ($users->isNotEmpty()) {
-                foreach ($users as $user) {
-                    $html .= '<tr>
-                    <td>' . $user->id . '</td>
-                    <td>' . $user->name . '</td>
-                    <td>' . $user->email . '</td>
-                </tr>';
-                }
-            } else {
-                $html .= '<tr>
-                <td colspan="3" class="text-center">No users found</td>
-            </tr>';
-            }
+        // if ($request->ajax()) {
+        //     $html = '';
+        //     if ($users->isNotEmpty()) {
+        //         foreach ($users as $user) {
+        //             $html .= '<tr>
+        //             <td>' . $user->id . '</td>
+        //             <td>' . $user->name . '</td>
+        //             <td>' . $user->email . '</td>
+        //         </tr>';
+        //         }
+        //     } else {
+        //         $html .= '<tr>
+        //         <td colspan="3" class="text-center">No users found</td>
+        //     </tr>';
+        //     }
 
-            return response()->json([
-                'data' => $html,
-                'pagination' => (string) $users->links(),
-            ]);
-        }
+        //     return response()->json([
+        //         'data' => $html,
+        //         'pagination' => (string) $users->links(),
+        //     ]);
+        // }
 
-        return view('admin.userdata.user', ['users' => $users]);
+
+        // return view('admin.userdata.user', ['users' => $users]);
+
+        // return response()->json(['success' => 'successfully','users'=>$users]);
+
+
+        return response()->json([
+            'users' => $users->items(),
+            'pagination' => $users->toArray()['links']
+        ]);
     }
 
     public function viewOrders(Request $request)
@@ -129,79 +138,86 @@ class AdminloginController extends Controller
 
         $order = $order->paginate(4);
 
-        if ($request->ajax()) {
-            $html = '';
-            if ($order->isNotEmpty()) {
-                foreach ($order as $orders) {
-                    $html .= '<tr>
+        
+        return response()->json([
+            'order' => $order->items(),
+            'pagination' => $order->toArray()['links']
+        ]);
+        
+        // if ($request->ajax()) {
+        //     $html = '';
+        //     if ($order->isNotEmpty()) {
+        //         foreach ($order as $orders) {
+        //             $html .= '<tr>
                 
-                        <td><a  style="text-decoration: none;" href="' . route('admin.orderdetail', $orders->id) . '">' . $orders->id . '</a></td>
-                        <td>' . $orders->user->name . '</td>
-                       <td>' . $orders->first_name . ' ' . $orders->last_name . '<br>' .
-                        $orders->address . ', ' .
-                        ($orders->apartment ? $orders->apartment . ', ' : '') .
-                        $orders->city . ', ' .
-                        $orders->state . ', ' .
-                        $orders->pincode . '</td>
-                        <td>' . $orders->email . '</td>
-                        <td>' . $orders->mobile . '</td>
-                         <td>';
-                    if ($orders->status == 'pending') {
-                        $html .= '<button type="button" class="btn btn-info"><span class="fa fa-bars" aria-hidden="true"></span> Pending</button>';
-                    } elseif ($orders->status == 'shipped') {
-                        $html .= '<button type="button" class="btn btn-primary"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Shipped!</button>';
-                    } elseif ($orders->status == 'out for delivery') {
-                        $html .= '<button type="button" class="btn btn-warning"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Out For Delivery!</button>';
-                    } elseif ($orders->status == 'delivered') {
-                        $html .= '<button type="button" class="btn btn-success"><span class="fa fa-check-circle" aria-hidden="true"></span> Delivered</button>';
-                    } elseif ($orders->status == 'cancelled') {
-                        $html .= '<button type="button" class="btn btn-danger"><i class="fa fa-close"></i> Cancelled</button>';
-                    } elseif ($orders->status == 'refunded') {
-                        $html .= '<button type="button" class="btn btn-secondary"><i class="fa fa-coins"></i> Refunded</button>';
-                    }
+        //                 <td><a  style="text-decoration: none;" href="' . route('admin.orderdetail', $orders->id) . '">' . $orders->id . '</a></td>
+        //                 <td>' . $orders->user->name . '</td>
+        //                <td>' . $orders->first_name . ' ' . $orders->last_name . '<br>' .
+        //                 $orders->address . ', ' .
+        //                 ($orders->apartment ? $orders->apartment . ', ' : '') .
+        //                 $orders->city . ', ' .
+        //                 $orders->state . ', ' .
+        //                 $orders->pincode . '</td>
+        //                 <td>' . $orders->email . '</td>
+        //                 <td>' . $orders->mobile . '</td>
+        //                  <td>';
+        //             if ($orders->status == 'pending') {
+        //                 $html .= '<button type="button" class="btn btn-info"><span class="fa fa-bars" aria-hidden="true"></span> Pending</button>';
+        //             } elseif ($orders->status == 'shipped') {
+        //                 $html .= '<button type="button" class="btn btn-primary"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Shipped!</button>';
+        //             } elseif ($orders->status == 'out for delivery') {
+        //                 $html .= '<button type="button" class="btn btn-warning"><span class="fa fa-cog fa-spin" aria-hidden="true"></span> Out For Delivery!</button>';
+        //             } elseif ($orders->status == 'delivered') {
+        //                 $html .= '<button type="button" class="btn btn-success"><span class="fa fa-check-circle" aria-hidden="true"></span> Delivered</button>';
+        //             } elseif ($orders->status == 'cancelled') {
+        //                 $html .= '<button type="button" class="btn btn-danger"><i class="fa fa-close"></i> Cancelled</button>';
+        //             } elseif ($orders->status == 'refunded') {
+        //                 $html .= '<button type="button" class="btn btn-secondary"><i class="fa fa-coins"></i> Refunded</button>';
+        //             }
 
-                    $html .= '</td>
-                        <td>' . $orders->payment_status . '</td>
-                        <td>' . $orders->grand_total . '</td>
-                        <td>' . \Carbon\Carbon::parse($orders->created_at)->format('d M, Y') . '</td>
-                            <td>';
+        //             $html .= '</td>
+        //                 <td>' . $orders->payment_status . '</td>
+        //                 <td>' . $orders->grand_total . '</td>
+        //                 <td>' . \Carbon\Carbon::parse($orders->created_at)->format('d M, Y') . '</td>
+        //                     <td>';
 
-                    if ($orders->status == 'cancelled' && $orders->payment_id != '') {
-                        if ($orders->payment_status == 'paid with Stripe Card') {
-                            $html .= '<td>
-                                        <form action="' . route('refund') . '" method="POST">
-                                            ' . csrf_field() . '
-                                            <input type="hidden" name="order_id" value="' . $orders->id . '">
-                                            <button type="submit" class="btn btn-secondary">Refund</button>
-                                        </form>
-                                    </td>';
-                        } elseif ($orders->payment_status == 'paid with BraintreeCard') {
-                            $html .= '<td>
-                                        <form action="' . route('braintree.refund', $orders->id) . '" method="POST">
-                                            ' . csrf_field() . '
-                                            <button type="submit" class="btn btn-secondary">Refund</button>
-                                        </form>
-                                    </td>';
-                        } elseif ($orders->payment_status == 'paid with PayPal') {
-                            $html .= '<td>
-                                        <form action="' . route('paypal.refund', $orders->id) . '" method="POST">
-                                            ' . csrf_field() . '
-                                            <button type="submit" class="btn btn-secondary">Refund</button>
-                                        </form>
-                                    </td>';
-                        }
-                    }
-                    $html .= '</td>
-                        </tr>';
-                }
-            }
+        //             if ($orders->status == 'cancelled' && $orders->payment_id != '') {
+        //                 if ($orders->payment_status == 'paid with Stripe Card') {
+        //                     $html .= '<td>
+        //                                 <form action="' . route('refund') . '" method="POST">
+        //                                     ' . csrf_field() . '
+        //                                     <input type="hidden" name="order_id" value="' . $orders->id . '">
+        //                                     <button type="submit" class="btn btn-secondary">Refund</button>
+        //                                 </form>
+        //                             </td>';
+        //                 } elseif ($orders->payment_status == 'paid with BraintreeCard') {
+        //                     $html .= '<td>
+        //                                 <form action="' . route('braintree.refund', $orders->id) . '" method="POST">
+        //                                     ' . csrf_field() . '
+        //                                     <button type="submit" class="btn btn-secondary">Refund</button>
+        //                                 </form>
+        //                             </td>';
+        //                 } elseif ($orders->payment_status == 'paid with PayPal') {
+        //                     $html .= '<td>
+        //                                 <form action="' . route('paypal.refund', $orders->id) . '" method="POST">
+        //                                     ' . csrf_field() . '
+        //                                     <button type="submit" class="btn btn-secondary">Refund</button>
+        //                                 </form>
+        //                             </td>';
+        //                 }
+        //             }
+        //             $html .= '</td>
+        //                 </tr>';
+        //         }
+        //     }
 
-            return response()->json([
-                'data' => $html,
-                'pagination' => (string) $order,
-            ]);
-        }
-        return view('admin.userdata.orders', ['order' => $order]);
+        //     return response()->json([
+        //         'data' => $html,
+        //         'pagination' => (string) $order,
+        //     ]);
+        // }
+
+        // return view('admin.userdata.orders', ['order' => $order]);
     }
 
     public function viewPendingOrders()
@@ -316,37 +332,43 @@ class AdminloginController extends Controller
         }
         $rating = $rating->paginate(4);
 
-        if ($request->ajax()) {
-            $html = '';
-            if ($rating->isNotEmpty()) {
-                foreach ($rating as $ratings) {
-                    $html .='<tr>
-                        <td><img width="120" src="' . asset('admin_assets/images/' .$ratings->product->image) . '" alt=""></td>
-                    <td>'.$ratings->product_id.'</td>
-                    <td>'.$ratings->product->prod_name.'</td>
-                    <td>'.$ratings->rating .'</td>
-                    <td>'.$ratings->username.'</td>
-                    <td>'.$ratings->comment .'</td>
+        // if ($request->ajax()) {
+        //     $html = '';
+        //     if ($rating->isNotEmpty()) {
+        //         foreach ($rating as $ratings) {
+        //             $html .='<tr>
+        //                 <td><img width="120" src="' . asset('admin_assets/images/' .$ratings->product->image) . '" alt=""></td>
+        //             <td>'.$ratings->product_id.'</td>
+        //             <td>'.$ratings->product->prod_name.'</td>
+        //             <td>'.$ratings->rating .'</td>
+        //             <td>'.$ratings->username.'</td>
+        //             <td>'.$ratings->comment .'</td>
 
 
-                    </tr>';
-                }
-            }
-            else{
-                $html = '<tr>
-                <td>No Data Found</td>
-                </tr>';
-            }
+        //             </tr>';
+        //         }
+        //     }
+        //     else{
+        //         $html = '<tr>
+        //         <td>No Data Found</td>
+        //         </tr>';
+        //     }
 
-            return response()->json([
-                'data' => $html,
-                'pagination' => (string) $rating
-            ]);
+        //     return response()->json([
+        //         'data' => $html,
+        //         'pagination' => (string) $rating
+        //     ]);
 
-        }
+        // }
 
-        return view('admin.userdata.view_rating', ['rating' => $rating]);
 
+
+        // return view('admin.userdata.view_rating', ['rating' => $rating]);
+        // return response()->json(['success', 'success','rating'=>$rating]);
+        return response()->json([
+            'rating' => $rating->items(),
+            'pagination' => $rating->toArray()['links']
+        ]);
         // dd($rating);
         // return view('admin.userdata.view_rating', compact('rating'));
     }

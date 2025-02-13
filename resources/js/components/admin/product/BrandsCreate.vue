@@ -15,7 +15,13 @@
                         </div>
                     </div>
                 </section>
-
+                <div class="row d-flex justify-content-center" v-if="successMessage">
+                    <div class="col-md-10 mt-4">
+                        <div class="alert alert-success">
+                            <b>{{ successMessage }}</b>
+                        </div>
+                    </div>
+                </div>
                 <!-- Main content -->
                 <section class="content">
                     <div class="container-fluid">
@@ -97,21 +103,24 @@ export default {
                 image: null,
                 status: '',
             },
-            errors: {},
+            errors: [{}],
+            successMessage: null,
+            isLoading: false,
         };
     },
     methods: {
         async submitForm() {
-            const formData = new FormData();
-            formData.append('name', this.form.name);
-            formData.append('slug', this.form.slug);
-            formData.append('image', this.form.image);
-            formData.append('status', this.form.status);
 
             try {
-                const response = await axios.post('/admin/store_brand', formData);
+                const formData = new FormData();
+                formData.append('name', this.form.name);
+                formData.append('slug', this.form.slug);
+                formData.append('image', this.form.image);
+                formData.append('status', this.form.status);
+                const response = await axios.post('/api/create-brand', formData);
+                this.successMessage = response.data.success;
+                this.resetForm();
                 // Handle success (show a success message or redirect)
-                this.$router.push('/admin/brand'); // Redirect to the brand list page
             } catch (error) {
                 if (error.response && error.response.data.errors) {
                     this.errors = error.response.data.errors;

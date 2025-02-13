@@ -17,9 +17,11 @@ import ProductsCreate from '../components/admin/product/ProductsCreate.vue';
 
 import Brands from '../components/admin/product/Brands.vue';
 import BrandsCreate from '../components/admin/product/BrandsCreate.vue';
+import BrandsUpdate from '../components/admin/product/BrandsUpdate.vue';
 
 import Banners from '../components/admin/coupon/Banners.vue';
 import BannersCreate from '../components/admin/coupon/BannersCreate.vue';
+import BannerUpdates from '../components/admin/coupon/BannerUpdates.vue';
 
 import Coupons from '../components/admin/coupon/Coupons.vue';
 import CouponsCreate from '../components/admin/coupon/CouponsCreate.vue';
@@ -42,16 +44,18 @@ const routes = [
     { path: '/subcategory-ceate', component: SubCategoryCeate },
     { path: '/subcategory-update/:id', component: SubCategoryUpdate },
 
-
-
     { path: '/products', component: Products },
     { path: '/products-create', component: ProductsCreate },
 
     { path: '/brands', component: Brands },
     { path: '/brands-create', component: BrandsCreate },
+    { path: '/brands-update/:id', component: BrandsUpdate },
+
 
     { path: '/banners', component: Banners },
     { path: '/create-banner', component: BannersCreate },
+    { path: '/update-banner/:id', component: BannerUpdates },
+
 
     { path: '/coupons', component: Coupons },
     { path: '/coupons-create', component: CouponsCreate },

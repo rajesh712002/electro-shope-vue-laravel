@@ -426,7 +426,7 @@ class CategoryController extends Controller
         $rules = [
             'category' => 'required|max:50',
             'image' => $request->isMethod('post') ? 'required|image' : 'nullable|image',
-            'name' => 'required|alpha_num|max:50',
+            'subcate_name' => 'required|alpha_num|max:50',
             'slug' => 'required|alpha_num|max:100|unique:subcategories,slug,' . $subcategory->id . ',id',
             'status' => 'required'
         ];
@@ -436,7 +436,7 @@ class CategoryController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $subcategory->subcate_id = $request->category;
-        $subcategory->subcate_name = $request->name;
+        $subcategory->subcate_name = $request->subcate_name;
         $subcategory->slug = $request->slug;
         $subcategory->status = $request->status;
         //store Image

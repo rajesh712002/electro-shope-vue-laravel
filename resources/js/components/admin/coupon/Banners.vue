@@ -75,7 +75,7 @@
                                                     </svg>
                                                 </td>
                                                 <td>
-                                                    <router-link :to="`/admin/editBanner/${banner.id}`">
+                                                    <router-link :to="'/update-banner/'+banner.id">
                                                         <svg class="filament-link-icon w-4 h-4 mr-1"
                                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                                             fill="currentColor" aria-hidden="true">
@@ -100,7 +100,15 @@
                                     </table>
                                 </div>
                                 <div class="card-footer clearfix">
-                                    <div class="pagination-container" v-html="pagination"></div>
+                                    <div v-if="pagination && pagination.length > 0">
+                                        <ul class="pagination">
+                                            <li v-for="(link, index) in pagination" :key="index" class="page-item">
+                                                <button v-if="link.url" @click="goToPage(link.label)" class="page-link"
+                                                    :class="{ 'disabled': link.label === '« Previous' || link.label === 'Next »' }"
+                                                    v-html="link.label"></button>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -120,47 +128,68 @@ export default {
     },
     data() {
         return {
-            banners: [],
-            pagination: '',
-            keyword: '',
-            successMessage: '',
+            banners: { data: [] },
+            pagination: "",
+            searchKeyword: "",
+            currentPage: 1,
         };
     },
     mounted() {
         this.fetchBanners();
+        if (this.$route.query.success) {
+            this.successMessage = this.$route.query.success;
+        }
     },
     methods: {
-        async fetchBanners(page = 1) {
+        async fetchBanner() {
             try {
-                const response = await axios.get('/admin/banners', {
-                    params: {
-                        keyword: this.keyword,
-                        page: page,
-                    },
-                });
-                this.banners = response.data.banners;
-                this.pagination = response.data.pagination;
-                if (response.data.successMessage) {
-                    this.successMessage = response.data.successMessage;
-                }
+                const result = await axios.get(`api/banner-show?page=${this.currentPage}&search=${this.searchKeyword}`);
+
+                this.banners = result.data.banner;
+                this.pagination = result.data.pagination;
+                console.log(result)
+                // if (response.data.successMessage) {
+                //     this.successMessage = response.data.successMessage;
+                // }
             } catch (error) {
                 console.error('Error fetching banners:', error);
             }
         },
-        onSearchSubmit() {
-            this.fetchBanners();
+        // async deleteBanner(id) {
+        //     if (confirm('Do you really want to delete this record?')) {
+        //         try {
+        //             await axios.delete(`/admin/deleteBanner/${id}`);
+        //             this.fetchBanners(); // Refresh the banner list
+        //         } catch (error) {
+        //             console.error('Error deleting banner:', error);
+        //         }
+        //     }
+        // },
+        searchBanner() {
+            this.fetchBanner();
+        },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+            this.fetchBanner();
         },
         async deleteBanner(id) {
-            if (confirm('Do you really want to delete this record?')) {
-                try {
-                    await axios.delete(`/admin/deleteBanner/${id}`);
-                    this.fetchBanners(); // Refresh the banner list
-                } catch (error) {
-                    console.error('Error deleting banner:', error);
-                }
+            if (confirm("Do you really want to delete this record?")) {
+               await axios.delete(`/api/delete-banner/${id}`)
+                    .then(() => {
+                        this.fetchBanner();
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
             }
         },
     },
+    mounted() {
+        this.fetchBanner();
+        if (this.$route.query.success) {
+            this.successMessage = this.$route.query.success;
+        }
+    }
 };
 </script>
 

@@ -93,45 +93,50 @@ export default {
                 description: '',
             },
             errors: {},
-            successMessage: '',
+            successMessage: null,
+            isLoading: false,
         };
     },
-    mounted() {
-        tinymce.init({
-            selector: '#description',
-            plugins: 'lists link image preview code table media textcolor paste',
-            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | table | forecolor backcolor | code preview | save',
-            menubar: false,
-            branding: false,
-            cleanup: true,
-            setup: (editor) => {
-                editor.ui.registry.addButton('save', {
-                    text: 'Save',
-                    onAction: () => alert('Save functionality needs to be implemented!'),
-                });
-            },
-            image_advtab: true,
-            media_dimensions: false,
-            image_caption: true,
-        });
-    },
+    // mounted() {
+    //     tinymce.init({
+    //         selector: '#description',
+    //         plugins: 'lists link image preview code table media textcolor paste',
+    //         toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | table | forecolor backcolor | code preview | save',
+    //         menubar: false,
+    //         branding: false,
+    //         cleanup: true,
+    //         setup: (editor) => {
+    //             editor.ui.registry.addButton('save', {
+    //                 text: 'Save',
+    //                 onAction: () => alert('Save functionality needs to be implemented!'),
+    //             });
+    //         },
+    //         image_advtab: true,
+    //         media_dimensions: false,
+    //         image_caption: true,
+    //     });
+    // },
     methods: {
         handleFileUpload(event) {
-            this.form.image = event.target.files[0];
+            const file = event.target.files[0];
+            if (file) {
+                this.form.image = file;
+            }
         },
         async submitForm() {
-            this.errors = {};
-            const formData = new FormData();
-            formData.append('name', this.form.name);
-            formData.append('image', this.form.image);
-            formData.append('status', this.form.status);
-            formData.append('description', this.form.description);
-
+            // this.errors = {};
+            
             try {
-                const response = await axios.post('/admin/store-banner', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                this.successMessage = response.data.message;
+                const formData = new FormData();
+                formData.append('name', this.form.name);
+                formData.append('image', this.form.image);
+                formData.append('status', this.form.status);
+                formData.append('description', this.form.description);
+                const response = await axios.post('/api/create-banner', formData);
+                this.successMessage = response.data.success;
+                console.log(this.successMessage )
+                // this.resetForm();
+                // this.successMessage = response.data.message;
                 this.resetForm();
             } catch (error) {
                 if (error.response && error.response.data.errors) {

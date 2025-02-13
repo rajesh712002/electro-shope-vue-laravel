@@ -32,14 +32,14 @@ class DiscountCouponController extends Controller
                 ->orWhere('starts_at', 'like', '%' . $request->get('keyword') . '%')
                 ->orWhere('expires_at', 'like', '%' . $request->get('keyword') . '%')
                 ->orWhere('description', 'like', '%' . $request->get('keyword') . '%');
-
-
-            $discount = $discount->paginate(100);
-            return view('admin.coupon.coupon-codes', ['discount' => $discount]);
-        } else {
-            $discount = $discount->paginate(5);
-            return view('admin.coupon.coupon-codes', ['discount' => $discount]);
         }
+
+        $discount = $discount->paginate(2);
+
+        return response()->json([
+            'discount' => $discount->items(),
+            'pagination' => $discount->toArray()['links']
+        ]);
     }
 
     public function createCoupon()
@@ -171,8 +171,12 @@ class DiscountCouponController extends Controller
 
     public function viewBanner()
     {
-        $banner = Banner::orderBy('id', 'desc')->paginate(10);
-        return view('admin.coupon.banner', compact('banner'));
+        $banner = Banner::orderBy('id', 'desc')->paginate(2);
+        return response()->json([
+            'banner' => $banner->items(),
+            'pagination' => $banner->toArray()['links']
+        ]);
+        // return view('admin.coupon.banner', compact('banner'));
     }
 
     public function createBanner()
@@ -214,7 +218,8 @@ class DiscountCouponController extends Controller
     public function editBanner($id)
     {
         $banner = Banner::findOrFail($id);
-        return view('admin.coupon.update-banner', compact('banner'));
+        // return view('admin.coupon.update-banner', compact('banner'));
+        return response()->json(['success' => 'Banner Inserted Successfully', 'banner' => $banner]);
     }
 
     public function updateBanner(Request $request, $id)
@@ -248,7 +253,7 @@ class DiscountCouponController extends Controller
             $banner->image = $imagename;
         }
         $banner->save();
-        return response()->json(['success' => 'Banner Updated Successfully']);
+        return response()->json(['success' => 'Banner Updated Successfully', 'banner' => $banner]);
     }
 
     public function deleteBanner($id)
@@ -258,8 +263,8 @@ class DiscountCouponController extends Controller
         File::delete(public_path('admin_assets/images/' . $banner->image));
 
         $banner->delete();
-        //return response()->json(['message' => 'Item Deleted successfully']);
-        return redirect()->route('admin.viewBanner')->with('success', 'Banner Deleted Successfully');
+        return response()->json(['success' => 'Item Deleted successfully']);
+        // return redirect()->route('admin.viewBanner')->with('success', 'Banner Deleted Successfully');
     }
 
     public function bannerCursor()
