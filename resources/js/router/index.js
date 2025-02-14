@@ -25,8 +25,10 @@ import BannerUpdates from '../components/admin/coupon/BannerUpdates.vue';
 
 import Coupons from '../components/admin/coupon/Coupons.vue';
 import CouponsCreate from '../components/admin/coupon/CouponsCreate.vue';
+import CouponsUpdate from '../components/admin/coupon/CouponsUpdate.vue';
 
 import Orders from '../components/admin/orders/Orders.vue';
+import OrdersView from '../components/admin/orders/OrdersView.vue'
 import Users from '../components/admin/report/Users.vue';
 import FeedBack from '../components/admin/report/FeedBack.vue';
  
@@ -51,7 +53,6 @@ const routes = [
     { path: '/brands-create', component: BrandsCreate },
     { path: '/brands-update/:id', component: BrandsUpdate },
 
-
     { path: '/banners', component: Banners },
     { path: '/create-banner', component: BannersCreate },
     { path: '/update-banner/:id', component: BannerUpdates },
@@ -59,8 +60,12 @@ const routes = [
 
     { path: '/coupons', component: Coupons },
     { path: '/coupons-create', component: CouponsCreate },
+    { path: '/coupons-update/:id', component: CouponsUpdate },
+
 
     { path: '/orders', component: Orders },
+    { path: '/orders-view/:id', component: OrdersView },
+
     { path: '/users', component: Users },
     { path: '/feedbacks', component: FeedBack },
 

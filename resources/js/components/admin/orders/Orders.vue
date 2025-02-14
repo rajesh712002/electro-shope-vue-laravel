@@ -95,7 +95,11 @@
 
                                     <tbody>
                                         <tr v-for="order in orders" :key="order.id">
-                                            <td>{{ order.id }}</td>
+                                            <td>
+                                                <router-link :to="'/orders-view/' + order.id">{{ order.id
+                                                    }}</router-link>
+                                            </td>
+
                                             <td>{{ order.user ? order.user.name : 'N/A' }}</td>
                                             <td>
                                                 {{ order.first_name }} {{ order.last_name }}<br />

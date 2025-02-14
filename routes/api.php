@@ -11,6 +11,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+Route::get('/deshboard', [AdminloginController::class, 'getDashboardData']);
+
 //  Category
 Route::get('/category-show',[CategoryController::class,'category']);
 Route::get('/category-show-all',[CategoryController::class,'categoryAll']);
@@ -34,6 +37,8 @@ Route::delete('/delete-subcategory/{subcategory}', [CategoryController::class, '
  Route::get('/brand-show/{brand}', [ProductController::class, 'editBrand']);
  Route::put('/update-brand/{id}', [ProductController::class, 'updateBrand']);
 
+//  Products
+Route::get('/product-show', [ProductController::class, 'product']);
 
  
 // //Insert Brand
@@ -52,12 +57,15 @@ Route::delete('/delete-subcategory/{subcategory}', [CategoryController::class, '
  //  Coupon
  Route::get('coupon-show', [DiscountCouponController::class, 'coupons']);
  Route::post('create-coupon', [DiscountCouponController::class, 'storeCoupon']);
-
+ Route::get('coupon-show/{id}', [DiscountCouponController::class, 'editCoupon']);
+ Route::put('update-coupon/{id}', [DiscountCouponController::class, 'updateCoupon']);
 
 
 //  Reports
 Route::get('/orders-report', [AdminloginController::class, 'viewOrders']);
+Route::get('/order-detail/{id?}', [AdminloginController::class, 'viewOrderDetails']);
 Route::get('/users-report', [AdminloginController::class, 'users']);
 Route::get('/feddbacks-report', [AdminloginController::class, 'viewRating']);
+
 
 

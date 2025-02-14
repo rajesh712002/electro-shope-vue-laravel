@@ -162,7 +162,7 @@ export default {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
 
-                this.successMessage = "Banner updated successfully!";
+                this.successMessage =  response.data.success;
             } catch (error) {
                 if (error.response && error.response.data.errors) {
                     this.errors = error.response.data.errors;

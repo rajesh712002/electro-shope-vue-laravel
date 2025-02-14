@@ -90,7 +90,8 @@ class DiscountCouponController extends Controller
         // dd($id);
         $couponCode = DiscountCoupon::findOrFail($id);
         // dd($couponCode);
-        return view('admin.coupon.update-coupon-code', compact('couponCode'));
+        // return view('admin.coupon.update-coupon-code', compact('couponCode'));
+        return response()->json(['success'=>'success','couponCode'=>$couponCode]);
     }
 
     public function updateCoupon(Request $request, $id)

@@ -52,74 +52,75 @@ class ProductController extends Controller
 
         $product = $product->paginate(4);
 
-        if ($request->ajax()) {
-            $html = '';
-            if ($product->isNotEmpty()) {
-                foreach ($product as $prod) {
-                    $productImage = $prod->productImages->first();
+        // if ($request->ajax()) {
+        //     $html = '';
+        //     if ($product->isNotEmpty()) {
+        //         foreach ($product as $prod) {
+        //             $productImage = $prod->productImages->first();
 
-                    $imageUrl = !empty($productImage) && !empty($productImage->images)
-                        ? asset('admin_assets/images/' . $productImage->images)
-                        : asset('admin_assets/images/' . $prod->image);
-                    // dd($imageUrl);
-                    $html .= '<tr>
-                        <td>' . $prod->id . '</td>
-                        <td><img width="100" src="' . $imageUrl . '" alt=""></td>
-                        <td>' . $prod->prod_name . '</td>
-                        <td>' . $prod->categorys->name . '</td>
-                        <td>' . $prod->sub_category->subcate_name . '</td>
-                        <td>' . $prod->brand->name . '</td>
-                        <td>' . $prod->description . '</td>
-                        <td>' . $prod->price . '</td>
-                        <td>' . $prod->compare_price . '</td>
-                        <td>' . $prod->qty . '</td>
-                         <td>' . ($prod->status == 1 ? ' <svg class="text-success-500 h-6 w-6 text-success" fill="none"
-                                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                                aria-hidden="true">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                            </svg>' : '<svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
-                                                                fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                                                stroke="currentColor" aria-hidden="true">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                                </path>
-                                                            </svg>') . '</td>
+        //             $imageUrl = !empty($productImage) && !empty($productImage->images)
+        //                 ? asset('admin_assets/images/' . $productImage->images)
+        //                 : asset('admin_assets/images/' . $prod->image);
+        //             // dd($imageUrl);
+        //             $html .= '<tr>
+        //                 <td>' . $prod->id . '</td>
+        //                 <td><img width="100" src="' . $imageUrl . '" alt=""></td>
+        //                 <td>' . $prod->prod_name . '</td>
+        //                 <td>' . $prod->categorys->name . '</td>
+        //                 <td>' . $prod->sub_category->subcate_name . '</td>
+        //                 <td>' . $prod->brand->name . '</td>
+        //                 <td>' . $prod->description . '</td>
+        //                 <td>' . $prod->price . '</td>
+        //                 <td>' . $prod->compare_price . '</td>
+        //                 <td>' . $prod->qty . '</td>
+        //                  <td>' . ($prod->status == 1 ? ' <svg class="text-success-500 h-6 w-6 text-success" fill="none"
+        //                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        //                                                         aria-hidden="true">
+        //                                                         <path stroke-linecap="round" stroke-linejoin="round"
+        //                                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        //                                                     </svg>' : '<svg class="text-danger h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+        //                                                         fill="none" viewBox="0 0 24 24" stroke-width="2"
+        //                                                         stroke="currentColor" aria-hidden="true">
+        //                                                         <path stroke-linecap="round" stroke-linejoin="round"
+        //                                                             d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+        //                                                         </path>
+        //                                                     </svg>') . '</td>
 
-                        <td>
-                                <a href="' . route('admin.edit_prod', $prod->id) . '">  <svg class="filament-link-icon w-4 h-4 mr-1"
-                                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                                fill="currentColor" aria-hidden="true">
-                                                                <path
-                                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
-                                                                </path>
-                                                            </svg></a>
-                                <a href="#" onclick="deleteProduct(' . $prod->id . ');" class="text-danger"><svg wire:loading.remove.delay="" wire:target=""
-                                                                class="filament-link-icon w-4 h-4 mr-1"
-                                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                                fill="currentColor" aria-hidden="true">
-                                                                <path ath fill-rule="evenodd"
-                                                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                                    clip-rule="evenodd"></path>
-                                                            </svg></a>
-                                <form id="delete-product-form-' . $prod->id . '" class="delete_cat" method="post" action="' . route('admin.destroy_product', $prod->id) . '">
-                                   ' . csrf_field() . method_field('delete') . '
-                                </form>
-                            </td>
-                        </tr>';
-                }
-            } else {
-                $html = '<tr>
-                    <td>No Data Found</td>
-                    </tr>';
-            }
+        //                 <td>
+        //                         <a href="' . route('admin.edit_prod', $prod->id) . '">  <svg class="filament-link-icon w-4 h-4 mr-1"
+        //                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+        //                                                         fill="currentColor" aria-hidden="true">
+        //                                                         <path
+        //                                                             d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
+        //                                                         </path>
+        //                                                     </svg></a>
+        //                         <a href="#" onclick="deleteProduct(' . $prod->id . ');" class="text-danger"><svg wire:loading.remove.delay="" wire:target=""
+        //                                                         class="filament-link-icon w-4 h-4 mr-1"
+        //                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+        //                                                         fill="currentColor" aria-hidden="true">
+        //                                                         <path ath fill-rule="evenodd"
+        //                                                             d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+        //                                                             clip-rule="evenodd"></path>
+        //                                                     </svg></a>
+        //                         <form id="delete-product-form-' . $prod->id . '" class="delete_cat" method="post" action="' . route('admin.destroy_product', $prod->id) . '">
+        //                            ' . csrf_field() . method_field('delete') . '
+        //                         </form>
+        //                     </td>
+        //                 </tr>';
+        //         }
+        //     } else {
+        //         $html = '<tr>
+        //             <td>No Data Found</td>
+        //             </tr>';
+        //     }
 
-            return response()->json([
-                'data' => $html,
-                'pagination' => (string) $product
-            ]);
-        }
-        return view('admin.product.product', compact('product'));
+        //     return response()->json([
+        //         'data' => $html,
+        //         'pagination' => (string) $product
+        //     ]);
+        // }
+        
+        // return view('admin.product.product', compact('product'));
     }
 
     public function createProduct()

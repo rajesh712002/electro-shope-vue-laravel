@@ -24,38 +24,65 @@ class AdminloginController extends Controller
 
 
 
-    public function deshboard()
+    // public function deshboard()
+    // {
+    //     $totaluser = User::count();
+
+    //     $totalcategory = Category::where('status', '1')->count();
+
+    //     $totalsubcategory = Subcategory::where('status', '1')->count();
+
+    //     $totalbrand = Brand::where('status', '1')->count();
+
+    //     $totalproduct = Product::where('status', '1')->count();
+
+    //     $totalearning = Order::where('status', 'delivered')->sum('grand_total');
+
+    //     $totalorder = Order::count();
+        
+    //     $orders = Order::select('status', DB::raw('count(*) as total'))
+    //     ->groupBy('status')
+    //     ->get();
+        
+    //     $statusCounts = $orders->pluck('total', 'status')->toArray();
+        
+        
+        
+    //     return view('admin.deshboard', compact('totaluser', 'totalcategory', 'statusCounts', 'totalsubcategory', 'totalbrand', 'totalproduct', 'totalorder',  'totalearning'));
+    // }
+    // $pending = Order::where('status', 'pending')->count();
+    // $processing = Order::whereIn('status', ['shipped', 'out for delivery'])->count();
+    // $delivered = Order::where('status', operator: 'delivered')->count();
+    // $cancelled = Order::where('status', 'cancelled')->count();
+
+    public function getDashboardData()
     {
-        $totaluser = User::count();
-
-        $totalcategory = Category::where('status', '1')->count();
-
-        $totalsubcategory = Subcategory::where('status', '1')->count();
-
-        $totalbrand = Brand::where('status', '1')->count();
-
-        $totalproduct = Product::where('status', '1')->count();
-
-        $totalearning = Order::where('status', 'delivered')->sum('grand_total');
-
-        $totalorder = Order::count();
-        // $pending = Order::where('status', 'pending')->count();
-        // $processing = Order::whereIn('status', ['shipped', 'out for delivery'])->count();
-        // $delivered = Order::where('status', operator: 'delivered')->count();
-        // $cancelled = Order::where('status', 'cancelled')->count();
-
+        $totalUser = User::count();
+        $totalCategory = Category::where('status', '1')->count();
+        $totalSubcategory = Subcategory::where('status', '1')->count();
+        $totalBrand = Brand::where('status', '1')->count();
+        $totalProduct = Product::where('status', '1')->count();
+        $totalEarning = Order::where('status', 'delivered')->sum('grand_total');
+        $totalOrder = Order::count();
+    
         $orders = Order::select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->get();
-
+        
         $statusCounts = $orders->pluck('total', 'status')->toArray();
-
-
-
-        return view('admin.deshboard', compact('totaluser', 'totalcategory', 'statusCounts', 'totalsubcategory', 'totalbrand', 'totalproduct', 'totalorder',  'totalearning'));
+    
+        return response()->json([
+            'totalUser' => $totalUser,
+            'totalCategory' => $totalCategory,
+            'totalSubcategory' => $totalSubcategory,
+            'totalBrand' => $totalBrand,
+            'totalProduct' => $totalProduct,
+            'totalEarning' => $totalEarning,
+            'totalOrder' => $totalOrder,
+            'statusCounts' => $statusCounts,
+        ]);
     }
-
-
+    
 
 
 
@@ -255,7 +282,11 @@ class AdminloginController extends Controller
         $order_item = OrderItem::where('order_id', $id)->with('order')->first();
         $order_item_det = OrderItem::where('order_id', $id)->with('order')->get();
         // dd($order_item_count);
-        return view('admin.userdata.order_detail', compact('order_item', 'order_item_det'));
+        return response()->json([
+            'order_item' => $order_item,
+            'order_items' => $order_item_det
+        ]);
+        // return view('admin.userdata.order_detail', compact('order_item', 'order_item_det'));
     }
 
     public function updateUserOrder(Request $request, $id = null)
