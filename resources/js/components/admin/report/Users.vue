@@ -9,7 +9,7 @@
                                 <h1>Users</h1>
                             </div>
                             <div class="col-sm-6 text-left">
-                                <a href="{{ route('usersExcel') }}" class="btn btn-warning">Export Data</a>
+                                <button @click="getExcel" class="btn btn-warning">Export Data</button>
                             </div>
                         </div>
                     </div>
@@ -118,12 +118,32 @@ export default {
                 console.error('Error fetching users:', error);
             }
         },
-        searchBanner() {
+        searchUsers() {
+            this.currentPage = 1;
             this.fetchUsers();
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
             this.fetchUsers();
+        },
+        async getExcel() {
+            try {
+                const response = await axios.get(`/api/users-excel`, {
+                    responseType: 'blob',
+                });
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'users.xlsx'); 
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                
+                alert("Generate successfully");
+            } catch (error) {
+                console.error("Error updating order status", error);
+            }
         },
 
     },

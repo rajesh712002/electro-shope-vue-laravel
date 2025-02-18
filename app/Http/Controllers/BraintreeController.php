@@ -253,8 +253,8 @@ class BraintreeController extends Controller
 
                 //Mail For Refund
                 refundOrderAmount($orderId);
-
-                return redirect()->back()->with('status', 'Refund Successful!');
+                return response()->json(['status'=> 'Refund Successful!']);
+                // return redirect()->back()->with('status', 'Refund Successful!');
             } else {
                 return redirect()->back()->with('error', 'Refund failed: ');
             }

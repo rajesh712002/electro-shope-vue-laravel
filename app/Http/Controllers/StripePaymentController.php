@@ -290,9 +290,9 @@ class StripePaymentController extends Controller
 
    
 
-   public function refund(Request $request)
+   public function refund($id)
    {
-      $order = Order::find($request->order_id); 
+      $order = Order::find($id); 
       $paymentIntentId = $order->payment_id;
 
       // Set Stripe secret key
@@ -316,8 +316,8 @@ class StripePaymentController extends Controller
          //Mail For Refund
          refundOrderAmount($orderId);
 
-
-         return redirect()->back()->with('status', 'Refund Successful!');
+         return response()->json(['status' => 'Refund Successful!']);
+         // return redirect()->back()->with('status', 'Refund Successful!');
       } catch (\Stripe\Exception\ApiErrorException $e) {
          return redirect()->back()->with('error', 'Refund Failed: ' . $e->getMessage());
       }

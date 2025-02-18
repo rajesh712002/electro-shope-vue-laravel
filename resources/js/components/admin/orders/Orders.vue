@@ -16,7 +16,7 @@
                                 <h1>Orders</h1>
                             </div>
                             <div class="col-sm-6 text-left">
-                                <a href="{{ route('ordersExcel') }}" class="btn btn-warning">Export Data</a>
+                                <button @click="getExcel" class="btn btn-warning">Export Data</button>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                                         <tr v-for="order in orders" :key="order.id">
                                             <td>
                                                 <router-link :to="'/orders-view/' + order.id">{{ order.id
-                                                    }}</router-link>
+                                                }}</router-link>
                                             </td>
 
                                             <td>{{ order.user ? order.user.name : 'N/A' }}</td>
@@ -124,6 +124,10 @@
                                                     <button type="submit" class="btn btn-secondary">Refund</button>
                                                 </form>
                                             </td> -->
+                                            <td v-if="canRefund(order)">
+                                                <button @click="refundOrder(order)"
+                                                    class="btn btn-secondary">Refund</button>
+                                            </td>
                                         </tr>
                                     </tbody>
 
@@ -228,13 +232,53 @@ export default {
         //         return '{{ route('paypal.refund', '') }}' + '/' + order.id;
         //     }
         // },
+        async refundOrder(order) {
+            let refundUrl = '';
+
+            if (order.payment_status === 'paid with Stripe Card') {
+                refundUrl = `/api/stripe-refund/${order.id}`;
+            } else if (order.payment_status === 'paid with BraintreeCard') {
+                refundUrl = `/api/braintree-refund/${order.id}`;
+            } else if (order.payment_status === 'paid with PayPal') {
+                refundUrl = `/api/paypal-refund/${order.id}`;
+            }
+
+            try {
+                const response = await axios.post(refundUrl);
+                console.log(response)
+                this.fetchOrders();
+                alert("success");  // Display success message
+            } catch (error) {
+                alert('Refund failed');
+            }
+        },
+
         searchOrders() {
             this.fetchOrders();
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
             this.fetchOrders();
-        }
+        },
+        async getExcel() {
+            try {
+                const response = await axios.get(`/api/orders-excel`, {
+                    responseType: 'blob',
+                });
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'orders.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                alert("Generate successfully");
+            } catch (error) {
+                console.error("Error updating order status", error);
+            }
+        },
     },
     mounted() {
         this.fetchOrders();

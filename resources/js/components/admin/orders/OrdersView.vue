@@ -6,7 +6,7 @@
                     <div class="container-fluid my-2">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>Order: #{{ order.order_id }}</h1>
+                                <h1>Order: #{{ order.id }}</h1>
                             </div>
                             <div class="col-sm-6 text-right">
                                 <router-link to="/orders" class="btn btn-primary">Back</router-link>
@@ -35,31 +35,31 @@
                                             <div class="col-sm-4 invoice-col">
                                                 <h1 class="h5 mb-3">Shipping Address</h1>
                                                 <address>
-                                                    <strong>{{ order.order.first_name }} {{ order.order.last_name }}</strong><br>
-                                                    {{ order.order.address }}, {{ order.order.apartment }}, {{ order.order.pincode }}<br>
-                                                    {{ order.order.state }}, {{ order.order.city }}<br>
-                                                    <b>Phone:</b> {{ order.order.mobile }}<br>
-                                                    <b>Email:</b> {{ order.order.email }}
+                                                    <strong>{{ order.first_name }} {{ order.last_name }}</strong><br>
+                                                    {{ order.address }}, {{ order.apartment }}, {{ order.pincode }}<br>
+                                                    {{ order.state }}, {{ order.city }}<br>
+                                                    <b>Phone:</b> {{ order.mobile }}<br>
+                                                    <b>Email:</b> {{ order.email }}
                                                 </address>
                                             </div>
 
                                             <div class="col-sm-4 invoice-col">
-                                                <b>Order ID:</b> {{ order.order_id }}<br>
-                                                <b>Total:</b> <i class="fa fa-inr"></i> {{ order.order.grand_total }}<br>
+                                                <b>Order ID:</b> {{ order_id }}<br>
+                                                <b>Total:</b> <i class="fa fa-inr"></i> {{ order.grand_total }}<br>
                                                 <b>Status:</b>
-                                                <button :class="statusClass(order.order.status)" class="btn">
-                                                    <span v-if="order.order.status === 'pending'" class="fa fa-bars"></span>
-                                                    <span v-else-if="order.order.status === 'shipped'"
+                                                <button :class="statusClass(order.status)" class="btn">
+                                                    <span v-if="order.status === 'pending'" class="fa fa-bars"></span>
+                                                    <span v-else-if="order.status === 'shipped'"
                                                         class="fa fa-cog fa-spin"></span>
-                                                    <span v-else-if="order.order.status === 'out for delivery'"
+                                                    <span v-else-if="order.status === 'out for delivery'"
                                                         class="fa fa-cog fa-spin"></span>
-                                                    <span v-else-if="order.order.status === 'delivered'"
+                                                    <span v-else-if="order.status === 'delivered'"
                                                         class="fa fa-check-circle"></span>
-                                                    <span v-else-if="order.order.status === 'cancelled'"
+                                                    <span v-else-if="order.status === 'cancelled'"
                                                         class="fa fa-close"></span>
-                                                    <span v-else-if="order.order.status === 'refunded'"
+                                                    <span v-else-if="order.status === 'refunded'"
                                                         class="fa fa-coins"></span>
-                                                    {{ order.order.status }}
+                                                    {{ order.status }}
                                                 </button>
                                             </div>
                                         </div>
@@ -84,15 +84,15 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3" class="text-right">Subtotal:</th>
-                                                    <td><i class="fa fa-inr"></i> {{ order.order.subtotal }}</td>
+                                                    <td><i class="fa fa-inr"></i> {{ order.subtotal }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3" class="text-right">Discount:</th>
-                                                    <td><i class="fa fa-inr"></i> {{ order.order.discount ?? '0.00' }}</td>
+                                                    <td><i class="fa fa-inr"></i> {{ order.discount ?? '0.00' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3" class="text-right">Coupon Code:</th>
-                                                    <td>{{ order.order.coupon_code ?? 'null' }}</td>
+                                                    <td>{{ order.coupon_code ?? 'null' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3" class="text-right">Shipping:</th>
@@ -100,7 +100,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="3" class="text-right">Grand Total:</th>
-                                                    <td><i class="fa fa-inr"></i> {{ order.order.grand_total }}</td>
+                                                    <td><i class="fa fa-inr"></i> {{ order.grand_total }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -172,6 +172,7 @@ export default {
             selectedStatus: "",
             emailRecipient: "customer",
             loading: false,
+            
         };
     },
     mounted() {
@@ -187,7 +188,7 @@ export default {
             try {
                 const response = await axios.get(`/api/order-detail/${orderId}`);
                 console.log(response)
-                this.order = response.data.order_item;
+                this.order = response.data.order_item.order;
                 this.orderItems = response.data.order_items;
                 this.selectedStatus = this.order.status;
             } catch (error) {
@@ -196,24 +197,25 @@ export default {
                 this.loading = false;
             }
         },
-        // async updateStatus() {
-        //     try {
-        //         await axios.put(`/api/admin/order/${this.order.order_id}/status`, {
-        //             status: this.selectedStatus,
-        //         });
-        //         alert("Order status updated successfully");
-        //     } catch (error) {
-        //         console.error("Error updating order status", error);
-        //     }
-        // },
-        // async sendInvoiceEmail() {
-        //     try {
-        //         await axios.post(`/api/admin/order/${this.order.order_id}/send-invoice`);
-        //         alert("Invoice email sent successfully");
-        //     } catch (error) {
-        //         console.error("Error sending invoice email", error);
-        //     }
-        // },
+        async updateStatus() {
+            try {
+                await axios.put(`/api/update-order-detail/${this.order.id}`, {
+                    status: this.selectedStatus,
+                });
+                this.fetchOrderDetails()
+                alert("Order status updated successfully");
+            } catch (error) {
+                console.error("Error updating order status", error);
+            }
+        },
+        async sendInvoiceEmail() {
+            try {
+                await axios.post(`/api/send-Invoice-Email/${this.order.id}`);
+                alert("Invoice email sent successfully");
+            } catch (error) {
+                console.error("Error sending invoice email", error);
+            }
+        },
         statusClass(status) {
             return {
                 "btn-info": status === "pending",

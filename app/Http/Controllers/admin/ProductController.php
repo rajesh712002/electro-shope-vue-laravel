@@ -52,6 +52,10 @@ class ProductController extends Controller
 
         $product = $product->paginate(4);
 
+        return response()->json([
+            'product' => $product->items(),
+            'pagination' => $product->toArray()['links']
+        ]);
         // if ($request->ajax()) {
         //     $html = '';
         //     if ($product->isNotEmpty()) {
@@ -131,9 +135,21 @@ class ProductController extends Controller
         return view('admin.product.create_product', compact('category', 'brand', 'subcategory'));
     }
 
+    //for vue
+
+    public function showData(){
+        $category = Category::where('status', 1)->pluck('name', 'id');
+        $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
+        $brand = Brand::where('status', 1)->pluck('name', 'id');
+
+        return response()->json(['success' => 'successfully','brand' => $brand, 'subcategory' => $subcategory,'category' => $category]);
+
+    }
     public function storeProduct(Request $request)
     {
-
+        // $category = Category::where('status', 1)->pluck('name', 'id');
+        // $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
+        // $brand = Brand::where('status', 1)->pluck('name', 'id');
 
         // // dd($request->image_array);
         // exit();
@@ -256,7 +272,8 @@ class ProductController extends Controller
         $brand = Brand::where('status', 1)->pluck('name', 'id');
         $product = Product::findOrFail($id);
         // dd($productImage);
-        return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory', 'productImage'));
+        return response()->json(['product'=>$product,'productImage'=>$productImage,'category'=>$category,'subcategory'=>$subcategory,'brand'=>$brand]);
+        // return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory', 'productImage'));
     }
 
     public function updateImages(Request $request)
@@ -351,8 +368,8 @@ class ProductController extends Controller
         ProductImage::where('product_id', $product->id)->delete();
 
         $product->delete();
-        //return response()->json(['message' => 'Item Deleted successfully']);
-        return redirect()->route('admin.product')->with('status', 'Product Deleted Successfully');
+        return response()->json(['message' => 'Item Deleted successfully']);
+        // return redirect()->route('admin.product')->with('status', 'Product Deleted Successfully');
     }
 
     public function destroyProductImages(Request $request)

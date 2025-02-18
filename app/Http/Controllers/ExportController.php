@@ -17,6 +17,7 @@ class ExportController extends Controller
         $column = ['id', 'name', 'phone', 'email'];
         $conditions = ['role' => '1'];
         return $this->exportData($model, $column, $conditions, 'users');
+        
     }
 
     public function ordersExcel()

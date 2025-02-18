@@ -173,19 +173,19 @@ export default {
         searchCoupons() {
             this.fetchCoupons();
         },
-        // deleteCoupon(id) {
-        //     if (confirm("Do you really want to delete this record?")) {
-        //         axios
-        //             .delete(`/admin/coupons/${id}`)
-        //             .then(() => {
-        //                 this.fetchCoupons(); // Reload the list after deletion
-        //             })
-        //             .catch((error) => {
-        //                 this.message = 'Error deleting coupon';
-        //                 console.error(error);
-        //             });
-        //     }
-        // },
+        deleteCoupon(id) {
+            if (confirm("Do you really want to delete this record?")) {
+                axios
+                    .delete(`/api/delete-coupon/${id}`)
+                    .then(() => {
+                        this.fetchCoupons(); 
+                    })
+                    .catch((error) => {
+                        this.message = 'Error deleting coupon';
+                        console.error(error);
+                    });
+            }
+        },
 
         searchCoupons() {
             this.fetchCoupons();

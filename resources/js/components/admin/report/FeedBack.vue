@@ -9,7 +9,7 @@
                                 <h1>Feedbacks</h1>
                             </div>
                             <div class="col-sm-6 text-left">
-                                <a href="{{ route('ratingsExcel') }}" class="btn btn-warning">Export Data</a>
+                                <button @click="getExcel" class="btn btn-warning">Export Data</button>
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,26 @@ export default {
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
             this.fetchRatings();
-        }
+        },
+        async getExcel() {
+            try {
+                const response = await axios.get(`/api/ratings-excel`, {
+                    responseType: 'blob',
+                });
+                console.log(response)
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'ratings.xlsx'); 
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                
+                alert("Generate successfully");
+            } catch (error) {
+                console.error("Error updating order status", error);
+            }
+        },
     },
 };
 </script>

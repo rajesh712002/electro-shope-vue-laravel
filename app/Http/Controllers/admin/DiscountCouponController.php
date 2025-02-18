@@ -136,7 +136,8 @@ class DiscountCouponController extends Controller
     {
         $couponCode = DiscountCoupon::findOrFail($id);
         $couponCode->delete();
-        return redirect()->route('admin.coupons')->with('success', 'Coupon Deleted Successfully');
+        // return redirect()->route('admin.coupons')->with('success', 'Coupon Deleted Successfully');
+        return response()->json(['success'=>'Coupon Deleted Successfully']);
     }
 
 

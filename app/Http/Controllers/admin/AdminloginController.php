@@ -292,7 +292,8 @@ class AdminloginController extends Controller
     public function updateUserOrder(Request $request, $id = null)
     {
         $order_update = Order::where('id', $id)->update(['status' => $request->status]);
-        return redirect()->back();
+        // return redirect()->back();
+        return response()->json(['success'=>'Update Successfully']);
     }
 
 
@@ -409,6 +410,7 @@ class AdminloginController extends Controller
         // echo "hello";
         sendInvoiceEmail($orderId);
 
-        return redirect()->back()->with('status', 'Order Detail Mail Successfully');
+        // return redirect()->back()->with('status', 'Order Detail Mail Successfully');
+        return response()->json(['status' => 'Order Detail Mail Successfully']);
     }
 }

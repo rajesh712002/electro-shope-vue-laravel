@@ -14,6 +14,7 @@ import SubCategoryUpdate from '../components/admin/category/SubCategoryUpdate.vu
 
 import Products from '../components/admin/product/Products.vue';
 import ProductsCreate from '../components/admin/product/ProductsCreate.vue';
+import ProductsUpdate from '../components/admin/product/ProductsUpdate.vue';
 
 import Brands from '../components/admin/product/Brands.vue';
 import BrandsCreate from '../components/admin/product/BrandsCreate.vue';
@@ -48,6 +49,8 @@ const routes = [
 
     { path: '/products', component: Products },
     { path: '/products-create', component: ProductsCreate },
+    { path: '/products-update/:id', component: ProductsUpdate },
+
 
     { path: '/brands', component: Brands },
     { path: '/brands-create', component: BrandsCreate },
