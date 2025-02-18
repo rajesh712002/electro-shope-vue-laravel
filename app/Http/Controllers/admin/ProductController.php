@@ -151,7 +151,7 @@ class ProductController extends Controller
         // $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
         // $brand = Brand::where('status', 1)->pluck('name', 'id');
 
-        // // dd($request->image_array);
+        // dd($request->all());
         // exit();
         $rules = [
             'name' => 'required|alpha_num|max:50',
@@ -231,7 +231,8 @@ class ProductController extends Controller
 
     public function storeImage(Request $request)
     {
-        $image = $request->image;
+        $image = $request->file('image');
+        // dd($image);
 
 
         if (!empty($image)) {

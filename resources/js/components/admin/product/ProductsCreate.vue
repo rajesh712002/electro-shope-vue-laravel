@@ -40,13 +40,14 @@
                                                 <label for="description">Description</label>
                                                 <textarea v-model="product.description" cols="30" rows="5"
                                                     class="form-control" placeholder="Description"></textarea>
+                                                <!-- <TinyMCE v-model="product.description" /> -->
                                                 <p v-if="errors.description" class="text-danger">{{ errors.description
-                                                }}</p>
+                                                    }}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- ✅ Dropzone File Upload -->
+
                                     <div class="card mb-3">
                                         <div class="card-body">
                                             <h2 class="h4 mb-3">Product Images</h2>
@@ -115,7 +116,6 @@
                                         </div>
                                     </div>
 
-                                  
                                     <div class="mb-3">
                                         <label for="category">Category</label>
                                         <select v-model="product.category" class="form-control">
@@ -141,7 +141,7 @@
                                                 <select v-model="product.brand" class="form-control">
                                                     <option value="">---select---</option>
                                                     <option v-for="(name, id) in brands" :key="id" :value="id">{{ name
-                                                        }}</option>
+                                                    }}</option>
                                                 </select>
                                                 <p v-if="errors.brand" class="text-danger">{{ errors.brand }}</p>
                                             </div>
@@ -165,16 +165,16 @@
     </AdminLayout>
 </template>
 
-
 <script>
 import axios from "axios";
+
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
 import AdminLayout from "../../admin/Layouts/AdminLayout.vue";
-
+// import TinyMCE from "../../admin/Layouts/TinyMCE.vue";
 export default {
     components: {
-        AdminLayout
+        AdminLayout,
     },
     data() {
         return {
@@ -183,51 +183,90 @@ export default {
                 slug: '',
                 description: '',
                 price: '',
-                qty:'',
-                sku:'',
+                qty: '',
+                sku: '',
                 compare_price: '',
-                status: 1,
+                status: '',
                 category: '',
-                sub_category: '', 
-                brand:'',
-                imageFiles: []
+                sub_category: '',
+                brand: '',
+                imageFiles: [],
+                imageArray: []
             },
             errors: {},
             categories: {},
-            sub_categories: {}, 
-            brands: {}, 
+            sub_categories: {},
+            brands: {},
         };
     },
     methods: {
+        // initDropzone() {
+        //     this.dropzone = new Dropzone(this.$refs.dropzoneForm, {
+        //         url: "api/images", // Prevent auto-uploading, handle manually
+        //         autoProcessQueue: false,
+        //         paramName: "image",
+        //         maxFiles: 5,
+        //         autoProcessQueue: true,
+        //         addRemoveLinks: true,
+        //         acceptedFiles: "image/*",
+        //         init: function () {
+        //             // Use a regular function to ensure `this` points to the Dropzone instance
+        //             this.on("addedfile", function (file) {
+        //                 if (this.product && Array.isArray(this.product.imageFiles)) {
+        //                     this.product.imageFiles.push(file);
+        //                 }
+        //             });
+        //         },
+        //     });
+        // },
+
+
         initDropzone() {
             this.dropzone = new Dropzone(this.$refs.dropzoneForm, {
-                url: "api/images", // Prevent auto-uploading, handle manually
-                autoProcessQueue: false,
+                url: "/api/images",
+                paramName: "image",
                 maxFiles: 5,
-                addRemoveLinks: true,
                 acceptedFiles: "image/*",
-                init: function () {
-                    this.on("addedfile", (file) => {
-                        this.product.imageFiles.push(file);
-                    });
-                    this.on("removedfile", (file) => {
-                        this.product.imageFiles = this.product.imageFiles.filter(f => f !== file);
-                    });
-                },
+                autoProcessQueue: true,
+                addRemoveLinks: true,
+            });
+
+
+            this.funDropzone();
+        },
+
+        funDropzone() {
+            this.dropzone.on("success", (file, response) => {
+                console.log("Upload Response:", response);
+                console.log(this.product);
+
+                if (response.image_id) {
+                    this.product.imageArray = this.product.imageArray || [];
+                    this.product.imageArray.push(response.image_id);
+                }
+
+                // Append Image Preview
+                let html = `<div class="col-md-3" style="width: 18rem;">
+            <input type="hidden" name="image_array[]" value="${response.image_id}">
+            <img src="${response.ImagePath}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <a href="#" class="btn btn-danger" data-file="${file.name}">Delete</a>
+            </div>
+        </div>`;
+                document.getElementById("productImages").insertAdjacentHTML("beforeend", html);
             });
         },
 
+
         async fetchSubCategories() {
             if (!this.product.category) {
-                this.sub_categories = {}; // Reset subcategories if no category selected
-                this.product.sub_category = ''; // Reset selected subcategory
+                this.sub_categories = {};
+                this.product.sub_category = '';
                 return;
             }
 
             try {
                 const response = await axios.get(`/api/get-subcategories/${this.product.category}`);
-                console.log(response)
-
                 this.sub_categories = response.data || {};
             } catch (error) {
                 console.error("Error fetching subcategories:", error);
@@ -249,17 +288,21 @@ export default {
             formData.append("sub_category", this.product.sub_category);
             formData.append("brand", this.product.brand);
 
-
             // Append Images
-            this.product.imageFiles.forEach((file, index) => {
+            this.product.imageArray.forEach((id, index) => {
+                formData.append(`image_array[${index}]`, id);
+            });
+
+            const re = this.product.imageFiles.forEach((file, index) => {
                 formData.append(`images[${index}]`, file);
             });
+            console.log('hii', re)
 
             try {
                 const response = await axios.post(`/api/create-products`, formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
-                console.log(response)
+                console.log(response);
                 alert(response.data.success);
                 this.resetForm();
             } catch (error) {
@@ -287,10 +330,9 @@ export default {
 
     async mounted() {
         this.initDropzone();
-
+        this.product = { imageFiles: [] };
         try {
             const response = await axios.get('/api/show-data');
-            console.log(response)
             this.categories = response.data.category || {};
             this.brands = response.data.brand || {};
         } catch (error) {
@@ -300,7 +342,7 @@ export default {
 
     watch: {
         "product.category": function () {
-            this.fetchSubCategories(); // Call fetchSubCategories when category changes
+            this.fetchSubCategories();
         }
     }
 };
