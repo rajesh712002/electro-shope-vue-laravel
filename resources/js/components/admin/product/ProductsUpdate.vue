@@ -24,7 +24,7 @@
                                         <div class="card-body">
                                             <div class="mb-3">
                                                 <label for="name">Name</label>
-                                                <input type="text" v-model="product.name" class="form-control"
+                                                <input type="text" v-model="product.prod_name" class="form-control"
                                                     placeholder="Product Name">
                                                 <p v-if="errors.name" class="text-danger">{{ errors.name }}</p>
                                             </div>
@@ -36,23 +36,37 @@
                                                 <p v-if="errors.slug" class="text-danger">{{ errors.slug }}</p>
                                             </div>
 
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <label for="description">Description</label>
                                                 <textarea v-model="product.description" cols="30" rows="5"
                                                     class="form-control" placeholder="Description"></textarea>
+                                                <p v-if="errors.description" class="text-danger">{{ errors.description
+                                                }}</p>
+                                            </div> -->
+
+                                            <div class="mb-3">
+                                                <label for="description">Description</label>
+                                                <Editor :modelValue="product.description"
+                                                    @update:modelValue="product.description = $event"
+                                                    api-key="adkflfpe6mrdbxryjc4huob43fi29gg6o1a9gjfbf22la31k" :init="{
+                                                        height: 300,
+                                                        menubar: false,
+                                                        plugins: 'lists link image preview code table media paste textpattern',
+                                                        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | table | code preview',
+                                                    }" />
                                                 <p v-if="errors.description" class="text-danger">{{ errors.description
                                                 }}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- <div class="card mb-3">
+                                    <div class="card mb-3">
                                         <div class="card-body">
                                             <h2 class="h4 mb-3">Product Images</h2>
                                             <form ref="dropzoneForm" class="dropzone"></form>
                                             <p v-if="errors.image" class="text-danger">{{ errors.image }}</p>
                                         </div>
-                                    </div> -->
+                                    </div>
 
                                     <div class="card mb-3">
                                         <div class="card-body">
@@ -139,8 +153,11 @@
                                             <div class="mb-3">
                                                 <select v-model="product.brand" class="form-control">
                                                     <option value="">---select---</option>
-                                                    <option v-for="(name, id) in brands" :key="id" :value="id">{{ name
-                                                        }}</option>
+                                                    <!-- <option v-for="(name, id) in brands" :key="id" :value="id">{{ name
+                                                        }}</option> -->
+                                                    <option v-for="(name, id) in brands" :key="id" :value="id">
+                                                        {{ name }}
+                                                    </option>
                                                 </select>
                                                 <p v-if="errors.brand" class="text-danger">{{ errors.brand }}</p>
                                             </div>
@@ -167,10 +184,12 @@ import axios from "axios";
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
 import AdminLayout from "../../admin/Layouts/AdminLayout.vue";
+import Editor from '@tinymce/tinymce-vue';
+
 
 export default {
     components: {
-        AdminLayout
+        AdminLayout, Editor
     },
     data() {
         return {
@@ -213,7 +232,7 @@ export default {
         funDropzone() {
             this.dropzone.on("success", (file, response) => {
                 if (response.image_id) {
-                    this.product.imageArray = this.product.imageArray || []; 
+                    this.product.imageArray = this.product.imageArray || [];
                     this.product.imageArray.push(response.image_id);
                 }
 
@@ -230,8 +249,8 @@ export default {
 
         async fetchSubCategories() {
             if (!this.product.category) {
-                this.sub_categories = {}; 
-                this.product.sub_category = ''; 
+                this.sub_categories = {};
+                this.product.sub_category = '';
                 return;
             }
 
@@ -245,11 +264,26 @@ export default {
 
         async fetchProductData() {
             try {
-                const response = await axios.get(`/api/products/${this.$route.params.id}`);
-                this.product = response.data;
-                this.categories = response.data.categories || {};
-                this.brands = response.data.brands || {};
-                this.sub_categories = response.data.sub_categories || {};
+                const product_id = this.$route.params.id;
+                const response = await axios.get(`/api/product-show/${product_id}`);
+                console.log('hii', response)
+                // this.product.brand = response.data.product.brand_id;
+
+                this.product = response.data.product;
+                this.categories = response.data.category || {};
+                this.brands = response.data.brand || {};
+                this.sub_categories = response.data.sub_category || {};
+
+                this.product.category = response.data.product.category_id;
+                // Fetch subcategories dynamically
+                await this.fetchSubCategories();
+
+                // Then set the subcategory
+                this.product.sub_category = response.data.product.sub_category_id;
+
+                // Set brand
+                this.product.brand = response.data.product.brand_id;
+
             } catch (error) {
                 console.error("Error fetching product data:", error);
             }
@@ -259,7 +293,7 @@ export default {
             let formData = new FormData();
 
             formData.append("id", this.product.id);
-            formData.append("name", this.product.name);
+            formData.append("name", this.product.prod_name);
             formData.append("slug", this.product.slug);
             formData.append("description", this.product.description);
             formData.append("price", this.product.price);
@@ -271,17 +305,18 @@ export default {
             formData.append("sub_category", this.product.sub_category);
             formData.append("brand", this.product.brand);
 
-            this.product.imageArray.forEach((id, index) => {
-                formData.append(`image_array[${index}]`, id);
-            });
+            // this.product.imageArray.forEach((id, index) => {
+            //     formData.append(`image_array[${index}]`, id);
+            // });
 
-            this.product.imageFiles.forEach((file, index) => {
-                formData.append(`images[${index}]`, file);
-            });
+            // this.product.imageFiles.forEach((file, index) => {
+            //     formData.append(`images[${index}]`, file);
+            // });
 
             try {
-                const response = await axios.put(`/api/update-products/${this.product.id}`, formData, {
-                    headers: { "Content-Type": "multipart/form-data" }
+                formData.append("_method", "PUT");
+                const response = await axios.post(`/api/update-product/${this.product.id}`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
                 });
                 alert(response.data.success);
                 this.resetForm();
@@ -295,7 +330,7 @@ export default {
         resetForm() {
             this.product = {
                 id: null,
-                name: '',
+                prod_name: '',
                 slug: '',
                 description: '',
                 price: '',

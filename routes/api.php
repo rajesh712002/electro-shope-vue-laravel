@@ -45,10 +45,15 @@ Route::put('/update-brand/{id}', [ProductController::class, 'updateBrand']);
 Route::get('/get-subcategories/{id}', [CategoryController::class, 'getSubcategories']);
 Route::get('/product-show', [ProductController::class, 'product']);
 Route::get('/show-data', [ProductController::class, 'showData']);
+
 Route::post('/create-products', [ProductController::class, 'storeProduct']);
 Route::delete('/delete-products/{product}', [ProductController::class, 'destroyProduct']);
-Route::post('/images',  [ProductController::class, 'storeImage']);
+Route::get('/product-show/{product}', [ProductController::class, 'editProduct']);
+Route::put('/update-product/{product}', [ProductController::class, 'updateProduct']);
 
+Route::post('/images',  [ProductController::class, 'storeImage']);
+Route::post('/update/images',[ProductController::class,'updateImages']);
+Route::delete('/delete/images',[ProductController::class,'destroyProductImages']);
 
 // //Insert Brand
 // Route::get('/createbrand', [ProductController::class, 'createBrand'])->name('admin.create_brand');

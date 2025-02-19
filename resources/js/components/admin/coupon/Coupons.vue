@@ -161,7 +161,7 @@ export default {
         async fetchCoupons() {
             try {
                 const response = await axios.get(`/api/coupon-show`, {
-                    params: { search: this.searchKeyword, page: this.currentPage }
+                    params: { keyword: this.searchKeyword, page: this.currentPage }
                 });
                 console.log("hi", response);
                 this.coupons = response.data.discount;

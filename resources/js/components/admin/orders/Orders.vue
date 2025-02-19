@@ -173,7 +173,7 @@ export default {
         async fetchOrders() {
             try {
                 const response = await axios.get(`/api/orders-report`, {
-                    params: { search: this.searchKeyword, page: this.currentPage }
+                    params: { keyword: this.searchKeyword, page: this.currentPage }
                 });
                 console.log("hi", response);
                 this.orders = response.data.order;

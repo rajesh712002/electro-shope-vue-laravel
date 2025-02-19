@@ -127,7 +127,7 @@ export default {
     methods: {
         async fetchBrands() {
             try {
-                let result = await axios.get(`api/brand-show?page=${this.currentPage}&search=${this.searchKeyword}`);
+                let result = await axios.get(`api/brand-show?page=${this.currentPage}&keyword=${this.searchKeyword}`);
                 console.log("Full response:", result);
 
                 // Store the categories and pagination

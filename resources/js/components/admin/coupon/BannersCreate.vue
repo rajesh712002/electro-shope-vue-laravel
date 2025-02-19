@@ -77,7 +77,7 @@
 <script>
 import AdminLayout from '../../admin/Layouts/AdminLayout.vue';
 import axios from 'axios';
-import tinymce from 'tinymce';
+// import tinymce from 'tinymce';
 export default {
     components: {
         AdminLayout

@@ -109,7 +109,7 @@ export default {
         async fetchUsers() {
             try {
                 const response = await axios.get(`/api/users-report`, {
-                    params: { search: this.searchKeyword, page: this.currentPage }
+                    params: { keyword: this.searchKeyword, page: this.currentPage }
                 });
                 console.log(response)
                 this.users = response.data.users;

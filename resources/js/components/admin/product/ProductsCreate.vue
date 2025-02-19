@@ -36,11 +36,24 @@
                                                 <p v-if="errors.slug" class="text-danger">{{ errors.slug }}</p>
                                             </div>
 
+                                            <!-- <div class="mb-3">
+                                                <label for="description">Description</label>
+                                                <!- <textarea v-model="product.description" cols="30" rows="5"
+                                                    class="form-control" placeholder="Description"></textarea> ->
+                                                <TinyMCE v-model="product.description" />
+                                                <p v-if="errors.description" class="text-danger">{{ errors.description
+                                                    }}</p>
+                                            </div> -->
                                             <div class="mb-3">
                                                 <label for="description">Description</label>
-                                                <textarea v-model="product.description" cols="30" rows="5"
-                                                    class="form-control" placeholder="Description"></textarea>
-                                                <!-- <TinyMCE v-model="product.description" /> -->
+                                                <Editor :modelValue="product.description"
+                                                    @update:modelValue="product.description = $event"
+                                                    api-key="adkflfpe6mrdbxryjc4huob43fi29gg6o1a9gjfbf22la31k" :init="{
+                                                        height: 300,
+                                                        menubar: false,
+                                                        plugins: 'lists link image preview code table media paste textpattern',
+                                                        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | table | code preview',
+                                                    }" />
                                                 <p v-if="errors.description" class="text-danger">{{ errors.description
                                                     }}</p>
                                             </div>
@@ -141,7 +154,7 @@
                                                 <select v-model="product.brand" class="form-control">
                                                     <option value="">---select---</option>
                                                     <option v-for="(name, id) in brands" :key="id" :value="id">{{ name
-                                                    }}</option>
+                                                        }}</option>
                                                 </select>
                                                 <p v-if="errors.brand" class="text-danger">{{ errors.brand }}</p>
                                             </div>
@@ -167,14 +180,14 @@
 
 <script>
 import axios from "axios";
-
+import Editor from '@tinymce/tinymce-vue';
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
 import AdminLayout from "../../admin/Layouts/AdminLayout.vue";
 // import TinyMCE from "../../admin/Layouts/TinyMCE.vue";
 export default {
     components: {
-        AdminLayout,
+        AdminLayout, Editor
     },
     data() {
         return {

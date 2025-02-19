@@ -121,7 +121,7 @@ export default {
         async fetchRatings() {
             try {
                 const response = await axios.get(`/api/feddbacks-report`, {
-                    params: { search: this.searchKeyword, page: this.currentPage }
+                    params: { keyword: this.searchKeyword, page: this.currentPage }
                 });
                 console.log("hi", response);
                 this.ratings = response.data.rating;

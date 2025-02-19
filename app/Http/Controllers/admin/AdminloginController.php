@@ -106,6 +106,12 @@ class AdminloginController extends Controller
 
         $users = $users->paginate(3);
 
+        
+        return response()->json([
+            'users' => $users->items(),
+            'pagination' => $users->toArray()['links']
+        ]);
+        
         // if ($request->ajax()) {
         //     $html = '';
         //     if ($users->isNotEmpty()) {
@@ -133,14 +139,8 @@ class AdminloginController extends Controller
 
         // return response()->json(['success' => 'successfully','users'=>$users]);
 
-
-        return response()->json([
-            'users' => $users->items(),
-            'pagination' => $users->toArray()['links']
-        ]);
     }
-
-    public function viewOrders(Request $request)
+        public function viewOrders(Request $request)
     {
         $order = Order::with('user')->latest();
         if (!empty($request->get('keyword'))) {
