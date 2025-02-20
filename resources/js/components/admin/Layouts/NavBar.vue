@@ -13,7 +13,11 @@
                 <a @click.prevent="toggleDropdown" class="nav-link p-0 pr-3">
                     <img :src="getAdminAvatar()" class="img-circle elevation-2" width="40" height="40" alt="Admin Avatar" />
                 </a>
-                <div v-show="isDropdownOpen" class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-3">
+                <div ref="dropdownContent" 
+                     class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-3" 
+                     :class="{ 'show': isDropdownOpen }" 
+                     v-show="isDropdownOpen"
+                     @click.stop>
                     <h4 class="h4 mb-0"><strong>{{ adminUser.name }}</strong></h4>
                     <div class="mb-3">{{ adminUser.email }}</div>
                     <div class="dropdown-divider"></div>
@@ -21,7 +25,7 @@
                         <i class="fas fa-user-cog mr-2"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
-                    <router-link to="#" class="dropdown-item">
+                    <router-link to="/admin/change-password" class="dropdown-item">
                         <i class="fas fa-lock mr-2"></i> Change Password
                     </router-link>
                     <div class="dropdown-divider"></div>
@@ -40,25 +44,11 @@ import axios from "axios";
 
 export default {
     setup() {
-        const adminUser = ref({
-            name: "Admin",
-            email: "admin@example.com",
-        });
-
+        const adminUser = ref({ name: "Admin", email: "admin@example.com" });
         const isDropdownOpen = ref(false);
         const dropdownMenu = ref(null);
+        const dropdownContent = ref(null);
 
-        // Fetch Admin Data from API
-        const fetchAdminUser = async () => {
-            try {
-                const response = await axios.get("/api/admin/user"); // Update API URL accordingly
-                adminUser.value = response.data;
-            } catch (error) {
-                console.error("Error fetching admin user:", error);
-            }
-        };
-
-        // Toggle Fullscreen Mode
         const toggleFullscreen = () => {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -67,37 +57,35 @@ export default {
             }
         };
 
-        // Toggle Dropdown Menu
         const toggleDropdown = (event) => {
+            console.log("Dropdown toggle clicked");
             isDropdownOpen.value = !isDropdownOpen.value;
+            console.log("Dropdown open state:", isDropdownOpen.value);
             event.stopPropagation();
         };
 
-        // Close Dropdown When Clicking Outside
         const closeDropdown = (event) => {
-            if (dropdownMenu.value && !dropdownMenu.value.contains(event.target)) {
+            if (dropdownContent.value && !dropdownContent.value.contains(event.target) && 
+                dropdownMenu.value && !dropdownMenu.value.contains(event.target)) {
+                console.log("Closing dropdown");
                 isDropdownOpen.value = false;
             }
         };
 
-        // Logout Admin
         const logout = async () => {
             try {
-                await axios.post("/api/admin/logout"); // Update API route accordingly
+                await axios.get("/api/admin/logout");
                 window.location.href = "/admin/login";
             } catch (error) {
                 console.error("Logout failed:", error);
             }
         };
 
-        // Get Admin Avatar
         const getAdminAvatar = () => {
-            return "/admin_assets/img/avatar5.png"; // Update dynamically if needed
+            return "/admin_assets/img/avatar5.png";
         };
 
-        // Fetch Admin User on Component Mount
         onMounted(() => {
-            fetchAdminUser();
             document.addEventListener("click", closeDropdown);
         });
 
@@ -113,7 +101,32 @@ export default {
             logout,
             getAdminAvatar,
             dropdownMenu,
+            dropdownContent,
         };
     },
 };
 </script>
+
+<style scoped>
+.img-circle {
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+</style>

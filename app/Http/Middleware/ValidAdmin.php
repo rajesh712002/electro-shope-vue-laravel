@@ -16,14 +16,16 @@ class ValidAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        if (Auth::guard('admin')->check()) {
-            if (Auth::guard('admin')->user()->role == 2) {
-
-                return $next($request);
-            }
-        } else {
-            return redirect()->route('admin.login');
+        // Check if admin is authenticated
+        if (!Auth::guard('admin')->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
+
+        // Check if the authenticated user is an admin with role 2
+        if (Auth::guard('admin')->user()->role !== 2) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        return $next($request);
     }
 }

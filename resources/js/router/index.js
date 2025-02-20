@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../components/Home.vue';
 import Deshboard from '../components/admin/Deshboard.vue';
 import AdminLayout from '../components/admin/Layouts/AdminLayout.vue';
-import Login from '../components/admin/Login.vue';
+import Login from '../components/admin/auth/Login.vue';
+import ChangePassword from '../components/admin/auth/ChangePassword.vue';
 
 import Categories from '../components/admin/category/Categories.vue';
 import CategoryCreate from '../components/admin/category/CategoryCreate.vue';
@@ -35,9 +36,10 @@ import FeedBack from '../components/admin/report/FeedBack.vue';
  
 
 const routes = [
-    { path: '/', component: Deshboard },
+    { path: '/', component: Login },
     { path: '/deshboard', component: Deshboard },
-    { path: '/admins/login', component: Login },
+    { path: '/admin/login', component: Login },
+    { path: '/admin/change-password', component: ChangePassword },
 
     { path: '/categories', component: Categories },
     { path: '/category-create', component: CategoryCreate },

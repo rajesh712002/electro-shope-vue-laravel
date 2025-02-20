@@ -90,23 +90,27 @@ class AuthenticationController extends Controller
         return view('admin.login');
     }
 
+    
     public function adminLogincheck(Request $request)
     {
-        $validate = $request->validate([
+        $request->validate([
             'email' => 'required|email|max:100',
             'password' => 'required|min:8|max:50'
         ]);
-
-        if (Auth::guard('admin')->attempt($validate)) {
-            if (Auth::guard('admin')->user()->role == 2) {
-                return redirect()->route('admin.deshboard')->with('success', 'Welcome admin');
-            } else { //else if (Auth::guard('admin')->user()->role != 2) 
-                return redirect()->route('admin.login')->with('success', 'Either Email or Password Incorrect');
+    
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            $admin = Auth::guard('admin')->user();
+    
+            if ($admin->role == 2) {
+                return response()->json(['success' => 'Welcome Admin!'], 200);
+            } else {
+                return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
             }
-        } else {
-            return redirect()->route('admin.login')->with('success', 'Either Email or Password Incorrect');
         }
+    
+        return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
     }
+    
 
 
     public function adminLogout(Request $request)
@@ -115,7 +119,7 @@ class AuthenticationController extends Controller
         Auth::guard('admin')->logout();
         // $request->session()->invalidate();
         // $request->session()->regenerateToken();
-
-        return view('admin.login');
+        return response()->json(['success'=>'SuccessFully LogOut']);
+        // return view('admin.login');
     }
 }

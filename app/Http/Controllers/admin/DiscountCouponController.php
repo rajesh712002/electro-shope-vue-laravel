@@ -171,9 +171,16 @@ class DiscountCouponController extends Controller
     //================================================================================================================================================================
     //Banner
 
-    public function viewBanner()
+    public function viewBanner(Request $request)
     {
-        $banner = Banner::orderBy('id', 'desc')->paginate(2);
+        $banner = Banner::latest();
+
+        if (!empty($request->get('keyword'))) {
+            $keyword = $request->get('keyword');
+            $banner = $banner->where('title', 'like', '%' . $keyword . '%')
+                ->orWhere('id', 'like', '%' . $keyword . '%');
+        }
+        $banner = $banner->paginate(2);
         return response()->json([
             'banner' => $banner->items(),
             'pagination' => $banner->toArray()['links']

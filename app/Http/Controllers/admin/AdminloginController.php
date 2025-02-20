@@ -319,35 +319,63 @@ class AdminloginController extends Controller
         return view('admin.change-password');
     }
 
-    public function showchangePassword(Request $request)
+    // public function showchangePassword(Request $request)
+    // {
+    //     $rules = [
+    //         'old_password' => 'required|min:3|max:30',
+    //         'new_password' => 'required|min:3|max:30',
+    //         'confirm_password' => 'required|same:new_password'
+    //     ];
+
+    //     $validator = Validator::make($request->all(), $rules);
+
+    //     if ($validator->fails()) {
+    //         return response()->json(['errors' => $validator->errors()], 422);
+    //         // return redirect()->route('user.changePassword')->withInput()->withErrors($validator);
+    //     }
+
+    //     $user = User::select('id', 'password')->where('id', Auth::guard('admin')->user()->id)->first();
+    //     if (Auth::guard('admin')->user()->role == 2)
+    //         // dd($user);
+    //         if (!Hash::check($request->old_password, $user->password)) {
+
+    //             // dd($request->old_password, $user->password);
+    //             return response()->json(['error'=> 'Your Password is Incorrected']);
+    //         }
+    //     User::where('id', $user->id)->update([
+    //         'password' => Hash::make($request->new_password)
+    //     ]);
+    //     return response()->json(['success'=>'Your Password is Changed']);
+    // }
+
+   
+    public function showChangePassword(Request $request)
     {
         $rules = [
             'old_password' => 'required|min:3|max:30',
             'new_password' => 'required|min:3|max:30',
             'confirm_password' => 'required|same:new_password'
         ];
-
+    
         $validator = Validator::make($request->all(), $rules);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
-            // return redirect()->route('user.changePassword')->withInput()->withErrors($validator);
         }
-
-        $user = User::select('id', 'password')->where('id', Auth::guard('admin')->user()->id)->first();
-        if (Auth::guard('admin')->user()->role == 2)
-            // dd($user);
-            if (!Hash::check($request->old_password, $user->password)) {
-
-                // dd($request->old_password, $user->password);
-                return response()->json(['error', 'Your Password is Incorrected']);
-            }
-        User::where('id', $user->id)->update([
+    
+        $user = User::select('id', 'password')->where('id', Auth::guard('admin')->id())->first();
+        dd($user);
+        if (!$user || !Hash::check($request->old_password, $user->password)) {
+            return response()->json(['error' => 'Your current password is incorrect'], 400);
+        }
+    
+        $user->update([
             'password' => Hash::make($request->new_password)
         ]);
-        return response()->json(['success', 'Your Password is Changed']);
+    
+        return response()->json(['success' => 'Your password has been changed successfully']);
     }
-
+    
     public function viewRating(Request $request)
     {
         $rating = ProductRating::with('product')->latest();

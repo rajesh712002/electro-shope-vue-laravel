@@ -21,7 +21,7 @@
                                 <div class="card-header">
                                     <div class="card-tools">
                                         <div class="input-group" style="width: 250px;">
-                                            <input v-model="keyword" type="text" class="form-control float-right"
+                                            <input v-model="searchKeyword" type="text" class="form-control float-right"
                                                 placeholder="Search">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default">
@@ -127,7 +127,10 @@ export default {
     methods: {
         async fetchBrands() {
             try {
-                let result = await axios.get(`api/brand-show?page=${this.currentPage}&keyword=${this.searchKeyword}`);
+                // let result = await axios.get(`api/brand-show?page=${this.currentPage}&keyword=${this.searchKeyword}`);
+                const result = await axios.get(`/api/brand-show`, {
+                    params: { keyword: this.searchKeyword, page: this.currentPage }
+                });
                 console.log("Full response:", result);
 
                 // Store the categories and pagination

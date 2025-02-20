@@ -131,7 +131,7 @@ export default {
 
     async fetchCategories() {
       try {
-        let url = `http://127.0.0.1:8001/api/category-show?page=${this.currentPage}&search=${this.searchKeyword}`;
+        let url = `http://127.0.0.1:8001/api/category-show?page=${this.currentPage}&keyword=${this.searchKeyword}`;
         let result = await axios.get(url);
         // Check the structure of the response
         console.log("Full response:", result);

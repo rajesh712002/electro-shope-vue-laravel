@@ -148,7 +148,10 @@ export default {
     methods: {
         async fetchSubCategories() {
             try {
-                const response = await axios.get(`http://127.0.0.1:8001/api/subcategory-show?page=${this.currentPage}&search=${this.searchKeyword}`);
+                // let url = 
+                const response = await axios.get(`http://127.0.0.1:8001/api/subcategory-show`,{
+                    params: { keyword: this.searchKeyword, page: this.currentPage }
+                });
                 console.log(response);
                 this.subcategories = response.data.subcategories;
                 this.pagination = response.data.pagination;
