@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\BraintreeController;
+use App\Http\Controllers\user\CartController;
+use App\Http\Controllers\user\ShopController;
+use App\Http\Controllers\user\UserController;
+use App\Http\Controllers\user\SettingController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\admin\CategoryController;
@@ -13,13 +17,47 @@ use App\Http\Controllers\admin\AdminloginController;
 use App\Http\Controllers\Auth\AuthenticationController;
 use App\Http\Controllers\admin\DiscountCouponController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return response()->json(['user' => $request->user()]);
+});
+Route::middleware('auth:sanctum')->get('/valid-user', [AuthenticationController::class, 'getLoginUser']);
+Route::get('/user-logout', [AuthenticationController::class, 'userLogout']);
+Route::post('/user-login', [AuthenticationController::class, 'userLoginCheck']);
+Route::post('/user-register', [UserController::class, 'storeRegister']);
+
+Route::post('/change-password', [SettingController::class, 'showchangePassword']);
+
+Route::post('/add-cart', [CartController::class, 'addToCart']);
+
+Route::get('/get-profile', [SettingController::class, 'account']);
+Route::post('/change-profile', [SettingController::class, 'changeProfile']);
+
+Route::get('/wishlist', [CartController::class, 'wishlist']);
+Route::post('/addwishlist', [CartController::class, 'addToWishlist']);
+Route::delete('/remove-wishlist/{id}', [CartController::class, 'remove_wishlist']);
+
+Route::get('/order', [SettingController::class, 'view_order']);
+Route::get('/order-detail/{orderId?}', [SettingController::class, 'orderDetail']);
+Route::delete('/order/remove_order/{Id}', [SettingController::class, 'remove_order']);
+
+Route::get('/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop']);
+Route::get('/view-product/{slug}', [ShopController::class, 'view_product']);
+
+//Shopping
+Route::get('/shop/{categoryslug?}/{subcategoryslug?}', [ShopController::class, 'shop']);
+Route::get('/view-product/{slug}', [ShopController::class, 'view_product']);
+
+Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating']);
+
+//========================================================================================================================
+
 
 Route::post('/admin-login', [AuthenticationController::class, 'adminLogincheck']);
 
-Route::middleware([ValidAdmin::class])->group(function () {
+// Route::middleware([ValidAdmin::class])->group(function () {
     Route::put('/admin/change-password', [AdminloginController::class, 'showchangePassword']);
     Route::get('/admin/logout', [AuthenticationController::class, 'adminLogout']);
 
@@ -27,6 +65,7 @@ Route::middleware([ValidAdmin::class])->group(function () {
     Route::get('/deshboard', [AdminloginController::class, 'getDashboardData']);
 
     //  Category
+    Route::get('/get-category', [CategoryController::class, 'getCategory']);
     Route::get('/category-show', [CategoryController::class, 'category']);
     Route::get('/category-show-all', [CategoryController::class, 'categoryAll']);
     Route::post('/create-category', [CategoryController::class, 'storeCategory']);
@@ -51,6 +90,8 @@ Route::middleware([ValidAdmin::class])->group(function () {
 
     //  Products
     Route::get('/get-subcategories/{id}', [CategoryController::class, 'getSubcategories']);
+
+    Route::get('/get-product', [ProductController::class, 'getproduct']);
     Route::get('/product-show', [ProductController::class, 'product']);
     Route::get('/show-data', [ProductController::class, 'showData']);
 
@@ -102,4 +143,4 @@ Route::middleware([ValidAdmin::class])->group(function () {
     Route::post('stripe-refund/{id}', [StripePaymentController::class, 'refund']);
     Route::post('braintree-refund/{id}', [BraintreeController::class, 'refund']);
     Route::post('paypal-refund/{id}', [PayPalController::class, 'refund']);
-});
+// });

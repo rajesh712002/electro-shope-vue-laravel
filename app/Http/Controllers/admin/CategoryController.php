@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\LengthAwarePaginator; // Ensure the paginator class is imported
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -93,6 +94,16 @@ class CategoryController extends Controller
     // }
 
     //  This for Vue.js
+
+    public function getCategory(){
+        $user = Auth::user();
+        $category = Category::withCount('product', 'subcategory')->with('product', 'subcategory')->where('status',1)->get();
+        // dd($category);
+        return response()->json(['category' => $category,'user'=>$user]);
+    }
+
+   
+
     public function category(Request $request)
     {
         $categories = Category::latest();

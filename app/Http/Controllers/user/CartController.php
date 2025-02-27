@@ -33,9 +33,11 @@ class CartController extends Controller
                 $cart->save();
             }
             session()->forget(['coupon_code', 'discount_amount', 'new_total']);
-            return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
+            return response()->json(['success']);
+            // return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
         } else {
             // session()->forget('cart');
+            dd($request->all());
 
             // Guest User Save to Session
             $cart = session()->get('cart', []);
@@ -58,7 +60,9 @@ class CartController extends Controller
 
             session()->put('cart', $cart);
             // dd(vars: $cart);
-            return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
+            // return redirect()->route('user.index')->with('status', 'Product added to cart successfully.');
+            return response()->json(['success']);
+            
         }
     }
 
@@ -96,7 +100,8 @@ class CartController extends Controller
             $couponCode = session('coupon_code', null);
             $discount = session('discount_amount', 0);
             $newTotal = session('new_total', $totalSum);
-            return view('user.order.cart', compact('product', 'totalSum','couponCode','discount','newTotal'));
+            return response()->json(['product'=>$product, 'totalSum'=>$totalSum, 'couponCode'=>$couponCode, 'discount'=>$discount, 'newTotal'=>$newTotal]);
+            // return view('user.order.cart', compact('product', 'totalSum','couponCode','discount','newTotal'));
         } else {
             // Guest User  Show items from session
             $cart = session()->get('cart', []);
@@ -224,7 +229,7 @@ class CartController extends Controller
 
     public function wishlist()
     {
-        $userId = Auth::user()->id;
+        $userId = 7;
 
         // dd($cart_prod_id);
 
@@ -239,13 +244,14 @@ class CartController extends Controller
             ->select('products.*', 'wishlists.id as wid','product_images.images as images')
             ->get();
         // dd($product);
-        return view('user.order.wishlist', compact('product'));
+        return response()->json(['product'=>$product]);
+        // return view('user.order.wishlist', compact('product'));
     }
 
     public function addToWishlist(Request $request)
     {
-        if (Auth::check()) {
-            $userId = Auth::user()->id;
+        // if (Auth::check()) {
+            $userId = 7;
             $cart_prod_id =  DB::table('wishlists')
                 ->where('product_id', '=', $request->prod_id)
                 ->where('user_id', '=', $userId)
@@ -258,9 +264,10 @@ class CartController extends Controller
                 $cart->user_id = $request->user_id;
                 $cart->save();
             }
-            return redirect()->route('usershop')->with('status', 'Product added to Wishlist successfully.');
-        } else {
-        }
+            return response()->json(['success'=>'Product added to Wishlist successfully']);
+            // return redirect()->route('usershop')->with('status', 'Product added to Wishlist successfully.');
+        // } else {
+        // }
     }
 
     public function remove_wishlist($id)

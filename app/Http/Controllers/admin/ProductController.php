@@ -22,6 +22,13 @@ use console;
 
 class ProductController extends Controller
 {
+
+    function getproduct()
+    {
+        $product = Product::with('productImages')->orderBy('created_at', 'desc')->limit(12)->get();
+        return response()->json(['product' => $product]);
+    }
+
     public function product(Request $request)
     {
 
@@ -123,7 +130,7 @@ class ProductController extends Controller
         //         'pagination' => (string) $product
         //     ]);
         // }
-        
+
         // return view('admin.product.product', compact('product'));
     }
 
@@ -137,13 +144,13 @@ class ProductController extends Controller
 
     //for vue
 
-    public function showData(){
+    public function showData()
+    {
         $category = Category::where('status', 1)->pluck('name', 'id');
         $subcategory = Subcategory::where('status', 1)->pluck('subcate_name', 'id');
         $brand = Brand::where('status', 1)->pluck('name', 'id');
 
-        return response()->json(['success' => 'successfully','brand' => $brand, 'subcategory' => $subcategory,'category' => $category]);
-
+        return response()->json(['success' => 'successfully', 'brand' => $brand, 'subcategory' => $subcategory, 'category' => $category]);
     }
     public function storeProduct(Request $request)
     {
@@ -273,7 +280,7 @@ class ProductController extends Controller
         $brand = Brand::where('status', 1)->pluck('name', 'id');
         $product = Product::findOrFail($id);
         // dd($productImage);
-        return response()->json(['product'=>$product,'productImage'=>$productImage,'category'=>$category,'subcategory'=>$subcategory,'brand'=>$brand]);
+        return response()->json(['product' => $product, 'productImage' => $productImage, 'category' => $category, 'subcategory' => $subcategory, 'brand' => $brand]);
         // return view('admin.product.update_product', compact('category', 'brand', 'product', 'subcategory', 'productImage'));
     }
 
@@ -445,7 +452,7 @@ class ProductController extends Controller
         // Paginate the result
         $brand = $brand->paginate(4);
 
-        
+
         // Return the view for non-AJAX requests
         return response()->json([
             'brand' => $brand->items(),
@@ -476,7 +483,7 @@ class ProductController extends Controller
     //                                                             d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
     //                                                         </path>
     //                                                     </svg>') . '</td>
-                       
+
     //                                                     <td>
     //                                                      <a href="' . route('admin.edit_brand', $brands->id) . '">  <svg class="filament-link-icon w-4 h-4 mr-1"
     //                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -497,7 +504,7 @@ class ProductController extends Controller
     //                            ' . csrf_field() . method_field('delete') . '
     //                         </form>
     //                     </td>
-                    
+
     //         </tr>';
     //         }
     //     } else {
@@ -564,8 +571,6 @@ class ProductController extends Controller
         //     'brand' => $brand
         // ]);
         return response()->json(['success' => 'successfully', 'brand' => $brand]);
-
-        
     }
 
     public function updateBrand($id, Request $request)
@@ -592,7 +597,7 @@ class ProductController extends Controller
         $brand->status = $request->status;
         // store Image
         if ($request->hasFile('image')) {
-        File::delete(public_path('admin_assets/images/' . $brand->image));
+            File::delete(public_path('admin_assets/images/' . $brand->image));
             $image = $request->image;
             $ext = $image->Extension();
             $imagename = time() . '.' . $ext;

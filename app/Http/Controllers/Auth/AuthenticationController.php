@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Auth;
 
 class AuthenticationController extends Controller
@@ -14,6 +15,21 @@ class AuthenticationController extends Controller
         return view('user.login');
     }
 
+    public function getLoginUser(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            // dd($user);
+            if (!$user) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+
+            return response()->json(['user' => $user]);
+        }
+        return response()->json(['message' => 'NOt Login'], 401);
+    }
+
+    
     public function userLoginCheck(Request $request)
     {
         $validate = $request->validate([
@@ -21,19 +37,26 @@ class AuthenticationController extends Controller
             'password' => 'required|min:5|max:50'
         ]);
 
-        //check user
         if (Auth::attempt($validate)) {
-            if (Auth::guard('web')->user()->role == 1) {
+            $user = Auth::user();
 
-                //call below function after login
+            if ($user->role == 1) {
+                // Save guest cart after login
                 $this->svaeGuestCart();
 
-                return redirect()->route('userindex');
-            } else { //else if (Auth::guard('web')->user()->role != 1) {
-                return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
+                // Generate a Sanctum token for the user
+                // $token = $user->createToken('auth_token')->plainTextToken;
+                $request->session()->regenerate();
+                return response()->json([
+                    'success' => 'Login Successfully',
+                    // 'token' => $token,
+                    'user' => $user
+                ]);
+            } else {
+                return response()->json(['message' => 'Either Email or Password Incorrect'], 401);
             }
         } else {
-            return redirect()->route('userlogin')->with('success', 'Either Email or Password Incorrect');
+            return response()->json(['message' => 'Either Email or Password Incorrect'], 401);
         }
     }
 
@@ -77,7 +100,8 @@ class AuthenticationController extends Controller
         Auth::guard('web')->logout();
         // $request->session()->invalidate();
         // $request->session()->regenerateToken();
-        return redirect()->route('userindex');
+        return response()->json(['success']);
+        // return redirect()->route('userindex');
     }
 
 
@@ -90,27 +114,27 @@ class AuthenticationController extends Controller
         return view('admin.login');
     }
 
-    
+
     public function adminLogincheck(Request $request)
     {
         $request->validate([
             'email' => 'required|email|max:100',
             'password' => 'required|min:8|max:50'
         ]);
-    
+
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
             $admin = Auth::guard('admin')->user();
-    
+
             if ($admin->role == 2) {
                 return response()->json(['success' => 'Welcome Admin!'], 200);
             } else {
                 return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
             }
         }
-    
+
         return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
     }
-    
+
 
 
     public function adminLogout(Request $request)
@@ -119,7 +143,7 @@ class AuthenticationController extends Controller
         Auth::guard('admin')->logout();
         // $request->session()->invalidate();
         // $request->session()->regenerateToken();
-        return response()->json(['success'=>'SuccessFully LogOut']);
+        return response()->json(['success' => 'SuccessFully LogOut']);
         // return view('admin.login');
     }
 }

@@ -18,64 +18,128 @@ use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
 {
-    public function shop($categoryslug = null, $subcategoryslug = null)
+    // public function shop($categoryslug = null, $subcategoryslug = null)
+    // {
+
+    //     $categorySelected = '';
+    //     $subcategorySelected = '';
+    //     $brandsArray = [];
+
+    //     $categorys = Category::withCount('product')->get();
+    //     $products = Product::with('productImages')->where('status', 1);
+
+    //     // $images = DB::table('product_images')
+    //     //         ->join('products','products.id' ,'=' ,'product_images.product_id')
+    //     //         ->where('products.id','=',$products->id)->first();
+    //     // dd( $products);
+    //     //Filter
+    //     if (!empty($categoryslug)) {
+    //         $category = Category::where('slug', $categoryslug)->first();
+    //         //@dd($category->id);
+    //         $products = $products->where('category_id', $category->id);
+    //         $categorySelected = $category->id;
+    //     }
+    //     if (!empty($subcategoryslug)) {
+    //         $subcategory = Subcategory::where('slug', $subcategoryslug)->first();
+    //         //@dd($subcategory->id);
+    //         $products = $products->where('sub_category_id', $subcategory->id);
+    //         $subcategorySelected = $subcategory->id;
+    //     }
+
+    //     $keyword = request()->query('keyword');
+    //     if (!empty($keyword)) {
+    //         $products = $products->where('prod_name', 'like', '%' . $keyword . '%'); // Search by product name
+    //     }
+
+    //     $sort = request()->query('sort');
+    //     if ($sort == 'price_desc') {
+    //         $products = $products->orderBy('price', 'desc');
+    //     } elseif ($sort == 'price_asc') {
+    //         $products = $products->orderBy('price', 'asc');
+    //     } else {
+    //         // Default sorting, for example by latest
+    //         $products = $products->orderBy('created_at', 'desc');
+    //     }
+    //     // $products = $products->orderBy('created_at', 'desc');
+    //     $products = $products->paginate(3);
+    //     // dd( $products);
+    //     $brands = Brand::where('status', '1')->get();
+    //     return response()->json(['brands' => $brands, 'products'=>$products, 'categorys'=>$categorys, 'subcategorySelected'=>$subcategorySelected, 'brandsArray'=>$brandsArray]);
+    //     // return view('user.order.shop', compact('brands', 'products', 'categorys', 'categorySelected', 'subcategorySelected', 'brandsArray'));
+    // }
+
+
+    public function shop(Request $request)
     {
-
-        $categorySelected = '';
-        $subcategorySelected = '';
+        $categorySelected = null;
+        $subcategorySelected = null;
         $brandsArray = [];
-
+    
         $categorys = Category::withCount('product')->get();
         $products = Product::with('productImages')->where('status', 1);
-
-        // $images = DB::table('product_images')
-        //         ->join('products','products.id' ,'=' ,'product_images.product_id')
-        //         ->where('products.id','=',$products->id)->first();
-        // dd( $products);
-        //Filter
+    
+        // Fetch Filters from Request
+        $categoryslug = $request->query('categoryslug');
+        $subcategoryslug = $request->query('subcategoryslug');
+        $keyword = $request->query('keyword');
+        $sort = $request->query('sort');
+    
+        // Category Filter
         if (!empty($categoryslug)) {
             $category = Category::where('slug', $categoryslug)->first();
-            //@dd($category->id);
-            $products = $products->where('category_id', $category->id);
-            $categorySelected = $category->id;
+            if ($category) {
+                $products = $products->where('category_id', $category->id);
+                $categorySelected = $category->id;
+            } else {
+                return response()->json(['error' => 'Category not found'], 404);
+            }
         }
+    
+        // Subcategory Filter
         if (!empty($subcategoryslug)) {
             $subcategory = Subcategory::where('slug', $subcategoryslug)->first();
-            //@dd($subcategory->id);
-            $products = $products->where('sub_category_id', $subcategory->id);
-            $subcategorySelected = $subcategory->id;
+            if ($subcategory) {
+                $products = $products->where('sub_category_id', $subcategory->id);
+                $subcategorySelected = $subcategory->id;
+            } else {
+                return response()->json(['error' => 'Subcategory not found'], 404);
+            }
         }
-
-        $keyword = request()->query('keyword');
+    
+        // Search Filter
         if (!empty($keyword)) {
-            $products = $products->where('prod_name', 'like', '%' . $keyword . '%'); // Search by product name
+            $products = $products->where('prod_name', 'like', '%' . $keyword . '%');
         }
-
-        $sort = request()->query('sort');
+    
+        // Sorting
         if ($sort == 'price_desc') {
             $products = $products->orderBy('price', 'desc');
         } elseif ($sort == 'price_asc') {
             $products = $products->orderBy('price', 'asc');
         } else {
-            // Default sorting, for example by latest
             $products = $products->orderBy('created_at', 'desc');
         }
-        // $products = $products->orderBy('created_at', 'desc');
+    
+        // Paginate Results
         $products = $products->paginate(3);
-        // dd( $products);
+    
         $brands = Brand::where('status', '1')->get();
-
-        return view('user.order.shop', compact('brands', 'products', 'categorys', 'categorySelected', 'subcategorySelected', 'brandsArray'));
+        return response()->json([
+            'brands' => $brands,
+            'products' => $products,
+            'categorys' => $categorys,
+            'categorySelected' => $categorySelected,
+            'subcategorySelected' => $subcategorySelected,
+            'brandsArray' => $brandsArray
+        ]);
     }
-
-
-
+    
 
 
     public function view_product(Request $request, $slug)
     {
-        if (Auth::check()) {
-            $user_id = Auth::user()->id;
+        // if (Auth::check()) {
+            $user_id = 7;//Auth::user()->id;
 
             // Get order details 
             $order = DB::table('order_items')
@@ -83,10 +147,10 @@ class ShopController extends Controller
                 ->where('orders.user_id', '=', $user_id)
                 ->select('orders.user_id as orUid', 'order_items.product_id as prod_id')
                 ->first();
-        } else {
+        // } else {
 
-            $order = null;
-        }
+        //     $order = null;
+        // }
 
         // get product details 
         $product = Product::with('brand')->where('slug', $slug)->first();
@@ -107,7 +171,8 @@ class ShopController extends Controller
             ->where('products.slug', '=', $slug)
             ->sum('product_ratings.rating');
 
-        return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum', 'images'));
+            return response()->json(['product'=>$product, 'order'=>$order, 'productrat'=>$productrat, 'ratingcount'=>$ratingcount, 'ratingsum'=>$ratingsum, 'images'=>$images]);
+        // return view("user.order.product", compact('product', 'order', 'productrat', 'ratingcount', 'ratingsum', 'images'));
     }
 
 

@@ -113,45 +113,7 @@
 
                 <div class="col-md-7">
                     <div class="bg-light right">
-                        {{-- <img style="width: 100px; height: 70px; object-fit: contain ! important"
-                            src="{{ asset('admin_assets/images/' . $product->brand->image) }}"> --}}
-                        {{-- <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner bg-light">
-                                    @foreach ($images as $key => $image)
-                                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                                            <img class="w-100 h-100" src="{{ asset('admin_assets/images/' . $image->images) }}" alt="{{ $image->images }} image {{ $key + 1 }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            
-                                <!-- Controls for the Carousel -->
-                                <a class="carousel-control-prev" href="#product-carousel" role="button" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" href="#product-carousel" role="button" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </a>
-                            </div> --}}
-                        {{-- 
-                            <div class="col-md-5">
-                                <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner bg-light">
-                                        @foreach ($images as $key => $image)
-                                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                                            <img class="w-100 h-100" src="{{ asset('admin_assets/images/' . $image->images) }}" alt="{{ $image->images }} image {{ $key + 1 }}">
-                                        </div>
-                                    @endforeach
-                                    </div>
-                                    <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
-                                        <i class="fa fa-2x fa-angle-left text-dark"></i>
-                                    </a>
-                                    <a class="carousel-control-next" href="#product-carousel" data-bs-slide="next">
-                                        <i class="fa fa-2x fa-angle-right text-dark"></i>
-                                    </a>
-                                </div>
-                            </div> --}}
+                       
 
                         <h1>{{ $product->prod_name }}</h1>
                         <div class="d-flex mb-3">

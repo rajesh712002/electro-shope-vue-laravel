@@ -1,113 +1,113 @@
 <template>
-    <div class="login-box">
-      <!-- /.login-logo -->
-      <div class="card card-outline card-primary">
-        <div class="card-header text-center">
-          <a href="#" class="h3">Administrative Panel</a>
+  <main>
+    <section class="section-5 pt-3 pb-3 mb-3 bg-white">
+      <header class="bg-dark">
+        <div class="container">
+          <nav class="navbar navbar-expand-xl"></nav>
         </div>
-        <div class="card-body">
-          <p class="login-box-msg">Sign in to start your session</p>
-          <form @submit.prevent="handleSubmit">
-            <div class="row d-flex justify-content-center">
-              <div v-if="successMessage" class="col-md-10">
-                <div class="alert alert-success">
-                  {{ successMessage }}
-                </div>
-              </div>
-            </div>
-  
-            <div class="input-group mb-3">
-              <input
-                v-model="email"
-                type="email"
-                name="email"
-                id="email"
-                class="form-control"
-                :class="{ 'is-invalid': errors.email }"
-                placeholder="Email"
-              />
-              <div v-if="errors.email" class="invalid-feedback">
-                {{ errors.email }}
-              </div>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-envelope"></span>
-                </div>
-              </div>
-            </div>
-  
-            <div class="input-group mb-3">
-              <input
-                v-model="password"
-                type="password"
-                name="password"
-                id="password"
-                class="form-control"
-                :class="{ 'is-invalid': errors.password }"
-                placeholder="Password"
-              />
-              <div v-if="errors.password" class="invalid-feedback">
-                {{ errors.password }}
-              </div>
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>
-            </div>
-  
-            <div class="row">
-              <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-              </div>
-            </div>
-          </form>
-          <p class="mb-1 mt-3">
-            <a href="forgot-password.html">I forgot my password</a>
-          </p>
+      </header>
+      <div class="container">
+        <div class="light-font">
+          <ol class="breadcrumb primary-color mb-0">
+            <li class="breadcrumb-item">
+              <router-link class="white-text" to="/">Home</router-link>
+            </li>
+            <li class="breadcrumb-item">
+              <router-link class="white-text" to="/shop">Shop</router-link>
+            </li>
+            <li class="breadcrumb-item">Login</li>
+          </ol>
         </div>
       </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        email: '',
-        password: '',
-        errors: {},
-        successMessage: ''
-      };
-    },
-    methods: {
-      handleSubmit() {
-        // Here, you can handle the form submission logic,
-        // e.g., sending data to a backend API.
-        const formData = {
+    </section>
+
+    <section class="section-10">
+      <div class="container">
+        <div class="login-form">
+          <div v-if="successMessage" class="alert alert-success">
+            {{ successMessage }}
+          </div>
+          <div v-if="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+          <h4 class="modal-title">Login to Your Account</h4>
+          <form @submit.prevent="handleLogin">
+            <div class="form-group">
+              <input type="email" v-model="email" class="form-control" :class="{ 'is-invalid': errors.email }"
+                placeholder="Enter Email" />
+              <p v-if="errors.email" class="invalid-feedback">{{ errors.email }}</p>
+            </div>
+
+            <div class="form-group">
+              <input type="password" v-model="password" class="form-control" :class="{ 'is-invalid': errors.password }"
+                placeholder="Enter Password" />
+              <p v-if="errors.password" class="invalid-feedback">{{ errors.password }}</p>
+            </div>
+
+            <div class="form-group small">
+              <router-link to="/forgot-password" class="forgot-link">Forgot Password?</router-link>
+            </div>
+
+            <button type="submit" class="btn btn-dark btn-block btn-lg">Login</button>
+          </form>
+
+          <div class="text-center small">
+            Don't have an account?
+            <router-link to="/register">Sign up</router-link>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+      errors: {},
+      successMessage: "",
+    };
+  },
+  methods: {
+    async handleLogin() {
+      this.errors = {};
+      this.successMessage = "";
+      this.errorMessage = "";
+
+      try {
+        let response = await axios.post("/api/user-login", {
           email: this.email,
-          password: this.password
-        };
-  
-        // Example: submit the data (you'd replace this with actual API call)
-        axios
-          .post('/admin/check', formData)
-          .then((response) => {
-            if (response.data.success) {
-              this.successMessage = response.data.success;
-            }
-          })
-          .catch((error) => {
-            if (error.response && error.response.data.errors) {
-              this.errors = error.response.data.errors;
-            }
-          });
+          password: this.password,
+        });
+
+        console.log('user',response);
+
+        if ( response.data.success) {
+          localStorage.setItem("auth_token", response.data.token); // Store token
+          localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user data
+
+          this.successMessage = response.data.success;
+
+          setTimeout(() => {
+            this.$router.push("/");
+          }, 1000);
+        }
+      } catch (error) {
+        console.log(error);
+        this.errorMessage = error.response?.data?.message || "Login failed.";
       }
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* Add custom styles here */
-  </style>
-  
+
+
+  },
+};
+</script>
+
+<style scoped>
+/* Add your custom styles here */
+</style>

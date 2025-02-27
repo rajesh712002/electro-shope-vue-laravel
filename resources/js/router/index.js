@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../components/Home.vue';
+//User
+import Home from '../components/user/Home.vue';
+import Header from '../components/user/include/Header.vue';
+import Cart from '../components/user/CartWishlist/Cart.vue';
+import Profile from '../components/user/setting/Profile.vue';
+//Admin
 import Deshboard from '../components/admin/Deshboard.vue';
 import AdminLayout from '../components/admin/Layouts/AdminLayout.vue';
 import Login from '../components/admin/auth/Login.vue';
@@ -35,8 +40,40 @@ import Users from '../components/admin/report/Users.vue';
 import FeedBack from '../components/admin/report/FeedBack.vue';
  
 
+
+import SettingSideBar from '../components/user/setting/SettingSideBar.vue';
+import Wishlist from '../components/user/setting/Wishlist.vue';
+import Order from '../components/user/setting/Order.vue';
+import ChangePasswordUser from '../components/user/setting/ChangePassword.vue';
+import UserLogin from '../components/user/auth/Login.vue';
+import Register from '../components/user/auth/Register.vue';
+import OrderDetail from '../components/user/setting/OrderDetail.vue';
+import ViewProduct from '../components/user/Shope/ViewProduct.vue';
+import Shope from '../components/user/Shope/Shope.vue';
 const routes = [
-    { path: '/', component: Login },
+    //User
+    { path: '/', component: Home },
+    { path: '/header', component: Header },
+    { path: '/cart', component: Cart },
+    { path: '/profile', component: Profile },
+    { path: '/setting-sidebar', component: SettingSideBar },
+    { path: '/wishlist', component: Wishlist },
+    { path: '/my-order', component: Order },
+    { path: '/user-change-password', component: ChangePasswordUser },
+    { path: '/user-register', component: Register },
+    { path: '/user-login', component: UserLogin },
+    { path: '/order-detail/:id', component: OrderDetail },
+    { path: '/view-product/:slug', component: ViewProduct },
+    { path: '/shope', component: Shope },
+
+
+
+
+
+
+
+    //Admin
+    // { path: '/', component: Login },
     { path: '/deshboard', component: Deshboard },
     { path: '/admin/login', component: Login },
     { path: '/admin/change-password', component: ChangePassword },

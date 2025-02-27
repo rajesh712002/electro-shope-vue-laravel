@@ -115,7 +115,8 @@ export default {
     methods: {
         async loadCategoryData() {
             this.isLoading = true;
-            const categoryId = this.$route.params.id;
+            const categoryId = this.$route.params;
+            console.log(categoryId)
             try {
                 const response = await axios.get(`/api/category-show/${categoryId}`);
                 console.log(response)

@@ -56,7 +56,9 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return redirect()->route('register')->withInput()->withErrors($validator);
+            // return redirect()->route('register')->withInput()->withErrors($validator);
+            return response()->json(['errors' => $validator->errors()], 422);
+
         }
 
         $member = new User();
@@ -66,8 +68,8 @@ class UserController extends Controller
         $member->phone = $request->phone;
 
         $member->save();
-
-        return redirect()->route('userlogin')->with('success', 'Registration  successfully.');
+        return response()->json(['success' => 'Registration  successfully.']);
+        // return redirect()->route('userlogin')->with('success', 'Registration  successfully.');
     }
 
 

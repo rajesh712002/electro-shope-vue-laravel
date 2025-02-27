@@ -1,61 +1,5 @@
 @include('user.includes.header')
-
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-    crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<script>
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-</script>
-
-
-<main>
-    <section class="section-5 pt-3 pb-3 mb-3 bg-white">
-        <div class="container">
-            <div class="light-font">
-                <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('usershop') }}">Shop</a></li>
-                    <li class="breadcrumb-item">Cart</li>
-                </ol>
-            </div>
-        </div>
-    </section>
-
-    <section class=" section-9 pt-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    {{-- @dd($carts) --}}
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="alert alert-danger">{{ session('error') }}</div>
-                    @endif
-                    @if (Auth::check())
-
-                        @if ($product->count() > 0)
-
-                            <div class="table-responsive">
-                                <table class="table" id="cart">
-                                    <thead>
-                                        <tr>
-                                            <th>Image</th>
-                                            <th>Item</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
-                                            <th>Remove</th>
-                                        </tr>
-                                    </thead>
-                                    {{-- <tbody>
+{{-- <tbody>
                                         {{- @foreach ($carts as $cart) -}}
                                         @foreach ($product as $item)
                                             <tr>
@@ -133,6 +77,62 @@
                                          @endforeach 
 
                                     </tbody> --}}
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+</script>
+
+
+<main>
+    <section class="section-5 pt-3 pb-3 mb-3 bg-white">
+        <div class="container">
+            <div class="light-font">
+                <ol class="breadcrumb primary-color mb-0">
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('userindex') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('usershop') }}">Shop</a></li>
+                    <li class="breadcrumb-item">Cart</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section class=" section-9 pt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    {{-- @dd($carts) --}}
+                    @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger">{{ session('error') }}</div>
+                    @endif
+                    @if (Auth::check())
+
+                        @if ($product->count() > 0)
+
+                            <div class="table-responsive">
+                                <table class="table" id="cart">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Item</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    
 
                                     <tbody>
                                         @foreach ($product as $item)
@@ -146,10 +146,7 @@
                                                         src="{{ asset('admin_assets/images/' . $item->image) }}" alt="">
                                                          @endif
                                                         </a>
-                                                    {{-- <a href="{{ route('viewproduct', $item->slug) }}">
-                                                        <img src="{{ asset('admin_assets/images/' . $item->image) }}"
-                                                            width="120" height="120">
-                                                    </a> --}}
+                                                   
                                                 </td>
                                                 <td>{{ $item->prod_name }}</td>
                                                 <td>{{ $item->price }}</td>
@@ -285,37 +282,7 @@
                 @if (Auth::check())
 
                     @if (cartCount() > 0)
-                        {{-- <div class="col-md-4">
-                            <div class="card cart-summery">
-                                <div class="sub-title">
-                                    <h2 class="bg-white">Cart Summery</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between pb-2">
-                                        <div>Subtotal</div>
-                                        <div><i class="fa fa-inr" aria-hidden="true">
-                                            </i> {{ $totalSum }}</div>
-                                    </div>
-                                    <div class="d-flex justify-content-between pb-2">
-                                        <div>Shipping</div>
-                                        {{-- <div><i class="fa fa-inr" aria-hidden="true"> -}}
-                                        </i> Free
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between summery-end">
-                                    <div>Total</div>
-                                    <div><i class="fa fa-inr" aria-hidden="true">
-                                        </i> {{ $totalSum }}</div>
-                                </div>
-                                <div class="pt-5">
-                                    <a href="{{ route('user.checkout') }}"
-                                        class="btn-dark btn btn-block w-100">Proceed
-                                        to
-                                        Checkout</a>
-                                </div>
-                            </div>
-                        </div> --}}
-
+                        
                         <!-- Coupon Codes Modal -->
                         <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel"
                             aria-hidden="true">

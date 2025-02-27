@@ -10,19 +10,7 @@
             </div>
         </div>
 
-        {{-- <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
-            <form action="" method="GET" id="searchForm">
-                <div class="input-group">
-                    <input type="text" name="keyword" placeholder="Search For Products" class="form-control"
-                        aria-label="Amount (to the nearest dollar)" value="{{ Request::get('keyword') }}">
-                    <span class="input-group-text">
-                        <button type="submit" class="btn btn-default">
-                        <i class="fa fa-search"></i>
-                    </button>
-                    </span>
-                </div>
-            </form>
-        </div> --}}
+       
 
         <div class="col-lg-12 col-12 text-right d-flex justify-content-end align-items-center">
             <form action="" method="GET" id="searchForm">

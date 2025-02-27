@@ -92,15 +92,7 @@
                 </div>
                 <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
                     <a href="{{ route('useraccount') }}" class="nav-link text-dark">My Account</a>
-                    {{-- <form action="">
-                        <div class="input-group">
-                            <input type="text" placeholder="Search For Products" class="form-control"
-                                aria-label="Amount (to the nearest dollar)">
-                            <span class="input-group-text">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
-                    </form> --}}
+                  
                 </div>
             </div>
         </div>
@@ -121,12 +113,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <!-- <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="index.php" title="Products">Home</a>
-        </li> -->
+                      
 
                         @if (getcategory()->isNotEmpty())
-
                             @foreach (getcategory() as $category)
                                 @if ($category->status == 1)
                                     <li class="nav-item dropdown">

@@ -38,14 +38,14 @@ class SettingController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        $user = User::select('id', 'password')->where('id', Auth::user()->id)->first();
+        $user = User::select('id', 'password')->where('id', 7)->first();
 
         $validator->after(function ($validator) use ($request, $user) {
             if (!Hash::check($request->old_password, $user->password)) {
                 $validator->errors()->add('old_password', 'Your old password is incorrect.');
             }
         });
-        
+
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -53,32 +53,33 @@ class SettingController extends Controller
         }
 
         // dd($request->old_password, $user->password, Hash::check($request->old_password, $user->password));
-       
+
         if (!Hash::check($request->old_password, $user->password)) {
             return response()->json(['errors' => 'Your Password is Incorrected'], 422);
         } else {
             User::where('id', $user->id)->update([
                 'password' => Hash::make($request->new_password)
             ]);
-            return response()->json(['success', 'Your Password is Changed']);
+            return response()->json(['success' => 'Your Password is Changed']);
         }
     }
 
 
     public function account()
     {
-        $user = User::where('id', Auth::user()->id)->first();
-        return view('user.account', compact('user'));
+        $user = User::where('id', 7)->get();
+        return response()->json(['user' => $user]);
+        // return view('user.account', compact('user'));
     }
 
     public function changeProfile(Request $request)
     {
-        $userId = Auth::user()->id;
+        $userId = 7;
         $rules = [
 
             'name' => 'required|string|min:3|max:30',
             'email' => 'required|email|max:100|unique:users,email,' . $userId . ',id',
-            'phone' => 'required|integer|min:10|max:10'
+            'phone' => 'required|integer|min:10'
             // 'address' => 'required'
 
         ];
@@ -98,7 +99,7 @@ class SettingController extends Controller
         $member->phone = $request->phone;
 
         $member->save();
-        return response()->json(['success', 'Your Profile is Updated']);
+        return response()->json(['success' => 'Your Profile is Updated']);
     }
 
     public function forgetPassword()
@@ -162,16 +163,16 @@ class SettingController extends Controller
         if ($tokenExist == null) {
             return redirect()->back();
         } else {
-            
+
             $rules = [
 
                 'new_password' => 'required|different:old_password|min:3|max:30',
                 'confirm_password' => 'required|same:new_password'
-    
+
             ];
-    
+
             $validator = Validator::make($request->all(), $rules);
-    
+
             if ($validator->fails()) {
                 // return response()->json(['errors' => $validator->errors()], 422);
                 return redirect()->back()->withInput()->withErrors($validator);
@@ -183,30 +184,33 @@ class SettingController extends Controller
             ]);
             return redirect()->back()->with('success', 'Password Reset Successfully');
         }
-          
     }
 
 
 
     public function view_order()
     {
-        $user_id = Auth::user()->id;
-        $order = Order::where('user_id', $user_id)->orderBy('id', 'DESC')->paginate(4);
-        return view('user.order.my_orders', compact('order'));
+        $user_id = 7; // Auth::user()->id;
+        $order = Order::where('user_id', operator: $user_id)->orderBy('id', 'DESC')->paginate(4);
+        return response()->json([
+            'order' => $order,
+            'pagination' => $order->toArray()['links']
+        ]);
+        // return view('user.order.my_orders', compact('order'));
     }
 
 
 
     public function orderDetail($id = null)
     {
-        $user_id = Auth::user()->id;
+        $user_id = 7;//Auth::user()->id;
 
-        $order = Order::where('user_id', $user_id)->where('id', $id)->first();
-        // dd($order);
-        $order_item = OrderItem::where('order_id', $id)->with('product')->get();
-        $order_item_count = OrderItem::where('order_id', $id)->count();
-
-        return view('user.order.order_detail', compact('order', 'order_item', 'order_item_count'));
+        $order = Order::where('user_id', $user_id)->where('id', 148)->first();
+        $order_item = OrderItem::where('order_id', 148)->with('product')->get();
+        // dd($order_item);
+        $order_item_count = OrderItem::where('order_id', 148)->count();
+        return response()->json(['order' => $order, 'order_item' => $order_item, 'order_item_count' => $order_item_count]);
+        // return view('user.order.order_detail', compact('order', 'order_item', 'order_item_count'));
     }
 
     public function remove_order($id)
@@ -217,6 +221,6 @@ class SettingController extends Controller
 
         sendCancleOrderEmail($id);
 
-        return redirect()->back()->with('status','Order Cancelled successfully');
+        return redirect()->back()->with('status', 'Order Cancelled successfully');
     }
 }
