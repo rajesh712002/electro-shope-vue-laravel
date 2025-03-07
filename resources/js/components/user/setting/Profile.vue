@@ -10,7 +10,7 @@
                 <router-link class="white-text" to="/shop">Shop</router-link>
               </li>
               <li class="breadcrumb-item">
-                <router-link class="white-text" to="/account">My Account</router-link>
+                My Account
               </li>
               <li class="breadcrumb-item">Settings</li>
             </ol>

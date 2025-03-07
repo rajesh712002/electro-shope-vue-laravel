@@ -105,6 +105,15 @@
 </template>
 
 <script>
+import '@css/user_assets/css/style.css';
+import '@css/user_assets/css/style.min.css';
+import '@css/user_assets/css/slick.css';
+import '@css/user_assets/css/slick-theme.css';
+import '@css/user_assets/css/video-js.css';
+// import '@css/';
+
+import axios from "axios";
+
 export default {
     data() {
         return {
@@ -178,7 +187,7 @@ export default {
     object-fit: contain;
 }
 
-.back-stars {
+/* .back-stars {
     position: relative;
     color: #ccc;
 }
@@ -188,7 +197,7 @@ export default {
     color: gold;
     overflow: hidden;
     white-space: nowrap;
-}
+} */
 </style>
 
 

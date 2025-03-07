@@ -9,6 +9,7 @@ import './bootstrap';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router/index.js';
+axios.defaults.withCredentials = true;
 
 import { createRouter, createWebHistory } from 'vue-router';
 // import Home from '../components/Home.vue';

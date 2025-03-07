@@ -19,7 +19,9 @@
         "vue-template-compiler": "^0.1.0"
     },
     "dependencies": {
+        "@stripe/stripe-js": "^5.8.0",
         "@tinymce/tinymce-vue": "^6.1.0",
+        "braintree-web-drop-in": "^1.44.1",
         "dropzone": "^6.0.0-beta.2",
         "font-awesome": "^4.7.0",
         "jquery": "^3.7.1",

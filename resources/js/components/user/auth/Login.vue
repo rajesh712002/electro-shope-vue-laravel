@@ -45,7 +45,7 @@
             </div>
 
             <div class="form-group small">
-              <router-link to="/forgot-password" class="forgot-link">Forgot Password?</router-link>
+              <router-link to="/forget-password" class="forgot-link">Forgot Password?</router-link>
             </div>
 
             <button type="submit" class="btn btn-dark btn-block btn-lg">Login</button>

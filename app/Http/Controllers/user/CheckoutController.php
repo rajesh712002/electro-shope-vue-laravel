@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\user;
 
+use Log;
 use Stripe;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use App\Mail\OrderEmail;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -18,15 +20,63 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\StripePaymentController;
-use App\Models\Product;
 
 class CheckoutController extends Controller
 {
 
+    public function testSession()
+    {
+        session(['order_data' => 'Testing session storage']);
+        return response()->json(['session_data' => session('order_data')]);
+    }
+
+
+    public function storeCheckoutData(Request $request)
+    {
+        // dd($request->all());
+        session()->forget('order_data');
+
+        // dd($request->all());
+        session()->put('order_data', $request->all());
+        session()->save();
+        $checkoutData = session('order_data');
+
+        // dd( $checkoutData);
+        return response()->json(['success' => true, 'order_data' => $checkoutData]);
+    }
+
+    // public function getCheckoutData(Request $request)
+    // {
+
+    //     $checkoutData = session('order_data');
+    //     // dd($checkoutData);
+    //     if (!$checkoutData) {
+    //         return response()->json(['message' => 'No checkout data found'], 404);
+    //     }
+
+    //     return response()->json(['checkoutData' => $checkoutData]);
+    // }
+
+
+    public function getCheckoutData(Request $request)
+    {
+        if (!$request->expectsJson()) {
+            return response()->json(['error' => 'Invalid request'], 400);
+        }
+
+        $checkoutData = session('order_data');
+
+        if (!$checkoutData) {
+            return response()->json(['message' => 'No checkout data found'], 404);
+        }
+
+        return response()->json(['checkoutData' => $checkoutData]);
+    }
+
 
     public function checkout()
     {
-        $userId = Auth::user()->id;
+        $userId = 7; //Auth::user()->id;
 
         // dd($cart_prod_id);
         $user = CustomerAddress::where('user_id', $userId)->first();
@@ -50,16 +100,24 @@ class CheckoutController extends Controller
         $newTotal = session('new_total', $totalSum);
 
         $CustomerAddress = CustomerAddress::where('user_id', '=', $userId)->first();
-
+        return response()->json([
+            'products' => $product,
+            'totalSum' => $totalSum,
+            'user' => $user,
+            'customerAddress' => $CustomerAddress,
+            'couponCode' => $couponCode,
+            'discount' => $discount,
+            'newTotal' => $newTotal
+        ]);
         // dd($CustomerAddress->user_id);
-        return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress', 'userId', 'couponCode', 'discount', 'newTotal'));
+        // return view("user.order.checkout", compact('product', 'totalSum', 'user', 'CustomerAddress', 'userId', 'couponCode', 'discount', 'newTotal'));
     }
 
 
     public function applyCoupon(Request $request)
     {
 
-        $user = Auth::user();
+        $user = 7; //Auth::user();
         $couponCode = $request->input('coupon_code');
 
         // Timezone and current time
@@ -150,7 +208,7 @@ class CheckoutController extends Controller
     public function storeCheckout(Request $request)
     {
 
-        $userId = Auth::user()->id;
+        $userId = 7; //Auth::user()->id;
 
         //Fatch Products From Cart
         $product = DB::table('carts')
@@ -160,7 +218,7 @@ class CheckoutController extends Controller
             ->select('products.*', 'carts.qty as cqty', 'carts.id as cid')
             ->get();
 
-       
+
         // dd($product);
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
@@ -177,7 +235,7 @@ class CheckoutController extends Controller
             'address' => 'required|max:50',
             'city' => 'required|string|max:50',
             'state' => 'required|string|max:50',
-            'zip' => 'required|digits_between:3,10',
+            // 'zip' => 'required|digits_between:3,10',
             'mobile' => 'required|digits:10',
 
 
@@ -191,7 +249,7 @@ class CheckoutController extends Controller
 
         // Store in session
 
-        $user = Auth::user();
+        //$user = Auth::user();
 
 
         //=======//============//==============//======================//==============================//
@@ -202,9 +260,9 @@ class CheckoutController extends Controller
         //        Store Customer Address
 
         CustomerAddress::updateOrCreate(
-            ['user_id' => $user->id],
+            ['user_id' => 7],
             [
-                'user_id' => $user->id,
+                'user_id' => 7, //$user->id,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
@@ -262,7 +320,7 @@ class CheckoutController extends Controller
 
             $order->payment_status = 'paid on cod';
             // $order->status = $request->status;
-            $order->user_id = $user->id;
+            $order->user_id = 7; // $user->id;
             $order->first_name = $request->first_name;
             $order->last_name = $request->last_name;
             $order->email = $request->email;
@@ -356,16 +414,18 @@ class CheckoutController extends Controller
             $productUpdate->qty -= $products->cqty;
             $productUpdate->save();
         }
-        
+
         //Make Cart Empty 
 
-        $user_id = Auth::user()->id;
+        $user_id = 7; //Auth::user()->id;
         $user_cart_id = Cart::where('user_id', '=', $user_id)->select('user_id as cUid');
         if ($user_cart_id) {
-            $cart = Cart::where('user_id', Auth::user()->id);
+            $cart = Cart::where('user_id', 7);
             $cart->delete();
         }
     }
+
+
 
 
     //=======//==============//=====================//============================//===================================//

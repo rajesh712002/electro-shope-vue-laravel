@@ -46,7 +46,7 @@
                         class="d-block d-sm-flex align-items-start text-center text-sm-start"
                       >
                         <router-link
-                          :to="'/product/' + item.slug"
+                          :to="'/view-product/' + item.slug"
                           class="d-block flex-shrink-0 mx-auto me-sm-4"
                           style="width: 10rem"
                         >
@@ -62,7 +62,7 @@
                           <h3 class="product-title fs-base mb-2">
                             <router-link
                               class="text-dark"
-                              :to="'/product/' + item.slug"
+                              :to="'/view-product/' + item.slug"
                             >
                               {{ item.prod_name }}
                             </router-link>
@@ -137,9 +137,10 @@
   
       async moveToCart(item) {
         try {
-          await axios.post("/api/move-to-cart", {
+          await axios.post(`/api/moveToCart/${item.wid}`, {
+             _method: "delete" ,
             prod_id: item.id,
-            user_id: 1, // Replace with actual user ID
+            user_id: 7, // Replace with actual user ID
             qty: 1
           });
           this.statusMessage = "Item moved to cart!";

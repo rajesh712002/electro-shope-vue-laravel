@@ -50,6 +50,10 @@ import Register from '../components/user/auth/Register.vue';
 import OrderDetail from '../components/user/setting/OrderDetail.vue';
 import ViewProduct from '../components/user/Shope/ViewProduct.vue';
 import Shope from '../components/user/Shope/Shope.vue';
+import Checkout from '../components/user/Shope/Checkout.vue';
+import Braintree from '../components/user/Shope/Braintree.vue';
+import ForgetPassword from '../components/user/auth/ForgetPassword.vue';
+import ResetForgetPassword from '../components/user/auth/ResetForgetPassword.vue';
 const routes = [
     //User
     { path: '/', component: Home },
@@ -64,7 +68,14 @@ const routes = [
     { path: '/user-login', component: UserLogin },
     { path: '/order-detail/:id', component: OrderDetail },
     { path: '/view-product/:slug', component: ViewProduct },
-    { path: '/shope', component: Shope },
+    { path: '/shop', component: Shope },
+    { path: '/checkout', component: Checkout },
+    { path: '/braintree', component: Braintree, name: 'braintree-payment'},
+    // { path: '/forget-password/:token', component: ForgetPassword },
+    { path: '/forget-password', component: ForgetPassword },
+    { path: '/reset-forget-password/:token', component: ResetForgetPassword },
+
+
 
 
 

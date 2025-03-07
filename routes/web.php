@@ -95,7 +95,7 @@ Route::get('ratings-excel', [ExportController::class, 'ratingsExcel'])->name('ra
 //Stripe
 Route::post('stripe', [StripePaymentController::class, 'stripe'])->name('stripe');
 Route::get('successs', [StripePaymentController::class, 'success'])->name('successs');
-Route::get('cancell', [StripePaymentController::class, 'cancel'])->name('cancell');
+Route::get('cancell',  [StripePaymentController::class, 'cancel'])->name('cancell');
 Route::post('refund', [StripePaymentController::class, 'refund'])->name('refund');
 
 

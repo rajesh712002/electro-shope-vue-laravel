@@ -39,14 +39,14 @@
         <div class="row pb-3">
           <div class="col-lg-3" v-for="category in categories" :key="category.id">
             <div class="cat-card">
-              <router-link :to="'/shop/' + category.slug">
+              <router-link :to="'/shop' ">
                 <div class="left">
                   <img class="imgfluid" :src="'/admin_assets/images/' + category.image" alt="Category Image"
                     style="width: 100px; height: 100px; object-fit:contain;">
                 </div>
               </router-link>
               <div class="right">
-                <router-link :to="'/shop/' + category.slug">
+                <router-link :to="'/shop/' ">
                   <div class="cat-data">
                     <h2><b>{{ category.name }}</b></h2>
                     <p><b>{{ category.product_count }} Products</b></p>
@@ -147,7 +147,7 @@ export default {
       try {
         const response = await axios.post('/api/add-cart', {
           prod_id: product.id,
-          user_id: null,  // Adjust based on your auth system
+          user_id: 7,  // Adjust based on your auth system
           qty: 1,  // Assuming default quantity is 1
           price: product.price,
           name: product.prod_name,

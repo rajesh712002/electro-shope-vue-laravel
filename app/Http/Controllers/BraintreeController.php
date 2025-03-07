@@ -31,15 +31,15 @@ class BraintreeController extends Controller
     public function braintreeCard(Request $request)
     {
         $rules = [
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'email' => 'required|email|max:50',
-            'country' => 'required',
-            'address' => 'required|max:50',
-            'city' => 'required|string|max:50',
-            'state' => 'required|string|max:50',
-            'zip' => 'required|digits_between:3,10',
-            'mobile' => 'required|digits:10',
+            // 'first_name' => 'required|string|max:50',
+            // 'last_name' => 'required|string|max:50',
+            // 'email' => 'required|email|max:50',
+            // 'country' => 'required',
+            // 'address' => 'required|max:50',
+            // 'city' => 'required|string|max:50',
+            // 'state' => 'required|string|max:50',
+            // 'zip' => 'required|digits_between:3,10',
+            // 'mobile' => 'required|digits:10',
         ];
 
         // Perform validation
@@ -47,7 +47,8 @@ class BraintreeController extends Controller
 
         // Return an error if validation fails
         if ($validator->fails()) {
-            return redirect()->route('user.checkout')->with('status', 'Please Check Detail Correctly And Fill Up Them.');
+            return response()->json(['errors' => $validator->errors()], 422);
+            // return redirect()->route('user.checkout')->with('status', 'Please Check Detail Correctly And Fill Up Them.');
         }
         session()->put('order_data', [
             'first_name' => $request->first_name,
@@ -64,8 +65,8 @@ class BraintreeController extends Controller
         ]);
         //  $orderData = session()->get('order_data');
         //  dd($orderData);
-
-        $userId = Auth::user()->id;
+ 
+        $userId =7;// Auth::user()->id;
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->where('carts.user_id', $userId)
@@ -75,14 +76,18 @@ class BraintreeController extends Controller
         $newTotal = session('new_total', $totalSum);
 
         $token = $this->gateway->clientToken()->generate();
-        return view('user.order.braintree', ['token' => $token], compact('totalSum', 'newTotal'));
+        return response()->json(['token' => $token,'totalSum' => $totalSum, 'newTotal' => $newTotal]);
+        // return view('user.order.braintree', ['token' => $token], compact('totalSum', 'newTotal'));
     }
 
     public function braintree(Request $request)
     {
+        $orderData = $request->order_data;
 
-        $user = Auth::user();
-        $userId = $user->id;
+        // dd($orderData);
+
+        // $user = Auth::user();
+        $userId = 7;//$user->id;
         $totalSum = DB::table('carts')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->where('carts.user_id', $userId)
@@ -108,8 +113,8 @@ class BraintreeController extends Controller
 
         if ($result->success) {
 
-            $user = Auth::user();
-            $userId = $user->id;
+            // $user = Auth::user();
+            $userId =7;// $user->id;
 
             // Get product data 
             $product = DB::table('carts')
@@ -127,7 +132,7 @@ class BraintreeController extends Controller
                 ->first();
 
             // Create a new order session
-            $orderData = session()->get('order_data');
+            $orderData = $request->order_data;
 
             // dd($orderData);
 
@@ -209,13 +214,13 @@ class BraintreeController extends Controller
             // Clear the cart after successful payment
             Cart::where('user_id', $userId)->delete();
 
-            $request->session()->forget('order_data');
+            // $request->session()->forget('order_data');
 
             session()->forget(['coupon_code', 'discount_amount', 'new_total']);
 
-            return redirect()->route('user.view_order')->with('status', 'Payment is successful and your order is placed.');
+            // return redirect()->route('user.view_order')->with('status', 'Payment is successful and your order is placed.');
         } else {
-            return redirect()->route('user.index')->with('error', 'Payment Is Unsuccessful.');
+            // return redirect()->route('user.index')->with('error', 'Payment Is Unsuccessful.');
         }
     }
 

@@ -34,7 +34,7 @@
                             <ul v-if="category.subcategory && category.subcategory.length > 0"
                                 class="dropdown-menu dropdown-menu-dark">
                                 <li v-for="subcategory in category.subcategory" :key="subcategory.id">
-                                    <router-link :to="`/shop/${category.slug}/${subcategory.slug}`"
+                                    <router-link :to="`/shop/`"
                                         class="dropdown-item nav-link">
                                         {{ subcategory.subcate_name }}
                                     </router-link>

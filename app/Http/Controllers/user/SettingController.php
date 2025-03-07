@@ -118,8 +118,9 @@ class SettingController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
 
-            return redirect()->route('user.forgetPassword')->withInput()->withErrors($validator);
+            // return redirect()->route('user.forgetPassword')->withInput()->withErrors($validator);
         }
 
         $token = Str::random(60);
@@ -140,8 +141,8 @@ class SettingController extends Controller
             'user' => $user
         ];
         Mail::to($request->email)->send(new ResetPasswordEmail($formData));
-
-        return redirect()->route('user.forgetPassword')->with('success', 'Please Check your inbox to resest your password');
+        return response()->json(['success'=>'Please Check your inbox to resest your password']);
+        // return redirect()->route('user.forgetPassword')->with('success', 'Please Check your inbox to resest your password');
     }
 
     public function resestForgetPassword($token)
@@ -151,7 +152,8 @@ class SettingController extends Controller
         if ($tokenExist == null) {
             return redirect()->back();
         }
-        return view('user.order.forgot_password_email', ['token' => $token]);
+        return response()->json();
+        // return view('user.order.forgot_password_email', ['token' => $token]);
     }
 
     public function processForgotPasswordEmail(Request $request)
@@ -161,7 +163,7 @@ class SettingController extends Controller
         $tokenExist = DB::table('password_reset_tokens')->where('token', $token)->first();
 
         if ($tokenExist == null) {
-            return redirect()->back();
+            return response()->json('Token not exist');
         } else {
 
             $rules = [
@@ -174,15 +176,16 @@ class SettingController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                // return response()->json(['errors' => $validator->errors()], 422);
-                return redirect()->back()->withInput()->withErrors($validator);
+                return response()->json(['errors' => $validator->errors()], 422);
+                // return redirect()->back()->withInput()->withErrors($validator);
             }
 
             $user = User::where('email', $tokenExist->email)->first();
             User::where('id', $user->id)->update([
                 'password' => Hash::make($request->new_password)
             ]);
-            return redirect()->back()->with('success', 'Password Reset Successfully');
+            return response()->json(['success' => 'Password Reset Successfully']);
+            // return redirect()->back()->with('success', 'Password Reset Successfully');
         }
     }
 

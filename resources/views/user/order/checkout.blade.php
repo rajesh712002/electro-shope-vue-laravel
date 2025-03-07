@@ -540,9 +540,6 @@
 
 <script type="text/javascript">
     $(function() {
-
-
-
         /*------------------------------------------
 
         --------------------------------------------
@@ -551,14 +548,8 @@
 
         --------------------------------------------
 
-        --------------------------------------------*/
-
-
-
+      --------------------------------------------*/
         var $form = $(".require-validation");
-
-
-
         $('form.require-validation').bind('submit', function(e) {
 
             var $form = $(".require-validation"),
@@ -577,10 +568,7 @@
                 valid = true;
 
             $errorMessage.addClass('hide');
-
-
-
-            $('.has-error').removeClass('has-error');
+       $('.has-error').removeClass('has-error');
 
             $inputs.each(function(i, el) {
 
@@ -597,10 +585,7 @@
                 }
 
             });
-
-
-
-            if (!$form.data('cc-on-file')) {
+    if (!$form.data('cc-on-file')) {
 
                 e.preventDefault();
 
@@ -618,15 +603,8 @@
 
                 }, stripeResponseHandler);
 
-            }
-
-
-
-        });
-
-
-
-        /*------------------------------------------
+             });
+   /*------------------------------------------
 
         --------------------------------------------
 

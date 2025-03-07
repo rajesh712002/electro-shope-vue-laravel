@@ -1,13 +1,14 @@
 <template>
+    <Header />
     <div>
         <!-- Header -->
-        <header>
+        <!-- <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container">
                     <router-link class="navbar-brand" to="/">Electro-Shop</router-link>
                 </div>
             </nav>
-        </header>
+        </header> -->
 
         <!-- Breadcrumb -->
         <section class="section-5 pt-3 pb-3 mb-3 bg-white">
@@ -22,6 +23,25 @@
                 </div>
             </div>
         </section>
+
+        <!-- Search Bar -->
+        <div class="container mb-3">
+            <div class="row">
+                <div class="col-lg-12 col-12 text-right d-flex justify-content-end align-items-center">
+                    <form @submit.prevent="searchProducts">
+                        <div class="input-group">
+                            <input type="text" v-model="keyword" placeholder="Search For Products" class="form-control"
+                                aria-label="Search For Products">
+                            <span class="input-group-text">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Main Content -->
         <section class="section-6 pt-5">
@@ -41,8 +61,8 @@
                                             <h2 class="accordion-header" :id="'heading-' + index">
                                                 <button class="accordion-button"
                                                     :class="{ 'text-danger': categorySelected === category.slug }"
-                                                    @click="toggleCategory(category.slug)"
-                                                    data-bs-toggle="collapse" :data-bs-target="'#collapse-' + index"
+                                                    @click="toggleCategory(category.slug)" data-bs-toggle="collapse"
+                                                    :data-bs-target="'#collapse-' + index"
                                                     :aria-expanded="categorySelected === category.slug"
                                                     :aria-controls="'collapse-' + index">
                                                     {{ category.name }}
@@ -57,7 +77,8 @@
                                                         class="list-unstyled">
                                                         <li v-for="subcategory in category.subcategory"
                                                             :key="subcategory.id">
-                                                            <button @click="filterBySubcategory(category.slug, subcategory.slug)"
+                                                            <button
+                                                                @click="filterBySubcategory(category.slug, subcategory.slug)"
                                                                 class="dropdown-item nav-link">
                                                                 {{ subcategory.subcate_name }}
                                                             </button>
@@ -94,8 +115,8 @@
                                 <div class="card product-card">
                                     <div class="product-image position-relative">
                                         <img v-if="product.product_images && product.product_images.length > 0"
-                                            :src="'/admin_assets/images/' + product.product_images[0].images" width="100"
-                                            alt="Product Image" />
+                                            :src="'/admin_assets/images/' + product.product_images[0].images"
+                                            width="100" alt="Product Image" />
                                         <img v-else-if="product.image" :src="'/admin_assets/images/' + product.image"
                                             width="100" alt="Default Image" />
                                     </div>
@@ -106,12 +127,15 @@
                                         </router-link>
 
                                         <div class="price mt-2">
-                                            <span class="h5"><strong><i class="fa fa-inr"></i> {{ product.price }}</strong></span>
-                                            <span class="h6 text-underline"><del>{{ product.compare_price }}</del></span>
+                                            <span class="h5"><strong><i class="fa fa-inr"></i> {{ product.price
+                                                    }}</strong></span>
+                                            <span class="h6 text-underline"><del>{{ product.compare_price
+                                                    }}</del></span>
                                             <div class="text-secondary">InStock: {{ product.qty }}</div>
                                         </div>
 
-                                        <button class="btn btn-dark mt-2" @click="addToCart(product)">Add To Cart</button>
+                                        <button class="btn btn-dark mt-2" @click="addToCart(product)">Add To
+                                            Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -132,10 +156,15 @@
     </div>
 </template>
 
+
 <script>
 import axios from "axios";
+import Header from "../include/Header.vue";
 
 export default {
+    components: {
+        Header
+    },
     data() {
         return {
             categories: [],
@@ -203,6 +232,11 @@ export default {
             this.fetchProducts();
         },
 
+        searchProducts() {
+            console.log("Searching for:", this.keyword);
+            this.fetchProducts();
+        },
+
         changePage(url) {
             if (!url) return;
             const page = new URL(url).searchParams.get("page");
@@ -211,6 +245,7 @@ export default {
             }
         }
     },
+
     watch: {
         sort() {
             console.log("Sort changed to:", this.sort);

@@ -84,7 +84,7 @@
                                             <div class="row align-items-center">
                                                 <!-- Image Column -->
                                                 <div class="col-4 col-md-3 col-xl-2">
-                                                    <router-link :to="'/product/' + item.product.slug">
+                                                    <router-link :to="'/view-product/' + item.product.slug">
                                                         <img :src="getImageUrl(item.product.image)" class="img-fluid" />
                                                     </router-link>
                                                 </div>
@@ -93,7 +93,7 @@
                                                 <div class="col-8 col-md-9 col-xl-10">
                                                     <p class="mb-4 fs-sm fw-bold">
                                                         <router-link class="text-body"
-                                                            :to="'/product/' + item.product.slug">
+                                                            :to="'/view-product/' + item.product.slug">
                                                             {{ item.name }} X <b><u><i>{{ item.qty }}</i></u></b>
                                                         </router-link>
                                                         <br />
