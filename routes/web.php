@@ -24,7 +24,7 @@ use App\Http\Controllers\ExportController;
 Route::get('/{any}', function () {
     return view('welcome');
 })->where('any', '.*');
-
+Route::get('/cart', [CartController::class, 'index'])->middleware('web');  // Guest user session
 // Route::get('/orderEmail', function () {
 //     sendEmail(7);
 // });

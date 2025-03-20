@@ -208,8 +208,8 @@ class SettingController extends Controller
     {
         $user_id = 7;//Auth::user()->id;
 
-        $order = Order::where('user_id', $user_id)->where('id', 148)->first();
-        $order_item = OrderItem::where('order_id', 148)->with('product')->get();
+        $order = Order::where('user_id', $user_id)->where('id', $id)->first();
+        $order_item = OrderItem::where('order_id', $id)->with('product')->get();
         // dd($order_item);
         $order_item_count = OrderItem::where('order_id', 148)->count();
         return response()->json(['order' => $order, 'order_item' => $order_item, 'order_item_count' => $order_item_count]);

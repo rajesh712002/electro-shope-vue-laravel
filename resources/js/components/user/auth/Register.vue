@@ -130,7 +130,7 @@
     },
     methods: {
       async handleRegister() {
-        this.errors = {}; // Clear previous errors
+        this.errors = {}; 
   
         if (!this.name) this.errors.name = "Name is required";
         if (!this.email) this.errors.email = "Email is required";

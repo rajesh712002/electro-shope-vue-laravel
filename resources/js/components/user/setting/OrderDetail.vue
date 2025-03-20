@@ -160,6 +160,7 @@ export default {
     },
     data() {
         return {
+            id: this.$route.params.id,
             order: {},
             orderItems: [],
             statusMessage: "",
@@ -167,8 +168,9 @@ export default {
     },
     methods: {
         async fetchOrder() {
+            
             try {
-                const response = await axios.get("/api/order-detail/154");
+                const response = await axios.get(`/api/order-detail/${this.id}`);
                 this.order = response.data.order || {};
                 this.orderItems = response.data.order_item || [];
                 console.log(response)

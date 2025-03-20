@@ -28,10 +28,12 @@
 <script>
 import dropin from 'braintree-web-drop-in';
 import axios from 'axios';
+import { useCartStore } from "../../../stores/cartStore";
 
 export default {
   data() {
     return {
+      cartStore: useCartStore(),
       amount: '',
       loading: false,
       clientToken: '',
@@ -58,7 +60,7 @@ export default {
         console.log('get', responsee)
         const response = await axios.get('/api/braintree');
         this.clientToken = response.data.token;
-        this.amount = response.data.newTotal;
+        this.amount = this.cartStore.totalAmount;
         console.log(response)
         console.log('Client Token:', this.clientToken);
         if (this.clientToken) {

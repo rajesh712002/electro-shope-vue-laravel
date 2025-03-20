@@ -29,7 +29,7 @@ class AuthenticationController extends Controller
         return response()->json(['message' => 'NOt Login'], 401);
     }
 
-    
+
     public function userLoginCheck(Request $request)
     {
         $validate = $request->validate([
@@ -44,19 +44,20 @@ class AuthenticationController extends Controller
                 // Save guest cart after login
                 $this->svaeGuestCart();
 
-                // Generate a Sanctum token for the user
-                // $token = $user->createToken('auth_token')->plainTextToken;
-                $request->session()->regenerate();
+                // Generate Sanctum token for authentication
+                $token = $user->createToken('auth_token')->plainTextToken;
+
                 return response()->json([
-                    'success' => 'Login Successfully',
-                    // 'token' => $token,
+                    'success' => 'Login Successfull',
+                    'message' => 'Login Successfully',
+                    'token' => $token,
                     'user' => $user
                 ]);
             } else {
-                return response()->json(['message' => 'Either Email or Password Incorrect'], 401);
+                return response()->json(['message' => 'Unauthorized Access'], 401);
             }
         } else {
-            return response()->json(['message' => 'Either Email or Password Incorrect'], 401);
+            return response()->json(['message' => 'Invalid Email or Password'], 401);
         }
     }
 
@@ -115,26 +116,66 @@ class AuthenticationController extends Controller
     }
 
 
+    // public function adminLogincheck(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email|max:100',
+    //         'password' => 'required|min:8|max:50'
+    //     ]);
+
+    //     if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+    //         $admin = Auth::guard('admin')->user();
+
+    //         if ($admin->role == 2) {
+    //             return response()->json(['success' => 'Welcome Admin!'], 200);
+    //         } else {
+    //             return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
+    //         }
+    //     }
+
+    //     return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
+    // }
+
+
+
+    public function getAdminDetails(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
+    public function logoutAdmin(Request $request)
+    {
+        $request->user()->tokens()->delete(); // Revoke all tokens
+        return response()->json(['message' => 'Logged out successfully']);
+    }
+
+
     public function adminLogincheck(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|max:100',
-            'password' => 'required|min:8|max:50'
+            // 'email' => 'required|email|max:100',
+            // 'password' => 'required|min:8|max:50'
         ]);
 
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
             $admin = Auth::guard('admin')->user();
-
             if ($admin->role == 2) {
-                return response()->json(['success' => 'Welcome Admin!'], 200);
+                // Generate API Token for authentication
+                $token = $admin->createToken('AdminAuthToken')->plainTextToken;
+                // dump($token);
+
+                return response()->json([
+                    'success' => 'Welcome Admin!',
+                    'token' => $token,
+                    'admin' => $admin
+                ], 200);
             } else {
                 return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
             }
+        } else {
+            return response()->json(['message' => 'OK, Either Email or Password is Incorrect'], 401);
         }
-
-        return response()->json(['message' => 'Either Email or Password is Incorrect'], 401);
     }
-
 
 
     public function adminLogout(Request $request)

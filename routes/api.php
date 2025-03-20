@@ -18,13 +18,18 @@ use App\Http\Controllers\admin\AdminloginController;
 use App\Http\Controllers\Auth\AuthenticationController;
 use App\Http\Controllers\admin\DiscountCouponController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return response()->json(['user' => $request->user()]);
 // });
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+  return $request->user();
+});
 
+Route::get('/banners', [DiscountCouponController::class, 'bannerCursor']);
+  
 // Route::get('/test-session', [CheckoutController::class, 'testSession']);
 
 // Route::get('/forgot-password', [SettingController::class, 'forgetPassword']);
@@ -67,13 +72,14 @@ Route::post('/user-register', [UserController::class, 'storeRegister']);
 
 Route::post('/change-password', [SettingController::class, 'showchangePassword']);
 
-Route::get('/cart', [CartController::class, 'index']);
-Route::post('/add-cart', [CartController::class, 'addToCart']);
+Route::middleware(['auth:sanctum'])->get('/cart', [CartController::class, 'index']);
+// Route::get('/cart', [CartController::class, 'index']);    //For Guest User
+Route::middleware(['auth:sanctum'])->post('/add-cart', [CartController::class, 'addToCart']);
 Route::put('/cart/increase/{rowId}', [CartController::class, 'increaseCartQty']);
 Route::put('/cart/decrease/{rowId}', [CartController::class, 'decreaseCartQty']);
 Route::delete('/cart/remove_item/{rowId}', [CartController::class, 'remove_item']);
 
-Route::post('/apply_coupon', [CheckoutController::class, 'applyCoupon']);
+Route::middleware(['auth:sanctum'])->post('/apply_coupon', [CheckoutController::class, 'applyCoupon']);
 Route::post('/remove_coupon', [DiscountCouponController::class, 'removeCoupon']);
 Route::get('/get_coupons', [DiscountCouponController::class, 'getCoupons']);
 
@@ -104,10 +110,13 @@ Route::post('/save-rating/{id?}', [ShopController::class, 'saveRating']);
 
 
 Route::post('/admin-login', [AuthenticationController::class, 'adminLogincheck']);
-
+Route::middleware('auth:sanctum')->group(function () {
+  Route::get('/admin/me', [AuthenticationController::class, 'getAdminDetails']);
+  Route::post('/admin/logout', [AuthenticationController::class, 'logoutAdmin']);
+});
 // Route::middleware([ValidAdmin::class])->group(function () {
 Route::put('/admin/change-password', [AdminloginController::class, 'showchangePassword']);
-Route::get('/admin/logout', [AuthenticationController::class, 'adminLogout']);
+// Route::get('/admin/logout', [AuthenticationController::class, 'adminLogout']);
 
 
 Route::get('/deshboard', [AdminloginController::class, 'getDashboardData']);

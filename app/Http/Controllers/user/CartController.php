@@ -17,8 +17,8 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         // if (Auth::check()) {
-
-            $userId = 7;//Auth::user()->id;
+        // dd(Auth::user());
+            $userId = Auth::user()->id;
             $cart_prod_id =  DB::table('carts')
                 ->where('product_id', '=', $request->prod_id)
                 ->where('user_id', '=', $userId)
@@ -28,7 +28,7 @@ class CartController extends Controller
             } else {
                 $cart = new  Cart();
                 $cart->product_id = $request->prod_id;
-                $cart->user_id = $request->user_id;
+                $cart->user_id = $userId;
                 $cart->qty = $request->qty;
                 $cart->save();
             }
@@ -129,10 +129,12 @@ class CartController extends Controller
     {
         $userId = 7;// Auth::user()->id;
 
+        // dd($id);
         $cart = Cart::where('id', $id)
             ->where('user_id', $userId)
             ->firstOrFail();
         
+
         $product = DB::table('products')
             ->where('id', $cart->product_id)
             ->select('qty as pqty')

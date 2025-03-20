@@ -1,10 +1,20 @@
 <template>
   <Header></Header>
   <main>
+
+
     <section class="section-1">
       <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel"
-        data-bs-interval="false">
-        <div class="carousel-inner"></div>
+        data-bs-interval="3000">
+        <div class="carousel-inner">
+          <div v-for="(banner, index) in banners" :key="banner.id" :class="['carousel-item', { active: index === 0 }]">
+            <img :src="'/admin_assets/images/' + banner.image" class="d-block w-100" alt="Banner Image">
+            <div class="carousel-caption d-none d-md-block">
+              <h1 class="display-4 text-white mb-3 ">{{ banner.title }}</h1>
+              <p class="mx-md-5 px-5" v-html="banner.description"></p>
+            </div>
+          </div>
+        </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
           data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -17,6 +27,7 @@
         </button>
       </div>
     </section>
+
 
     <section class="section-2">
       <div class="container">
@@ -39,14 +50,14 @@
         <div class="row pb-3">
           <div class="col-lg-3" v-for="category in categories" :key="category.id">
             <div class="cat-card">
-              <router-link :to="'/shop' ">
+              <router-link :to="'/shop'">
                 <div class="left">
                   <img class="imgfluid" :src="'/admin_assets/images/' + category.image" alt="Category Image"
                     style="width: 100px; height: 100px; object-fit:contain;">
                 </div>
               </router-link>
               <div class="right">
-                <router-link :to="'/shop/' ">
+                <router-link :to="'/shop/'">
                   <div class="cat-data">
                     <h2><b>{{ category.name }}</b></h2>
                     <p><b>{{ category.product_count }} Products</b></p>
@@ -101,6 +112,9 @@
 <script>
 import axios from 'axios';
 import Header from './include/Header.vue';
+import { useAuthStore } from "../../stores/auth"; 
+import { useGuestCartStore } from "../../stores/guestCart"; 
+
 export default {
   components: {
     Header
@@ -108,23 +122,34 @@ export default {
   data() {
     return {
       categories: [],
+      banners: [],
       products: [],
       features: [
         { icon: 'fa-check', text: 'Quality Product' },
         { icon: 'fa-shipping-fast', text: 'Free Shipping' },
         { icon: 'fa-exchange-alt', text: '14-Day Return' },
         { icon: 'fa-phone-volume', text: '24/7 Support' }
-      ]
+      ],
+      authStore: useAuthStore(),
+      
     };
   },
   mounted() {
 
     this.fetchCategories();
     this.fetchProducts();
-    this.fetchUser();
+    this.fetchBanners();
   },
   methods: {
-
+    async fetchBanners() {
+      try {
+        const response = await axios.get('/api/banners');
+        console.log('banners', response);
+        this.banners = response.data.banners;
+      } catch (error) {
+        console.error('Error fetching banners:', error);
+      }
+    },
     async fetchCategories() {
       try {
         const response = await axios.get('/api/get-category');
@@ -142,37 +167,67 @@ export default {
         console.error('Error fetching products:', error);
       }
     },
-    async addToCart(product) {
-      console.log('Adding to cart:', product);
-      try {
-        const response = await axios.post('/api/add-cart', {
-          prod_id: product.id,
-          user_id: 7,  // Adjust based on your auth system
-          qty: 1,  // Assuming default quantity is 1
-          price: product.price,
-          name: product.prod_name,
-          image: product.image || (product.product_images?.length > 0 ? product.product_images[0].images : ''),
-          max_qty: product.qty  // Assuming 'qty' represents stock availability
-        });
+    // async addToCart(product) {
+    //   console.log('Adding to cart:', product);
+    //   try {
+    //     const response = await axios.post('/api/add-cart', {
+    //       prod_id: product.id,
+    //       user_id: 7,  
+    //       qty: 1, 
+    //       price: product.price,
+    //       name: product.prod_name,
+    //       image: product.image || (product.product_images?.length > 0 ? product.product_images[0].images : ''),
+    //       max_qty: product.qty 
+    //     });
 
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error adding to cart:', error);
+    //     console.log(response.data);
+    //   } catch (error) {
+    //     console.error('Error adding to cart:', error);
+    //   }
+    // },
+
+    async addToCart(product) {
+      // const authStore = useAuthStore(); // Get Auth Store
+      const guestCartStore = useGuestCartStore(); // Get Guest Cart Store
+
+      console.log('Adding to cart:', product);
+
+      if (this.authStore.isAuthenticated) {
+        try {
+          const response = await axios.post('/api/add-cart', {
+            prod_id: product.id,
+            // user_id: this.authStore.userId, // Get logged-in user ID
+            qty: 1,
+            price: product.price,
+            name: product.prod_name,
+            image: product.image || (product.product_images?.length > 0 ? product.product_images[0].images : ''),
+            max_qty: product.qty
+          }, {
+            headers: { Authorization: `Bearer ${this.authStore.token}` }
+          });
+
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+        }
+      } else {
+        guestCartStore.addToCart(product);
+        console.log('Added to guest cart:', guestCartStore.cart);
       }
     },
-    async fetchUser() {
-      try {
-        let response = await axios.get("/api/valid-user", {
-          withCredentials: true,
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        });
-        console.log('user', response.data.user); // Returns logged-in user
-      } catch (error) {
-        console.error("User not authenticated", error);
-      }
-    }
+    // async fetchUser() {
+    //   try {
+    //     let response = await axios.get("/api/valid-user", {
+    //       withCredentials: true,
+    //       headers: {
+    //         'X-Requested-With': 'XMLHttpRequest'
+    //       }
+    //     });
+    //     console.log('user', response.data.user); // Returns logged-in user
+    //   } catch (error) {
+    //     console.error("User not authenticated", error);
+    //   }
+    // }
 
   }
 };

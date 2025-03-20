@@ -15,7 +15,7 @@
                             <div class="col-sm-6">
                                 <h1>Orders</h1>
                             </div>
-                            <div class="col-sm-6 text-left">
+                            <div class="col-sm-2 text-left">
                                 <button @click="getExcel" class="btn btn-warning">Export Data</button>
                             </div>
                         </div>

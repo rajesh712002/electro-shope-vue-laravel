@@ -47,7 +47,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 /* Overlay spinner */
 .overlay {
     position: fixed;
@@ -61,4 +61,12 @@ export default {
     align-items: center;
     z-index: 9999;
 }
+
+td img {
+    max-width: 100px; 
+    height: auto;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
 </style>

@@ -48,12 +48,14 @@
               <router-link to="/forget-password" class="forgot-link">Forgot Password?</router-link>
             </div>
 
-            <button type="submit" class="btn btn-dark btn-block btn-lg">Login</button>
+            <button type="submit" class="btn btn-dark btn-block btn-lg" :disabled="loading">
+              {{ loading ? "Logging in..." : "Login" }}
+            </button>
           </form>
 
           <div class="text-center small">
             Don't have an account?
-            <router-link to="/register">Sign up</router-link>
+            <router-link to="/user-register">Sign up</router-link>
           </div>
         </div>
       </div>
@@ -63,6 +65,7 @@
 
 <script>
 import axios from "axios";
+import { useAuthStore } from "../../../stores/auth";
 
 export default {
   data() {
@@ -71,6 +74,8 @@ export default {
       password: "",
       errors: {},
       successMessage: "",
+      errorMessage: "",
+      loading: false,
     };
   },
   methods: {
@@ -78,6 +83,7 @@ export default {
       this.errors = {};
       this.successMessage = "";
       this.errorMessage = "";
+      this.loading = true;
 
       try {
         let response = await axios.post("/api/user-login", {
@@ -85,29 +91,29 @@ export default {
           password: this.password,
         });
 
-        console.log('user',response);
-
-        if ( response.data.success) {
-          localStorage.setItem("auth_token", response.data.token); // Store token
-          localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user data
+        if (response.data.success) {
+          const authStore = useAuthStore();
+          authStore.login(response.data.user, response.data.token);
 
           this.successMessage = response.data.success;
-
           setTimeout(() => {
-            this.$router.push("/");
+            this.$router.push("/"); 
           }, 1000);
         }
       } catch (error) {
-        console.log(error);
-        this.errorMessage = error.response?.data?.message || "Login failed.";
+        if (error.response?.data?.errors) {
+          this.errors = error.response.data.errors; 
+        } else {
+          this.errorMessage = error.response?.data?.message || "Login failed.";
+        }
+      } finally {
+        this.loading = false;
       }
-    }
-
-
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Add your custom styles here */
+
 </style>

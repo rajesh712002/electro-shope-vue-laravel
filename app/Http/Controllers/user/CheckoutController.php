@@ -76,6 +76,7 @@ class CheckoutController extends Controller
 
     public function checkout()
     {
+        
         $userId = 7; //Auth::user()->id;
 
         // dd($cart_prod_id);
@@ -116,8 +117,9 @@ class CheckoutController extends Controller
 
     public function applyCoupon(Request $request)
     {
-
-        $user = 7; //Auth::user();
+        
+        $user = Auth::user();
+        // dd($user);
         $couponCode = $request->input('coupon_code');
 
         // Timezone and current time

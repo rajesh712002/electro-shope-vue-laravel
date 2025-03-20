@@ -30,37 +30,41 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in cart" :key="item.cid">
+                  <tr v-for="item in (isGuest ? guestCartItems : cart)" :key="item.prod_id">
                     <td>
                       <router-link :to="'/view-product/' + item.slug">
                         <img :src="getImage(item)" width="120" height="120" class="cardimgtop" alt="Product Image" />
                       </router-link>
                     </td>
-                    <td>{{ item.prod_name }}</td>
+                    <td>{{ isGuest ? item.name : item.prod_name }}</td>
                     <td>{{ item.price }}</td>
-              
                     <td>
                       <div class="input-group quantity mx-auto" style="width: 100px;">
                         <button type="button" class="btn btn-sm btn-dark btn-minus px-2 py-1"
-                          @click="updateQuantity(item.cid, 'decrease')">
+                          @click="updateQuantity(isGuest ? item.prod_id : item.cid, 'decrease')">
                           <i class="fa fa-minus"></i>
                         </button>
+                        <input v-if="isGuest" type="text" class="form-control form-control-sm border-0 text-center"
+                          v-model="item.qty" readonly>
                         <input type="text" class="form-control form-control-sm border-0 text-center" v-model="item.cqty"
                           readonly>
                         <button type="button" class="btn btn-sm btn-dark btn-plus px-2 py-1"
-                          @click="updateQuantity(item.cid, 'increase')">
+                          @click="updateQuantity(isGuest ? item.prod_id : item.cid, 'increase')">
                           <i class="fa fa-plus"></i>
                         </button>
                       </div>
                     </td>
+                    <td v-if="isGuest">{{ item.price * (isGuest ? item.qty : item.cqty) }}</td>
+                    <!-- <td>{{ item.price * item.cqty }}</td> -->
 
-                    <td>{{ item.price * item.cqty }}</td>
                     <td>
-                      <button class="btn btn-sm btn-danger" @click="removeItem(item.cid)">
+                      <button class="btn btn-sm btn-danger" @click="removeItem(isGuest ? item.prod_id : item.cid)">
                         <i class="fa fa-times"></i>
                       </button>
                     </td>
                   </tr>
+
+
                 </tbody>
               </table>
             </div>
@@ -76,29 +80,34 @@
                 <h2 class="bg-white">Cart Summary</h2>
               </div>
               <div class="card-body">
-                <div class="d-flex justify-content-between pb-2">
-                  <div>Subtotal</div>
-                  <div>{{ totalSum }}</div>
+                <div class="d-flex justify-content-between summary-end">
+                  <div>Total</div>
+                  <div>{{ isGuest ? guestTotalPrice : totalPrice }}</div>
                 </div>
+
                 <div class="d-flex justify-content-between pb-2">
                   <div>Discount</div>
-                  <div>{{ discount }}</div>
+                  <div>{{ discountAmount }}</div>
                 </div>
+
                 <div class="d-flex justify-content-between pb-2">
                   <div>Shipping</div>
                   <div>Free</div>
                 </div>
                 <br>
-                <div class="input-group apply-coupon mt-4">
-                  <input type="text" placeholder="Coupon Code" class="form-control" v-model="couponCode">
-                  <button class="btn btn-dark" @click="applyCoupon">Apply Coupon</button>
+                <div v-if="!isGuest">
+                  <div class="input-group apply-coupon mt-4">
+                    <input type="text" placeholder="Coupon Code" class="form-control" v-model="couponCode">
+                    <button class="btn btn-dark" @click="applyCoupon">Apply Coupon</button>
+                  </div>
+                  <button class="btn btn-danger btn-sm mt-2" v-if="couponCode" @click="removeCoupon">Remove
+                    Coupon</button>
                 </div>
-                <button class="btn btn-danger btn-sm mt-2" v-if="couponCode" @click="removeCoupon">Remove
-                  Coupon</button>
+
                 <br><br>
                 <div class="d-flex justify-content-between summary-end">
                   <div>Total</div>
-                  <div>{{ newTotal }}</div>
+                  <div>{{ isGuest ? guestTotalPrice : totalPrice }}</div>
                 </div>
                 <div class="pt-5">
                   <router-link to="/checkout" class="btn btn-dark w-100">Proceed to Checkout</router-link>
@@ -112,72 +121,24 @@
   </main>
 </template>
 
-<!-- <script>
-  import Header from "../include/Header.vue";
-
-  export default {
-    components: {
-      Header,
-    },
-    data() {
-      return {
-        cart: [], // Fetch from API or Vuex
-        couponCode: '',
-        discount: 0,
-      };
-    },
-    computed: {
-      totalSum() {
-        return this.cart.reduce((sum, item) => sum + item.price * item.cqty, 0);
-      },
-      newTotal() {
-        return this.totalSum - this.discount;
-      }
-    },
-    methods: {
-      getImage(item) {
-        return item.images ? `/admin_assets/images/${item.images}` : `/admin_assets/images/${item.image}`;
-      },
-      updateQuantity(cid, action) {
-        const item = this.cart.find(p => p.cid === cid);
-        if (item) {
-          if (action === 'increase') item.cqty++;
-          else if (action === 'decrease' && item.cqty > 1) item.cqty--;
-        }
-      },
-      removeItem(cid) {
-        this.cart = this.cart.filter(item => item.cid !== cid);
-      },
-      applyCoupon() {
-        // Fetch coupon discount from API
-        this.discount = 10; // Example
-      },
-      removeCoupon() {
-        this.couponCode = '';
-        this.discount = 0;
-      }
-    },
-    created() {
-      // Fetch cart items from API or localStorage
-      this.cart = [
-        { cid: 1, prod_name: 'Product 1', price: 100, cqty: 2, image: 'default.jpg', slug: 'product-1' },
-        { cid: 2, prod_name: 'Product 2', price: 200, cqty: 1, image: 'product2.jpg', slug: 'product-2' }
-      ];
-    }
-  };
-  </script> -->
 
 <script>
 import Header from "../include/Header.vue";
-import axios from "axios"; // Import Axios for API calls
-
+import axios from "axios";
+import { useAuthStore } from "../../../stores/auth";
+import { useCartStore } from "../../../stores/cartStore";
+import { useGuestCartStore } from "../../../stores/guestCart";
+// const authStore = useAuthStore(); // 
 export default {
   components: {
     Header,
   },
   data() {
     return {
-      cart: [], 
+      authStore: useAuthStore(),
+      cartStore: useCartStore(),
+      guestCartStore: useGuestCartStore(),
+      cart: [],
       totalSum: 0,
       couponCode: '',
       discount: 0,
@@ -186,81 +147,246 @@ export default {
   },
   computed: {
     newTotalAmount() {
-      return this.totalSum - this.discount; 
+      return this.totalSum - this.discount;
     }
   },
+
+  // methods: {
+  //   async fetchCartData() {
+  //     if (this.isGuest) {
+
+  //       this.cart = this.guestCartStore.cart;
+  //       this.totalSum = this.guestCartStore.cartTotal;
+  //     }
+  //     else {
+  //       try {
+  //         const response = await axios.get("/api/cart", {
+  //           headers: { Authorization: `Bearer ${this.authStore.token}` }
+  //         });
+  //         const data = response.data;
+  //         console.log(response)
+  //         this.cart = data.product;
+  //         this.totalSum = data.totalSum;
+  //         this.couponCode = data.couponCode || '';
+  //         this.discount = data.discount;
+  //         this.newTotal = data.newTotal;
+  //       } catch (error) {
+  //         console.error("Error fetching cart data:", error);
+  //       }
+  //     }
+  //   },
+  //   getImage(item) {
+  //     return item.images ? `/admin_assets/images/${item.images}` : `/admin_assets/images/${item.image}`;
+  //   },
+  //   async updateQuantity(rowId, action) {
+  //     try {
+  //       if (action === "increase") {
+  //         await axios.put(`/api/cart/increase/${rowId}`);
+  //       } else if (action === "decrease") {
+  //         await axios.put(`/api/cart/decrease/${rowId}`);
+  //       }
+  //       this.fetchCartData();
+  //     } catch (error) {
+  //       console.error("Error updating quantity:", error);
+  //     }
+  //   },
+  //   async removeItem(rowId) {
+  //     try {
+  //       await axios.delete(`/api/cart/remove_item/${rowId}`);
+  //       this.fetchCartData();
+  //     } catch (error) {
+  //       console.error("Error removing item:", error);
+  //     }
+  //   },
+  //   async applyCoupon() {
+  //     try {
+
+  //       const response = await axios.post("/api/apply_coupon", {
+  //         coupon_code: this.couponCode,
+  //       }, {
+  //         headers: { Authorization: `Bearer ${this.authStore.token}` }
+  //       });
+  //       console.log('auth', response)
+  //       const data = response.data;
+
+  //       if (data.success) {
+
+  //         this.cartStore.setCoupon(this.couponCode, data.discountAmount, data.newTotal);
+  //         // this.fetchCartData();
+
+  //       } else {
+  //         alert(data.message);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error applying coupon:", error);
+  //       alert("An error occurred while applying the coupon.");
+  //     }
+  //   },
+  //   async removeCoupon() {
+  //     try {
+  //       await axios.post("/api/remove_coupon", {}, {
+  //         headers: { Authorization: `Bearer ${this.authStore.token}` }
+  //       });
+
+  //       this.cartStore.clearCoupon();
+  //       this.fetchCartData();
+
+  //     } catch (error) {
+  //       console.error("Error removing coupon:", error);
+  //       alert("An error occurred while removing the coupon.");
+  //     }
+  //   },
+
+
+  //   async getCoupons() {
+  //     try {
+  //       const response = await axios.get("/api/get_coupons");
+  //       console.log(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching coupons:", error);
+  //     }
+  //   }
+  // },
+  // created() {
+  //   this.fetchCartData();
+  // },
+
+
   methods: {
     async fetchCartData() {
-      try {
-        const response = await axios.get("/api/cart"); 
-        const data = response.data;
-
-        this.cart = data.product;
-        this.totalSum = data.totalSum;
-        this.couponCode = data.couponCode || ''; 
-        this.discount = data.discount;
-        this.newTotal = data.newTotal;
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
+      if (this.isGuest) {
+        // Guest User: Load from Local Storage
+        this.cart = this.guestCartStore.cart;
+        this.totalSum = this.guestCartStore.cartTotal;
+      } else {
+        // Authenticated User: Load from API
+        try {
+          const response = await axios.get("/api/cart", {
+            headers: { Authorization: `Bearer ${this.authStore.token}` }
+          });
+          console.log(response.data.product);
+          const data = response.data;
+          this.cart = data.product;
+          this.totalSum = data.totalSum;
+          this.couponCode = data.couponCode || '';
+          this.discount = data.discount;
+          this.newTotal = data.newTotal;
+        } catch (error) {
+          console.error("Error fetching cart data:", error);
+        }
       }
     },
     getImage(item) {
       return item.images ? `/admin_assets/images/${item.images}` : `/admin_assets/images/${item.image}`;
     },
-    async updateQuantity(rowId, action) {
+    updateQuantity(productId, action) {
+      if (this.isGuest) {
+        this.guestCartStore.updateCartItem(productId, action);
+      } else {
+        this.updateQuantityAPI(productId, action);
+      }
+    },
+    removeItem(productId) {
+      if (this.isGuest) {
+        this.guestCartStore.removeFromCart(productId);
+      } else {
+        this.removeItemAPI(productId);
+      }
+    },
+    async updateQuantityAPI(rowId, action) {
       try {
         if (action === "increase") {
           await axios.put(`/api/cart/increase/${rowId}`);
         } else if (action === "decrease") {
           await axios.put(`/api/cart/decrease/${rowId}`);
         }
-        this.fetchCartData(); 
+        this.fetchCartData();
       } catch (error) {
         console.error("Error updating quantity:", error);
       }
     },
-    async removeItem(rowId) {
+    async removeItemAPI(rowId) {
       try {
         await axios.delete(`/api/cart/remove_item/${rowId}`);
-        this.fetchCartData(); 
+        this.fetchCartData();
       } catch (error) {
         console.error("Error removing item:", error);
       }
     },
+
+
     async applyCoupon() {
       try {
-        const response = await axios.post("/api/apply_coupon", {
-          coupon: this.couponCode,
-        });
 
+        const response = await axios.post("/api/apply_coupon", {
+          coupon_code: this.couponCode,
+        }, {
+          headers: { Authorization: `Bearer ${this.authStore.token}` }
+        });
+        console.log('auth', response)
         const data = response.data;
-        this.discount = data.discount;
-        this.newTotal = data.newTotal;
+
+        if (data.success) {
+
+          this.cartStore.setCoupon(this.couponCode, data.discountAmount, data.newTotal);
+          // this.fetchCartData();
+
+        } else {
+          alert(data.message);
+        }
       } catch (error) {
         console.error("Error applying coupon:", error);
+        alert("An error occurred while applying the coupon.");
       }
     },
     async removeCoupon() {
       try {
-        await axios.post("/api/remove_coupon");
-        this.couponCode = '';
-        this.discount = 0;
-        this.fetchCartData(); 
+        await axios.post("/api/remove_coupon", {}, {
+          headers: { Authorization: `Bearer ${this.authStore.token}` }
+        });
+
+        this.cartStore.clearCoupon();
+        this.fetchCartData();
+
       } catch (error) {
         console.error("Error removing coupon:", error);
+        alert("An error occurred while removing the coupon.");
       }
     },
+
+
     async getCoupons() {
       try {
         const response = await axios.get("/api/get_coupons");
-        console.log(response.data); 
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching coupons:", error);
       }
     }
+
+
   },
   created() {
-    this.fetchCartData(); 
+    this.fetchCartData();
+  },
+
+  computed: {
+    discountAmount() {
+      return this.cartStore.discount;
+    },
+    totalPrice() {
+      return this.cartStore.totalAmount || this.totalSum;
+    },
+    isGuest() {
+      return !this.authStore.token;
+    },
+    guestCartItems() {
+      return this.guestCartStore.cart;
+    },
+    guestTotalPrice() {
+      return this.guestCartStore.cartTotal;
+    }
+
   }
 };
 </script>

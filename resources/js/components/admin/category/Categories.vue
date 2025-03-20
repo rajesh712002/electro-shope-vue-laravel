@@ -75,7 +75,7 @@
                             </svg>
                           </router-link>
 
-                          <a href="#" @click.prevent="deleteCategory(category.id)" class="text-danger w-4 h-4 mr-1">
+                          <a href="#" @click.prevent="deleteCategory(category.id)" class="text-danger w-4 h-4 mr">
                             <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                               fill="currentColor" aria-hidden="true">
                               <path fill-rule="evenodd"
@@ -131,12 +131,9 @@ export default {
 
     async fetchCategories() {
       try {
-        let url = `http://127.0.0.1:8001/api/category-show?page=${this.currentPage}&keyword=${this.searchKeyword}`;
+        let url = `/api/category-show?page=${this.currentPage}&keyword=${this.searchKeyword}`;
         let result = await axios.get(url);
-        // Check the structure of the response
         console.log("Full response:", result);
-
-        // Store the categories and pagination
         this.categories = result.data.categories;
         this.pagination = result.data.pagination;
 
@@ -151,9 +148,9 @@ export default {
 
     deleteCategory(id) {
       if (confirm("Do you really want to delete this record?")) {
-        axios.delete(`http://127.0.0.1:8001/api/delete-category/${id}`)
+        axios.delete(`/api/delete-category/${id}`)
           .then(() => {
-            this.fetchCategories(this.currentPage); // Refresh the list after deletion
+            this.fetchCategories(this.currentPage); 
           })
           .catch((error) => {
             console.error(error);
@@ -178,5 +175,5 @@ export default {
 </script>
 
 <style scoped>
-/* Add your scoped styles here */
+
 </style>

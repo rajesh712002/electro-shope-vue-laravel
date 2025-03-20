@@ -98,7 +98,7 @@ export default {
                 old_password: this.old_password,
                 new_password: this.new_password,
                 confirm_password: this.confirm_password,
-                _method: "PUT" // Include this inside the request payload, not as a separate config
+                _method: "PUT" 
             }
         );
 

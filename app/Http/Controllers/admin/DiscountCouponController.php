@@ -284,6 +284,6 @@ class DiscountCouponController extends Controller
             return $item;
         });
         // dd($banner);
-        return response()->json($banner);
+        return response()->json(['banners'=>$banner]);
     }
 }

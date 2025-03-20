@@ -77,8 +77,8 @@ export default {
   },
   data() {
     return {
-      profile: {}, // Changed from [] to {} to avoid "undefined" errors
-      errors: {}   // Ensure error messages are correctly handled
+      profile: {}, 
+      errors: {}   
     };
   },
   mounted() {

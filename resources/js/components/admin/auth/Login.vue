@@ -58,6 +58,7 @@
 
 <script>
 import axios from "axios";
+import { useAdminAuthStore } from "../../../stores/adminAuth";
 
 export default {
   data() {
@@ -71,7 +72,7 @@ export default {
   },
   methods: {
     async handleLogin() {
-      this.errors = {}; // Clear errors
+      this.errors = {}; 
       this.successMessage = "";
       this.errorMessage = "";
 
@@ -83,7 +84,12 @@ export default {
 
         if (response.data.success) {
           this.successMessage = response.data.success;
-          // Redirect admin after successful login
+          console.log('res',response)
+          const authStore = useAdminAuthStore();
+          console.log('auth',authStore)
+
+          authStore.initAuth(response.data.admin, response.data.token); 
+          
           setTimeout(() => {
             this.$router.push("/deshboard");
           }, 1000);
@@ -91,10 +97,10 @@ export default {
       } catch (error) {
         if (error.response) {
           if (error.response.status === 422) {
-            // Validation errors
+           
             this.errors = error.response.data.errors;
           } else {
-            // Authentication error
+          
             this.errorMessage = error.response.data.message || "Login failed. Please try again.";
           }
         } else {
@@ -109,7 +115,7 @@ export default {
 
 <style scoped>
 .login-box {
-  width: 400px; /* Adjust width as needed */
+  width: 400px; 
   margin: auto;
   position: absolute;
   top: 50%;

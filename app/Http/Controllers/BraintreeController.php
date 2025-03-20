@@ -165,7 +165,8 @@ class BraintreeController extends Controller
             $order = new Order();
             $order->subtotal = $totalSum;
             $order->shipping = 0;
-            $order->grand_total = $newTotal;
+            $order->grand_total = $amount ?? $newTotal;
+            // $order->grand_total = $newTotal;
             $order->discount = $discount;
             $order->coupon_code = $couponCode;
 

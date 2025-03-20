@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
+import { createPinia } from "pinia";  
+import { useAuthStore } from "../stores/auth.js";
+import { useAdminAuthStore } from "../stores/adminAuth.js";
+
+const pinia = createPinia(); 
 //User
 import Home from '../components/user/Home.vue';
 import Header from '../components/user/include/Header.vue';
@@ -59,7 +64,7 @@ const routes = [
     { path: '/', component: Home },
     { path: '/header', component: Header },
     { path: '/cart', component: Cart },
-    { path: '/profile', component: Profile },
+    { path: '/profile', component: Profile , meta: { requiresAuth: true }},
     { path: '/setting-sidebar', component: SettingSideBar },
     { path: '/wishlist', component: Wishlist },
     { path: '/my-order', component: Order },
@@ -69,7 +74,7 @@ const routes = [
     { path: '/order-detail/:id', component: OrderDetail },
     { path: '/view-product/:slug', component: ViewProduct },
     { path: '/shop', component: Shope },
-    { path: '/checkout', component: Checkout },
+    { path: '/checkout', component: Checkout , meta: { requiresAuth: true }},
     { path: '/braintree', component: Braintree, name: 'braintree-payment'},
     // { path: '/forget-password/:token', component: ForgetPassword },
     { path: '/forget-password', component: ForgetPassword },
@@ -85,42 +90,42 @@ const routes = [
 
     //Admin
     // { path: '/', component: Login },
-    { path: '/deshboard', component: Deshboard },
-    { path: '/admin/login', component: Login },
-    { path: '/admin/change-password', component: ChangePassword },
+    { path: '/deshboard', component: Deshboard , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/admin-login', component: Login },
+    { path: '/admin/change-password', component: ChangePassword , meta: { requiresAuth: true, role: "admin" }},
 
-    { path: '/categories', component: Categories },
-    { path: '/category-create', component: CategoryCreate },
-    { path: '/category-update/:id', component: CategoryUpdate },
+    { path: '/categories', component: Categories , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/category-create', component: CategoryCreate , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/category-update/:id', component: CategoryUpdate , meta: { requiresAuth: true, role: "admin" }},
 
-    { path: '/subcategories', component: SubCategories },
-    { path: '/subcategory-ceate', component: SubCategoryCeate },
-    { path: '/subcategory-update/:id', component: SubCategoryUpdate },
+    { path: '/subcategories', component: SubCategories , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/subcategory-ceate', component: SubCategoryCeate , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/subcategory-update/:id', component: SubCategoryUpdate , meta: { requiresAuth: true, role: "admin" }},
 
-    { path: '/products', component: Products },
-    { path: '/products-create', component: ProductsCreate },
-    { path: '/products-update/:id', component: ProductsUpdate },
-
-
-    { path: '/brands', component: Brands },
-    { path: '/brands-create', component: BrandsCreate },
-    { path: '/brands-update/:id', component: BrandsUpdate },
-
-    { path: '/banners', component: Banners },
-    { path: '/create-banner', component: BannersCreate },
-    { path: '/update-banner/:id', component: BannerUpdates },
+    { path: '/products', component: Products , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/products-create', component: ProductsCreate , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/products-update/:id', component: ProductsUpdate , meta: { requiresAuth: true, role: "admin" }},
 
 
-    { path: '/coupons', component: Coupons },
-    { path: '/coupons-create', component: CouponsCreate },
-    { path: '/coupons-update/:id', component: CouponsUpdate },
+    { path: '/brands', component: Brands , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/brands-create', component: BrandsCreate , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/brands-update/:id', component: BrandsUpdate , meta: { requiresAuth: true, role: "admin" }},
+
+    { path: '/banners', component: Banners , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/create-banner', component: BannersCreate , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/update-banner/:id', component: BannerUpdates , meta: { requiresAuth: true, role: "admin" }},
 
 
-    { path: '/orders', component: Orders },
-    { path: '/orders-view/:id', component: OrdersView },
+    { path: '/coupons', component: Coupons , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/coupons-create', component: CouponsCreate , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/coupons-update/:id', component: CouponsUpdate , meta: { requiresAuth: true, role: "admin" }},
 
-    { path: '/users', component: Users },
-    { path: '/feedbacks', component: FeedBack },
+
+    { path: '/orders', component: Orders , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/orders-view/:id', component: OrdersView , meta: { requiresAuth: true, role: "admin" }},
+
+    { path: '/users', component: Users , meta: { requiresAuth: true, role: "admin" }},
+    { path: '/feedbacks', component: FeedBack , meta: { requiresAuth: true, role: "admin" }},
 
 
 
@@ -132,5 +137,43 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+// router.beforeEach((to, from, next) => {
+//     const authStore = useAuthStore(pinia);  
+
+//     console.log("Route Guard - Checking Auth:", authStore.token);
+
+//     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+//         console.log("Route NOT Authenticated - Redirecting");
+//         next("/user-login");  
+//     } else {
+//         next();
+//     }
+// });
+
+router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
+    const adminAuthStore = useAdminAuthStore();
+
+    console.log("Route Guard - Checking Auth:", authStore.token, adminAuthStore.token);
+
+    if (to.meta.requiresAuth) {
+        if (to.meta.role === "admin") {
+            if (!adminAuthStore.isAuthenticated) {
+                console.log("Admin NOT Authenticated - Redirecting to Admin Login");
+                return next("/admin-login");
+            }
+        } else { // Default to user authentication if no role is provided
+            if (!authStore.isAuthenticated) {
+                console.log("User NOT Authenticated - Redirecting to User Login");
+                return next("/user-login");
+            }
+        }
+    }
+
+    next();
+});
+
+
 
 export default router;

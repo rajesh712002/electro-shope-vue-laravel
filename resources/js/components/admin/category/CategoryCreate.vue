@@ -118,7 +118,7 @@ export default {
         };
     },
     methods: {
-        // Handle file change event
+       
         handleFileChange(event) {
             const file = event.target.files[0];
             if (file) {
@@ -134,7 +134,7 @@ export default {
                 formData.append("image", this.form.image);
                 formData.append("status", this.form.status);
 
-                const response = await axios.post(`http://127.0.0.1:8001/api/create-category`,formData);
+                const response = await axios.post(`/api/create-category`,formData);
 
                 this.successMessage = response.data.success;
                 console.log(this.successMessage)

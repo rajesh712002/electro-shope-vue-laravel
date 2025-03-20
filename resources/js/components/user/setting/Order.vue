@@ -126,8 +126,9 @@
     async deleteOrder(orderId) {
       if (!confirm("Do you really want to cancel this order?")) return;
       try {
-        await axios.delete(`/user/order`);
-        this.orders = this.orders.filter(order => order.id !== orderId);
+        await axios.delete(`/api/order/remove_order/${orderId}`);
+        // this.orders = this.orders.filter(order => order.id !== orderId);
+        this.fetchOrders();
         alert("Order Cancelled Successfully!");
       } catch (error) {
         console.error("Error deleting order:", error);

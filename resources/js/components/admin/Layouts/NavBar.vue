@@ -3,9 +3,9 @@
         <ul class="navbar-nav ml-auto">
             <!-- Fullscreen Toggle -->
             <li class="nav-item">
-                <button @click="toggleFullscreen" class="nav-link">
+                <a href="#" @click="toggleFullscreen" class="nav-link">
                     <i class="fas fa-expand-arrows-alt"></i>
-                </button>
+                </a>
             </li>
 
             <!-- Dropdown for Admin Profile -->
@@ -109,9 +109,10 @@ export default {
 
 <style scoped>
 .img-circle {
-    border-radius: 50%;
-    cursor: pointer;
+    width: 40px !important;
+    height: 40px !important;
 }
+
 
 .dropdown-menu {
     display: none;

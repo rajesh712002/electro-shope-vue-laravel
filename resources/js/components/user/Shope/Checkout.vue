@@ -61,7 +61,7 @@
                   </div>
                   <div class="d-flex justify-content-between mt-2">
                     <div class="h6"><strong>Discount</strong></div>
-                    <strong><i class="fa fa-inr" aria-hidden="true">{{ discount }}</i></strong>
+                    <strong><i class="fa fa-inr" aria-hidden="true">{{ cartStore.discount }}</i></strong>
                   </div>
                   <div class="d-flex justify-content-between mt-2">
                     <div class="h6"><strong>Shipping</strong></div>
@@ -69,7 +69,7 @@
                   </div>
                   <div class="d-flex justify-content-between mt-2 summery-end">
                     <div class="h5"><strong>Total</strong></div>
-                    <div class="h5"><strong><i class="fa fa-inr" aria-hidden="true">{{ newTotal }}</i></strong></div>
+                    <div class="h5"><strong><i class="fa fa-inr" aria-hidden="true">{{ cartStore.totalAmount }}</i></strong></div>
                   </div>
                 </div>
               </div>
@@ -77,15 +77,15 @@
                 <h3 class="card-title h5 mb-3">Payment Details</h3>
                 <div>
                   <input type="radio" v-model="checkoutForm.payment_method" value="cod" /> COD
-                  <button type="submit" class="btn-dark btn btn-block w-100">{{ newTotal }} Pay On COD</button>
+                  <button type="submit" class="btn-dark btn btn-block w-100">{{ cartStore.totalAmount }} Pay On COD</button>
                 </div>
                 <!-- <div>
                   <input type="radio" v-model="checkoutForm.payment_method" value="stripe" /> Pay With Stripe
-                  <button type="submit" class="btn-dark btn btn-block w-100">{{ newTotal }} Pay Now</button>
+                  <button type="submit" class="btn-dark btn btn-block w-100">{{ cartStore.totalAmount }} Pay Now</button>
                 </div> -->
                 <div>
                   <input type="radio" v-model="checkoutForm.payment_method" value="braintree" /> Pay With braintree
-                  <button type="submit" class="btn-dark btn btn-block w-100">{{ newTotal }} Pay Now</button>
+                  <button type="submit" class="btn-dark btn btn-block w-100">{{ cartStore.totalAmount }} Pay Now</button>
                 </div>
               </div>
             </div>
@@ -98,6 +98,7 @@
 
 <script>
 import Header from "../include/Header.vue";
+import { useCartStore } from "../../../stores/cartStore";
 
 export default {
   components: {
@@ -105,6 +106,7 @@ export default {
   },
   data() {
     return {
+      cartStore: useCartStore(),
       loading: false,
       status: '',
       checkoutForm: {
@@ -201,7 +203,7 @@ export default {
     async fetchCheckout() {
       try {
         const response = await axios.get("/api/checkout");
-        console.log(response)
+        console.log('hii',response)
         this.checkoutForm = response.data.customerAddress
         this.products = response.data.products
         this.totalSum = response.data.totalSum
